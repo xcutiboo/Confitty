@@ -1,0 +1,38 @@
+# Build artifacts
+.angular
+dist
+
+# Dependencies
+node_modules
+bun.lockb
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+bun.log
+
+# Runtime
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage
+*.lcov
+
+# Scratch
+tmp/
+temp/
+
+# Nx workspace cache
+.nx/cache
+.nx/workspace-data
+.nx/polygraph
