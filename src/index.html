@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <base href="/" />
+
+    <title>Confitty · Visual Kitty Terminal config builder</title>
+    <meta name="description" content="Build, preview, and export kitty.conf visually. Live terminal preview, 40+ color themes, smart diff export, no documentation trauma." />
+    <meta name="author" content="xcutiboo" />
+    <meta name="application-name" content="Confitty" />
+    <meta name="apple-mobile-web-app-title" content="Confitty" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0d0d0d" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f6f5f3" media="(prefers-color-scheme: light)" />
+    <meta name="msapplication-TileColor" content="#ec4899" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <link rel="canonical" href="https://confitty.app/" />
+    <link rel="icon" type="image/svg+xml" href="assets/confitty.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/confitty-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/confitty-512.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="assets/confitty-192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="assets/confitty-512.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://confitty.app/" />
+    <meta property="og:title" content="Confitty · Visual Kitty Terminal config builder" />
+    <meta property="og:description" content="Build, preview, and export kitty.conf visually. Live terminal preview, 40+ color themes, smart diff export." />
+    <meta property="og:image" content="https://confitty.app/assets/confitty-og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Confitty logo on a dark background, with the tagline 'Visual config builder for Kitty terminal'" />
+    <meta property="og:site_name" content="Confitty" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://confitty.app/" />
+    <meta name="twitter:title" content="Confitty · Visual Kitty Terminal config builder" />
+    <meta name="twitter:description" content="Build, preview, and export kitty.conf visually. Live terminal preview, 40+ color themes, smart diff export." />
+    <meta name="twitter:image" content="https://confitty.app/assets/confitty-og.png" />
+    <meta name="twitter:image:alt" content="Confitty logo on a dark background, with the tagline 'Visual config builder for Kitty terminal'" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://storage.ko-fi.com" />
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://storage.ko-fi.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self'; font-src 'self' https://fonts.gstatic.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self';" />
+
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('confitty-theme');
+          var dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.classList.toggle('dark', dark);
+          document.documentElement.classList.toggle('light', !dark);
+        } catch (_) {}
+      })();
+    </script>
+
+    <style>
+      html { background: #0d0d0d; }
+      html.light { background: #f6f5f3; }
+      body { margin: 0; background: inherit; }
+      app-root { display: block; min-height: 100vh; }
+      .app-loader {
+        display: flex; align-items: center; justify-content: center;
+        min-height: 100vh; background: inherit;
+      }
+      .app-loader__spinner {
+        width: 36px; height: 36px;
+        border: 3px solid rgba(236, 72, 153, 0.18);
+        border-top-color: #ec4899;
+        border-radius: 50%;
+        animation: spin 900ms linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) {
+        .app-loader__spinner { animation: none; border-top-color: rgba(236, 72, 153, 0.6); }
+      }
+    </style>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Confitty",
+      "alternateName": "Confitty for Kitty Terminal",
+      "url": "https://confitty.app/",
+      "description": "Visual configuration builder for Kitty terminal with live preview, 40+ color themes, and smart diff export.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "browserRequirements": "Requires a modern browser with JavaScript enabled",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": { "@type": "Person", "name": "xcutiboo", "url": "https://github.com/xcutiboo" },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Confitty",
+        "logo": { "@type": "ImageObject", "url": "https://confitty.app/assets/confitty.svg" }
+      },
+      "image": "https://confitty.app/assets/confitty-og.png",
+      "screenshot": "https://confitty.app/assets/confitty-og.png",
+      "featureList": [
+        "Live terminal preview",
+        "40+ color themes",
+        "Visual editor for 400+ Kitty options",
+        "Import existing kitty.conf",
+        "Smart diff export (only changed values)",
+        "Tab bar, cursor, font, and window controls"
+      ],
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "license": "https://github.com/xcutiboo/Confitty/blob/confitty/LICENSE",
+      "softwareVersion": "1.0.0",
+      "datePublished": "2025-03-04",
+      "dateModified": "2026-05-19"
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Confitty?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Confitty is a visual configuration builder for Kitty terminal. It lets you tweak settings, preview the result live, and export a minimal kitty.conf that only includes values that differ from Kitty's defaults."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Confitty free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Confitty is free and open source under the MIT license."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I apply the exported kitty.conf?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Save the exported file to ~/.config/kitty/kitty.conf and reload Kitty with Ctrl+Shift+F5."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which themes ship with Confitty?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Confitty includes Dracula, Nord, Tokyo Night, Catppuccin variants, Gruvbox, Kanagawa, Ayu, Monokai, Solarized, VS Code, GitHub, iTerm2, and the original Confitty themes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I import an existing kitty.conf?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Click Import and select your kitty.conf, and Confitty parses it and populates the visual editor."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <script
+      src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"
+      integrity="sha384-QeYl2/sMqH1jlS91y8tKEY74zJhnzllyUAPV41ga9z1Q/22tZNeH66FKBd1AsCEs"
+      crossorigin="anonymous"
+      defer
+    ></script>
+  </head>
+  <body>
+    <app-root>
+      <div class="app-loader" role="status" aria-label="Loading Confitty">
+        <div class="app-loader__spinner"></div>
+      </div>
+    </app-root>
+  </body>
+</html>

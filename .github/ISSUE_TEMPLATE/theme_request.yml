@@ -1,0 +1,47 @@
+name: Theme suggestion
+description: Suggest a new color theme to ship with Confitty.
+title: "theme: "
+labels: ["theme"]
+body:
+  - type: input
+    id: theme-name
+    attributes:
+      label: Theme name
+      placeholder: "e.g. Rosé Pine Moon"
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Source / author
+      description: Where does this theme come from? Author site, repo, original kitty.conf, etc.
+    validations:
+      required: true
+
+  - type: textarea
+    id: palette
+    attributes:
+      label: 16-color palette
+      description: Full palette including foreground, background, selection, and color0..color15.
+      render: ini
+      placeholder: |
+        foreground            #...
+        background            #...
+        selection_foreground  #...
+        selection_background  #...
+        color0   #...
+        color1   #...
+        ...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have permission (or this theme is openly licensed) to redistribute it.
+          required: true
+        - label: I cross-checked the hex values against the original source.
+          required: true
