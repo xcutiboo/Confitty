@@ -1,0 +1,32 @@
+name: Feature request
+description: Suggest a new control, workflow improvement, or Kitty option Confitty doesn't cover yet.
+title: "feature: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do today that Confitty makes harder than it should be?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: How would you like it to work? UI sketches and references welcome.
+    validations:
+      required: true
+
+  - type: input
+    id: kitty-option
+    attributes:
+      label: Kitty option (if applicable)
+      description: Name of the underlying kitty.conf directive, if this maps to one.
+      placeholder: "e.g. background_image_layout"
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

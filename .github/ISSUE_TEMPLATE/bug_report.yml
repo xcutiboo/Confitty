@@ -1,0 +1,65 @@
+name: Bug report
+description: Something in Confitty doesn't work the way it should.
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you do, what did you expect, and what did you get instead?
+      placeholder: |
+        Steps:
+        1. ...
+        2. ...
+
+        Expected: ...
+        Got: ...
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: "Firefox 132 / Chrome 130 / Safari 18"
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "macOS 14.6 / Ubuntu 24.04 / Windows 11"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Live preview
+        - Config export / kitty.conf output
+        - Config import
+        - Forms / controls
+        - Themes and presets
+        - Search
+        - Performance
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Relevant config (optional)
+      description: Paste the relevant slice of your kitty.conf or the exported output.
+      render: ini
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Console errors (optional)
+      description: Anything printed in the browser devtools console.
+      render: shell
