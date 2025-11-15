@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discord
+    url: https://discord.gg/kxG674AadQ
+    about: Questions, config help, theme suggestions, general chat.
+  - name: Kitty Terminal docs
+    url: https://sw.kovidgoyal.net/kitty/conf/
+    about: Reference for the upstream config options Confitty exposes.
