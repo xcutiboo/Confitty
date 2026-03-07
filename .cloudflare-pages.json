@@ -1,0 +1,7 @@
+{
+  "build": {
+    "command": "bun run build",
+    "output": "dist/confitty/browser",
+    "node_version": "20"
+  }
+}
