@@ -1,0 +1,41 @@
+<svg viewBox="0 0 900 60" width="100%" height="60" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="confitty-fade-in" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#A9DFCD" stop-opacity="0" />
+      <stop offset="100%" stop-color="#A9DFCD" stop-opacity="0.6" />
+    </linearGradient>
+    
+    <linearGradient id="confitty-fade-out" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#A9DFCD" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#A9DFCD" stop-opacity="0" />
+    </linearGradient>
+
+    <filter id="confitty-bracket-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <g id="confitty-bracket-lines">
+    <rect x="50" y="29" width="360" height="2" fill="url(#confitty-fade-in)" />
+    <rect x="490" y="29" width="360" height="2" fill="url(#confitty-fade-out)" />
+  </g>
+
+  <g id="confitty-center-brackets" filter="url(#confitty-bracket-glow)">
+    <text x="430" y="40" font-family="monospace, Consolas, 'Courier New'" font-size="28" font-weight="bold" fill="#FFB3C6" text-anchor="middle">{</text>
+    
+    <circle cx="450" cy="30" r="3" fill="#FFF38B" />
+    
+    <text x="470" y="40" font-family="monospace, Consolas, 'Courier New'" font-size="28" font-weight="bold" fill="#CDAAD2" text-anchor="middle">}</text>
+  </g>
+
+  <g id="confitty-bracket-particles" opacity="0.8">
+    <path d="M 300 45 Q 315 35 310 50" fill="none" stroke="#FFB3C6" stroke-width="2.5" stroke-linecap="round"/>
+    <rect x="380" y="15" width="4" height="10" fill="#A0B7C6" transform="rotate(45 382 20)" />
+    <circle cx="520" cy="40" r="3" fill="#A9DFCD" />
+    <rect x="620" y="20" width="8" height="3" fill="#FFF38B" transform="rotate(-15 624 21)" />
+  </g>
+</svg>
