@@ -185,7 +185,6 @@ import { KittyVersionService } from '../../../services/kitty-version.service';
             </select>
           </div>
         }
-      </div>
 
       @if (helper.advancedMode()) {
         <div class="bg-kitty-surface rounded-lg p-6 border border-kitty-border">

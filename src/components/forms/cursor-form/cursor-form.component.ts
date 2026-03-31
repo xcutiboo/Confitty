@@ -217,7 +217,6 @@ import { KittyVersionService } from '../../../services/kitty-version.service';
             </div>
           </div>
         }
-      }
     </app-form-section>
   `,
   styles: []

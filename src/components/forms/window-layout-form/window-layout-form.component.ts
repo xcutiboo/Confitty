@@ -112,7 +112,6 @@ import { KittyVersionService } from '../../../services/kitty-version.service';
             (valueChange)="helper.updateField('window_padding_width', $event)"
             [min]="0" [max]="50" [step]="1" />
         </div>
-      </div>
 
       @if (helper.advancedMode()) {
         <div class="bg-kitty-surface rounded-lg p-6 border border-kitty-border">
