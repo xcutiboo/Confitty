@@ -1,0 +1,295 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─────────────────────────────────────────────
+   LIGHT MODE (default)
+   ───────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --kitty-deeper:        236 233 228;   /* page shell, outermost bg */
+  --kitty-bg:            247 246 243;   /* input backgrounds, badges */
+  --kitty-surface:       255 255 255;   /* cards, panels, header, nav */
+  --kitty-surface-light: 242 241 237;   /* hover states, elevated surfaces */
+
+  /* Brand - Confitty pink/magenta */
+  --kitty-primary:       236 72 153;    /* pink-600 — 4.5:1 on white */
+  --kitty-primary-dim:   219 39 119;    /* pink-700 — deeper for secondary */
+  --kitty-primary-hover: 244 114 182;   /* pink-500 — hover state */
+  --kitty-secondary:     192 38 211;    /* fuchsia-600 — magenta accent */
+  --kitty-accent:        217 70 239;    /* fuchsia-500 — bright highlights */
+  --kitty-accent-dim:    162 28 175;    /* fuchsia-700 — darker accent */
+  --kitty-warning:       180 83 9;      /* amber-700 — warnings */
+
+  /* Text */
+  --kitty-text:          28 25 23;      /* near-black, stone-900 */
+  --kitty-text-dim:      120 113 108;   /* muted, stone-500 */
+
+  /* Borders */
+  --kitty-border:        229 226 221;   /* subtle dividers */
+  --kitty-border-light:  212 209 204;   /* more visible borders */
+
+  /* Text color when rendered on top of a primary-colored background */
+  --kitty-dark:          255 255 255;   /* white — contrast on dark green */
+  
+  /* Scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--kitty-border-light)) transparent;
+}
+
+/* ─────────────────────────────────────────────
+   DARK MODE
+   ───────────────────────────────────────────── */
+.dark {
+  /* Backgrounds */
+  --kitty-deeper:        13 13 13;      /* #0d0d0d */
+  --kitty-bg:            22 22 22;      /* #161616 */
+  --kitty-surface:       30 30 30;      /* #1e1e1e */
+  --kitty-surface-light: 42 42 42;      /* #2a2a2a */
+
+  /* Brand - Confitty pink/magenta dark mode */
+  --kitty-primary:       255 181 198;   /* #FFB5C6 - pastel pink */
+  --kitty-primary-dim:   254 138 236;   /* #FE8AEC - magenta */
+  --kitty-primary-hover: 255 145 170;   /* #ff91aa - darker pink */
+  --kitty-secondary:     254 138 236;   /* #FE8AEC - magenta */
+  --kitty-accent:        255 157 237;   /* #ff9ded - bright pink */
+  --kitty-accent-dim:    230 120 210;   /* darker magenta */
+  --kitty-warning:       249 175 79;    /* #f9af4f - amber */
+
+  /* Text */
+  --kitty-text:          224 224 224;   /* #e0e0e0 */
+  --kitty-text-dim:      144 144 144;   /* #909090 */
+
+  /* Borders */
+  --kitty-border:        51 51 51;      /* #333333 */
+  --kitty-border-light:  64 64 64;      /* #404040 */
+
+  /* Text color when rendered on top of a primary-colored background */
+  --kitty-dark:          86 77 80;      /* #564D50 - Confitty terminal bg for contrast on pink */
+}
+
+/* ─────────────────────────────────────────────
+   BASE STYLES
+   ───────────────────────────────────────────── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background: rgb(var(--kitty-deeper));
+  color: rgb(var(--kitty-text));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* ─────────────────────────────────────────────
+   FORM ELEMENTS
+   ───────────────────────────────────────────── */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input[type="range"] {
+  accent-color: rgb(var(--kitty-primary));
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+  accent-color: rgb(var(--kitty-primary));
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+input[type="color"] {
+  cursor: pointer;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* ─────────────────────────────────────────────
+   SCROLLBARS
+   ───────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--kitty-border-light));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--kitty-text-dim) / 0.5);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ─────────────────────────────────────────────
+   ANIMATIONS
+   ───────────────────────────────────────────── */
+
+/* Entrance animations */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from { transform: translateY(-8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slide-in-left {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Exit animations */
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes fade-out-down {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-8px); opacity: 0; }
+}
+
+@keyframes slide-out-right {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+@keyframes scale-out {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(0.96); opacity: 0; }
+}
+
+/* Micro-interactions */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+@layer utilities {
+  /* Entrance utilities - 250ms standard */
+  .animate-fade-in {
+    animation: fade-in 250ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  .animate-fade-in-up {
+    animation: fade-in-up 250ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  .animate-slide-in-right {
+    animation: slide-in-right 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  .animate-slide-in-left {
+    animation: slide-in-left 300ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  .animate-scale-in {
+    animation: scale-in 250ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  /* Exit utilities - 200ms for snappy dismissal */
+  .animate-fade-out {
+    animation: fade-out 200ms cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+  .animate-fade-out-down {
+    animation: fade-out-down 200ms cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+  .animate-slide-out-right {
+    animation: slide-out-right 250ms cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+  .animate-scale-out {
+    animation: scale-out 200ms cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+
+  /* Micro-interactions */
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+  .animate-bounce-subtle {
+    animation: bounce-subtle 0.6s ease-in-out;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in,
+    .animate-fade-in-up,
+    .animate-slide-in-right,
+    .animate-slide-in-left,
+    .animate-scale-in,
+    .animate-fade-out,
+    .animate-fade-out-down,
+    .animate-slide-out-right,
+    .animate-scale-out {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+    .animate-pulse-soft,
+    .animate-bounce-subtle {
+      animation: none;
+    }
+  }
+
+  /* Performance hints */
+  .will-change-transform {
+    will-change: transform;
+  }
+  .will-change-opacity {
+    will-change: opacity;
+  }
+
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}

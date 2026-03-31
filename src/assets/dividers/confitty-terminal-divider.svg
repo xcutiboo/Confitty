@@ -1,0 +1,50 @@
+<svg viewBox="0 0 900 60" width="100%" height="60" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="confitty-line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+<stop offset="0%" stop-color="#FFB3C6" stop-opacity="0" />
+<stop offset="30%" stop-color="#FFB3C6" stop-opacity="0.3" />
+<stop offset="50%" stop-color="#FFB3C6" stop-opacity="0.8" />
+<stop offset="70%" stop-color="#FFB3C6" stop-opacity="0.3" />
+<stop offset="100%" stop-color="#FFB3C6" stop-opacity="0" />
+</linearGradient>
+
+<filter id="confitty-neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+  <feGaussianBlur stdDeviation="2" result="blur" />
+  <feMerge>
+    <feMergeNode in="blur" />
+    <feMergeNode in="SourceGraphic" />
+  </feMerge>
+</filter>
+</defs>
+
+<g id="confitty-layer-line">
+<rect id="confitty-main-line" x="50" y="29" width="800" height="2" fill="url(#confitty-line-gradient)" />
+</g>
+
+<g id="confitty-layer-particles" opacity="0.8">
+
+<g id="confitty-particles-left">
+  <circle id="confitty-dot-green-left" cx="200" cy="25" r="2.5" fill="#A9DFCD" />
+  <rect id="confitty-dash-yellow-left" x="280" y="40" width="8" height="3" fill="#FFF38B" transform="rotate(30 284 41)" />
+  <path id="confitty-swirl-purple-left" d="M 320 20 Q 330 15 325 30" fill="none" stroke="#CDAAD2" stroke-width="2.5" stroke-linecap="round"/>
+  <circle id="confitty-dot-pink-left" cx="370" cy="15" r="3.5" fill="#FFB3C6" />
+</g>
+
+<g id="confitty-particles-right">
+  <circle id="confitty-dot-blue-right" cx="530" cy="45" r="3" fill="#A0B7C6" />
+  <path id="confitty-swirl-yellow-right" d="M 580 40 Q 590 50 600 35" fill="none" stroke="#FFF38B" stroke-width="2.5" stroke-linecap="round"/>
+  <rect id="confitty-dash-pink-right" x="620" y="15" width="4" height="10" fill="#FFB3C6" transform="rotate(-45 622 20)" />
+  <circle id="confitty-dot-green-right" cx="700" cy="35" r="2.5" fill="#A9DFCD" />
+</g>
+</g>
+
+<g id="confitty-layer-badge">
+<rect id="confitty-badge-bg" x="410" y="14" width="80" height="32" rx="16" fill="#0E0C10" stroke="#3A333E" stroke-width="2" />
+
+<g id="confitty-badge-prompt" filter="url(#confitty-neon-glow)">
+  <path id="confitty-prompt-arrow" d="M 435 22 L 445 30 L 435 38" fill="none" stroke="#FFB3C6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <line id="confitty-prompt-cursor" x1="453" y1="38" x2="466" y2="38" stroke="#A9DFCD" stroke-width="2.5" stroke-linecap="round"/>
+</g>
+</g>
+
+</svg>

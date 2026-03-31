@@ -1,0 +1,37 @@
+[install]
+# Always use latest compatible versions
+cache = true
+frozen-lockfile = false
+# Prefer exact versions for reproducibility
+exact = true
+# Enable production registry for faster installs
+registry = "https://registry.npmjs.org/"
+
+[run]
+# Enable hot module replacement for development
+hot = true
+# Use system shell for compatibility
+shell = "system"
+
+[build]
+# Optimize for production builds
+target = "browser"
+minify = true
+sourcemap = false
+# Enable tree shaking
+treeShaking = true
+# Split code into chunks for better caching
+splitting = true
+
+[test]
+# Configure test runner
+coverage = true
+coverageReporter = ["text", "html"]
+
+[bun]
+# Enable experimental features for better performance
+experimental = true
+# Lock file configuration
+lockfile = true
+# Enable TypeScript support
+tsconfig = "tsconfig.json"
