@@ -288,7 +288,6 @@ import { KittyVersionService } from '../../../services/kitty-version.service';
             </div>
           </div>
         }
-      </div>
 
       <div class="bg-kitty-surface rounded-lg p-6 border border-kitty-border">
         <h3 class="text-lg font-semibold text-kitty-text mb-4">Tab Colors</h3>
@@ -398,7 +397,7 @@ import { KittyVersionService } from '../../../services/kitty-version.service';
             </div>
           </div>
         }
-      }
+      </div>
     </app-form-section>
   `,
   styles: []

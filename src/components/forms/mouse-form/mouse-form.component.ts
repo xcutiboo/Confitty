@@ -76,7 +76,6 @@ import { KittyVersionService } from '../../../services/kitty-version.service';
             </label>
           </div>
         </div>
-      </div>
 
       @if (helper.advancedMode()) {
         <div class="bg-kitty-surface rounded-lg p-6 border border-kitty-border">
@@ -336,9 +335,9 @@ import { KittyVersionService } from '../../../services/kitty-version.service';
               </div>
             </div>
           </div>
-        </app-form-section>
+        </div>
       }
-    </div>
+    </app-form-section>
   `,
   styles: []
 })
