@@ -1,7 +1,8 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfigStoreService } from '../../services/config-store.service';
 import { ptToPx } from './color-utils';
+import { measureCell } from './cell-metrics';
 
 const SYSTEM_BLINK_INTERVAL = 0.5;
 
@@ -9,13 +10,14 @@ const SYSTEM_BLINK_INTERVAL = 0.5;
   selector: 'app-terminal-cursor',
   imports: [CommonModule],
   template: `
-    <span class="terminal-cursor" [class.blinking]="blinking()" [ngStyle]="styles()"></span>
+    <span class="terminal-cursor" [class.blinking]="active()" [ngStyle]="styles()"></span>
   `,
   styles: [`
     .terminal-cursor {
       display: inline-block;
-      vertical-align: baseline;
+      vertical-align: text-top;
       box-sizing: border-box;
+      position: relative;
     }
     .terminal-cursor.blinking {
       animation: cursor-blink var(--blink-duration) steps(2, jump-none) infinite;
@@ -25,21 +27,40 @@ const SYSTEM_BLINK_INTERVAL = 0.5;
     }
   `]
 })
-export class TerminalCursorComponent {
+export class TerminalCursorComponent implements OnDestroy {
   private readonly store = inject(ConfigStoreService);
+  private readonly stoppedBlink = signal(false);
+  private stopTimer: ReturnType<typeof setTimeout> | null = null;
 
   private readonly cursor = computed(() => this.store.configState().cursor);
+  private readonly fontFamily = computed(() => this.store.configState().fonts.font_family);
   private readonly fontSize = computed(() => this.store.configState().fonts.font_size);
+  private readonly fontPx = computed(() => ptToPx(this.fontSize()));
 
-  readonly blinking = computed(() => {
-    const interval = this.cursor().cursor_blink_interval;
-    return interval !== 0;
+  constructor() {
+    effect(() => {
+      const seconds = this.cursor().cursor_stop_blinking_after;
+      if (this.stopTimer) clearTimeout(this.stopTimer);
+      this.stoppedBlink.set(false);
+      if (seconds > 0) {
+        this.stopTimer = setTimeout(() => this.stoppedBlink.set(true), seconds * 1000);
+      }
+    });
+  }
+
+  readonly active = computed(() => {
+    const cfg = this.cursor();
+    if (cfg.cursor_blink_interval === 0) return false;
+    return !this.stoppedBlink();
   });
 
   readonly styles = computed(() => {
     const cfg = this.cursor();
-    const cellWidth = ptToPx(this.fontSize()) * 0.6;
-    const cellHeight = ptToPx(this.fontSize()) * 1.25;
+    const family = this.fontFamily();
+    const fontPx = this.fontPx();
+    const metrics = measureCell(family, fontPx);
+    const cellWidth  = metrics.width;
+    const cellHeight = metrics.height;
     const color = cfg.cursor === 'none' ? 'transparent' : cfg.cursor;
     const blinkInterval = cfg.cursor_blink_interval === -1
       ? SYSTEM_BLINK_INTERVAL
@@ -52,18 +73,22 @@ export class TerminalCursorComponent {
     };
 
     switch (cfg.cursor_shape) {
-      case 'beam':
+      case 'beam': {
+        const thickness = Math.max(1, ptToPx(cfg.cursor_beam_thickness));
         return {
           ...base,
-          width: `${Math.max(1, cfg.cursor_beam_thickness)}px`,
+          width: `${thickness}px`,
           backgroundColor: color,
         };
-      case 'underline':
+      }
+      case 'underline': {
+        const thickness = Math.max(1, ptToPx(cfg.cursor_underline_thickness));
         return {
           ...base,
           backgroundColor: 'transparent',
-          borderBottom: `${Math.max(1, cfg.cursor_underline_thickness)}px solid ${color}`,
+          borderBottom: `${thickness}px solid ${color}`,
         };
+      }
       default:
         return {
           ...base,
@@ -71,4 +96,8 @@ export class TerminalCursorComponent {
         };
     }
   });
+
+  ngOnDestroy(): void {
+    if (this.stopTimer) clearTimeout(this.stopTimer);
+  }
 }

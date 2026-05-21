@@ -1,66 +1,114 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConfigStoreService } from '../../services/config-store.service';
-import { ptToPx, rgba } from './color-utils';
+import { ptToPx, rgba, mix } from './color-utils';
 import { effectiveTabColors } from './tab-colors';
 import { PREVIEW_TABS, type PreviewTab } from './terminal-session';
-import { DEFAULT_FADE_STEPS, TAB_BAR_RATIO } from './preview-metrics';
+import {
+  DEFAULT_FADE_STEPS,
+  POWERLINE_GLYPHS,
+  POWERLINE_SOFT,
+} from './preview-metrics';
+import { measureCell } from './cell-metrics';
+
+type Style = 'fade' | 'slant' | 'separator' | 'powerline' | 'hidden';
 
 @Component({
   selector: 'app-terminal-tab-bar',
   imports: [CommonModule],
   template: `
-    <div class="tab-bar" [ngStyle]="barStyles()">
-      <div class="tab-row" [ngStyle]="rowStyles()">
+    <div class="tab-bar-wrap" [ngStyle]="wrapStyles()">
+      <div class="tab-bar-margin" [style.height.px]="firstMargin()" [style.backgroundColor]="marginColor()"></div>
+      <div class="tab-bar" [ngStyle]="barStyles()">
+        <div class="tab-row" [ngStyle]="rowStyles()">
         @switch (style()) {
           @case ('powerline') {
-            @for (tab of tabs; track tab.title; let i = $index; let last = $last; let first = $first) {
-              <span
-                class="tab powerline"
-                [class.pl-slanted]="powerlineShape() === 'slanted'"
-                [class.pl-round]="powerlineShape() === 'round'"
-                [class.is-active]="tab.active"
-                [class.is-first]="first"
-                [class.is-last]="last"
-                [ngStyle]="tabStyles(tab)"
-              >{{ tab.title }}</span>
+            @for (tab of tabs; track tab.title; let i = $index; let first = $first; let last = $last) {
+              <span class="tab" [ngStyle]="powerlineTabStyles(tab, first)">{{ tab.title }}</span>
+              <svg
+                class="sep"
+                viewBox="0 0 1 1"
+                preserveAspectRatio="none"
+                shape-rendering="geometricPrecision"
+              >
+                @if (isSoftSeparator(tab, i, last)) {
+                  <rect x="0" y="0" width="1" height="1" [attr.fill]="tabBg(tab)" />
+                  <path
+                    [attr.d]="powerlineSoftPath()"
+                    fill="none"
+                    [attr.stroke]="tabFg(tab)"
+                    stroke-width="0.08"
+                    stroke-linecap="round"
+                  />
+                } @else {
+                  <rect x="0" y="0" width="1" height="1" [attr.fill]="nextBgFor(i, last)" />
+                  <path [attr.d]="powerlinePath()" [attr.fill]="tabBg(tab)" />
+                }
+              </svg>
+              <span class="cell-pad" [style.backgroundColor]="nextBgFor(i, last)">&nbsp;</span>
             }
           }
           @case ('slant') {
             @for (tab of tabs; track tab.title) {
-              <span class="tab slant" [ngStyle]="slantStyles(tab)">
-                <span class="slant-bg" [style.backgroundColor]="tabBg(tab)"></span>
-                <span>{{ tab.title }}</span>
-              </span>
+              <svg class="sep" viewBox="0 0 1 1" preserveAspectRatio="none">
+                <rect x="0" y="0" width="1" height="1" [attr.fill]="tabBg(tab)" />
+                <path [attr.d]="slantLeftPath()" [attr.fill]="barBg()" />
+              </svg>
+              <span class="tab" [ngStyle]="slantTabStyles(tab)">{{ tab.title }}</span>
+              <svg class="sep" viewBox="0 0 1 1" preserveAspectRatio="none">
+                <rect x="0" y="0" width="1" height="1" [attr.fill]="tabBg(tab)" />
+                <path [attr.d]="slantRightPath()" [attr.fill]="barBg()" />
+              </svg>
             }
           }
           @case ('separator') {
-            @for (tab of tabs; track tab.title; let last = $last) {
-              <span class="tab plain" [ngStyle]="tabStyles(tab)">{{ tab.title }}</span>
+            @for (tab of tabs; track tab.title; let i = $index; let last = $last) {
+              @for (_ of leadingSpaces(); track $index) {
+                <span class="cell-pad">&nbsp;</span>
+              }
+              <span class="tab plain" [ngStyle]="plainTabStyles(tab)">{{ tab.title }}</span>
+              @for (_ of trailingSpaces(); track $index) {
+                <span class="cell-pad">&nbsp;</span>
+              }
               @if (!last) {
-                <span class="separator" [style.color]="dimFg()">{{ separator() }}</span>
+                <span class="separator" [ngStyle]="separatorStyles()">{{ sepChar() }}</span>
               }
             }
           }
           @case ('fade') {
-            @for (tab of tabs; track tab.title; let i = $index) {
-              <span class="tab plain" [ngStyle]="fadeStyles(tab, i)">{{ tab.title }}</span>
-            }
-          }
-          @default {
             @for (tab of tabs; track tab.title) {
-              <span class="tab plain" [ngStyle]="tabStyles(tab)">{{ tab.title }}</span>
+              @for (alpha of fadeSteps(); track $index) {
+                <span class="fade-cell" [ngStyle]="fadeCellStyles(tab, alpha)">&nbsp;</span>
+              }
+              <span class="tab fade-title" [ngStyle]="fadeTitleStyles(tab)">{{ tab.title }}</span>
+              @for (alpha of reversedFadeSteps(); track $index) {
+                <span class="fade-cell" [ngStyle]="fadeCellStyles(tab, alpha)">&nbsp;</span>
+              }
+              <span class="fade-cell" [style.backgroundColor]="barBg()">&nbsp;</span>
             }
           }
         }
+        </div>
       </div>
+      <div class="tab-bar-margin" [style.height.px]="lastMargin()" [style.backgroundColor]="marginColor()"></div>
     </div>
   `,
   styles: [`
+    :host { display: contents; }
+
+    .tab-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .tab-bar-margin {
+      flex-shrink: 0;
+    }
     .tab-bar {
       display: flex;
       flex-shrink: 0;
       overflow: hidden;
+      align-items: stretch;
     }
     .tab-row {
       display: flex;
@@ -71,57 +119,31 @@ import { DEFAULT_FADE_STEPS, TAB_BAR_RATIO } from './preview-metrics';
     .tab {
       display: inline-flex;
       align-items: center;
-      padding: 0 14px;
       white-space: nowrap;
       flex-shrink: 0;
     }
-    .tab.plain {
-      padding: 0 16px;
+    .fade-cell, .cell-pad {
+      display: inline-block;
+      width: var(--cell-w);
+      flex-shrink: 0;
     }
-    .tab.powerline {
-      position: relative;
-      padding: 0 26px 0 22px;
-      margin-right: -14px;
-    }
-    .tab.powerline.is-first {
-      padding-left: 16px;
-    }
-    .tab.powerline.is-active {
-      z-index: 2;
-    }
-    /* angled (default): right-pointing chevron */
-    .tab.powerline {
-      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%);
-    }
-    /* slanted: parallelogram leaning right */
-    .tab.powerline.pl-slanted {
-      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 100%, 0 100%);
-    }
-    /* round: half-disc right edge */
-    .tab.powerline.pl-round {
-      clip-path: none;
-      border-top-right-radius: 999px;
-      border-bottom-right-radius: 999px;
-      padding-right: 22px;
-      margin-right: -10px;
-    }
-    .tab.slant {
-      position: relative;
-      padding: 0 16px;
-      isolation: isolate;
-    }
-    .slant-bg {
-      position: absolute;
-      inset: 4px -6px 0 -6px;
-      transform: skewX(-18deg);
-      z-index: -1;
-      border-radius: 2px;
+    .fade-title {
+      padding: 0;
     }
     .separator {
       display: inline-flex;
       align-items: center;
-      padding: 0 4px;
-      opacity: 0.55;
+      flex-shrink: 0;
+      padding: 0;
+    }
+    .tab.plain {
+      padding: 0;
+    }
+    .sep {
+      display: inline-block;
+      width: var(--cell-w);
+      align-self: stretch;
+      flex-shrink: 0;
     }
   `]
 })
@@ -131,17 +153,39 @@ export class TerminalTabBarComponent {
   readonly edge = input<'top' | 'bottom'>('bottom');
   readonly tabs = PREVIEW_TABS;
 
-  readonly style = computed(() => this.store.configState().tab_bar.tab_bar_style);
-  readonly separator = computed(() => this.store.configState().tab_bar.tab_separator.trim() || '┇');
+  readonly style = computed<Style>(() => this.store.configState().tab_bar.tab_bar_style as Style);
+
+  private readonly parsedSeparator = computed(() => {
+    const raw = this.store.configState().tab_bar.tab_separator || ' ┇';
+    let sep = raw;
+    let trailing = 0;
+    while (sep.startsWith(' ')) { sep = sep.slice(1); trailing++; }
+    let leading = 0;
+    while (sep.endsWith(' ')) { sep = sep.slice(0, -1); leading++; }
+    return { sep, leading, trailing };
+  });
+
+  readonly sepChar = computed(() => this.parsedSeparator().sep);
+  readonly sepLeading = computed(() => this.parsedSeparator().leading);
+  readonly sepTrailing = computed(() => this.parsedSeparator().trailing);
   readonly powerlineShape = computed(() => this.store.configState().tab_bar.tab_powerline_style);
+
+  readonly slantLeftPath = computed(() =>
+    this.edge() === 'top' ? POWERLINE_GLYPHS.e0bc : POWERLINE_GLYPHS.e0ba,
+  );
+  readonly slantRightPath = computed(() =>
+    this.edge() === 'top' ? POWERLINE_GLYPHS.e0be : POWERLINE_GLYPHS.e0b8,
+  );
 
   private readonly tabBar = computed(() => this.store.configState().tab_bar);
   private readonly colors = computed(() => this.store.configState().colors);
+  private readonly fontFamily = computed(() => this.store.configState().fonts.font_family);
   private readonly palette = computed(() => effectiveTabColors(this.tabBar(), this.colors()));
   private readonly fontSize = computed(() => this.store.configState().fonts.font_size);
-
-  private readonly cellPx = computed(() => ptToPx(this.fontSize()));
-  private readonly height = computed(() => Math.round(this.cellPx() * TAB_BAR_RATIO));
+  private readonly fontPx = computed(() => ptToPx(this.fontSize()));
+  private readonly metrics = computed(() => measureCell(this.fontFamily(), this.fontPx()));
+  private readonly cellHeightPx = computed(() => Math.round(this.metrics().height));
+  private readonly cellWidthPx = computed(() => this.metrics().width);
 
   readonly barStyles = computed(() => {
     const tb = this.tabBar();
@@ -149,14 +193,13 @@ export class TerminalTabBarComponent {
     const margin = Math.max(0, tb.tab_bar_margin_width);
 
     return {
-      height: `${this.height()}px`,
+      height: `${this.cellHeightPx()}px`,
       backgroundColor: this.palette().barBg,
-      fontSize: `${this.cellPx()}px`,
-      color: rgba(colors.foreground, 0.7),
+      fontSize: `${this.fontPx()}px`,
+      lineHeight: `${this.cellHeightPx()}px`,
+      color: rgba(colors.foreground, 0.85),
       paddingInline: `${margin}px`,
-      borderTop: this.edge() === 'bottom' ? `1px solid ${rgba(colors.foreground, 0.08)}` : 'none',
-      borderBottom: this.edge() === 'top' ? `1px solid ${rgba(colors.foreground, 0.08)}` : 'none',
-      '--tab-height': `${this.height()}px`,
+      '--cell-w': `${this.cellWidthPx()}px`,
     } as Record<string, string>;
   });
 
@@ -166,42 +209,156 @@ export class TerminalTabBarComponent {
     return { justifyContent: justify } as Record<string, string>;
   });
 
+  readonly wrapStyles = computed(() => ({ backgroundColor: this.colors().background }) as Record<string, string>);
+
+  readonly marginColor = computed(() => {
+    const c = this.tabBar().tab_bar_margin_color;
+    return c && c !== 'none' ? c : this.colors().background;
+  });
+
+  private readonly margins = computed(() => {
+    const m = this.tabBar().tab_bar_margin_height ?? [];
+    const outer = Math.max(0, m[0] ?? 0);
+    const inner = Math.max(0, m[1] ?? 0);
+    return { outer, inner };
+  });
+
+  readonly firstMargin = computed(() => {
+    const { outer, inner } = this.margins();
+    return this.edge() === 'top' ? outer : inner;
+  });
+
+  readonly lastMargin = computed(() => {
+    const { outer, inner } = this.margins();
+    return this.edge() === 'top' ? inner : outer;
+  });
+
+  powerlinePath(): string {
+    switch (this.powerlineShape()) {
+      case 'round':   return POWERLINE_GLYPHS.e0b4;
+      case 'slanted': return POWERLINE_GLYPHS.e0b8;
+      default:        return POWERLINE_GLYPHS.e0b0;
+    }
+  }
+
+  powerlineSoftPath(): string {
+    switch (this.powerlineShape()) {
+      case 'round':   return POWERLINE_SOFT.round;
+      case 'slanted': return POWERLINE_SOFT.slanted;
+      default:        return POWERLINE_SOFT.angled;
+    }
+  }
+
+  nextBgFor(i: number, last: boolean): string {
+    if (last) return this.barBg();
+    return this.tabBg(this.tabs[i + 1]!);
+  }
+
+  prevBgFor(i: number, first: boolean): string {
+    if (first) return this.barBg();
+    return this.tabBg(this.tabs[i - 1]!);
+  }
+
+  isSoftSeparator(tab: PreviewTab, i: number, last: boolean): boolean {
+    return !last && this.tabBg(tab) === this.tabBg(this.tabs[i + 1]!);
+  }
+
   tabBg(tab: PreviewTab): string {
     const p = this.palette();
     return tab.active ? p.activeBg : p.inactiveBg;
   }
 
-  private tabFg(tab: PreviewTab): string {
+  barBg(): string {
+    return this.palette().barBg;
+  }
+
+  powerlineTabStyles(tab: PreviewTab, first: boolean): Record<string, string> {
+    return {
+      backgroundColor: this.tabBg(tab),
+      color: this.tabFg(tab),
+      paddingLeft: first ? 'var(--cell-w)' : '0',
+      paddingRight: 'var(--cell-w)',
+      ...this.tabFontStyle(tab),
+    };
+  }
+
+  private tabFontStyle(tab: PreviewTab): Record<string, string> {
+    const tb = this.tabBar();
+    const raw = (tab.active ? tb.active_tab_font_style : tb.inactive_tab_font_style) ?? 'normal';
+    const tokens = raw.toLowerCase().split(/[\s\-_]+/).filter(Boolean);
+    const isBold = tokens.includes('bold');
+    const isItalic = tokens.includes('italic');
+    return {
+      fontWeight: isBold ? '700' : '400',
+      fontStyle: isItalic ? 'italic' : 'normal',
+    };
+  }
+
+  tabFg(tab: PreviewTab): string {
     const p = this.palette();
     return tab.active ? p.activeFg : p.inactiveFg;
   }
 
-  tabStyles(tab: PreviewTab): Record<string, string> {
+  slantTabStyles(tab: PreviewTab): Record<string, string> {
     return {
       backgroundColor: this.tabBg(tab),
       color: this.tabFg(tab),
-      fontWeight: tab.active ? '600' : '400',
+      padding: '0 var(--cell-w)',
+      ...this.tabFontStyle(tab),
     };
   }
 
-  slantStyles(tab: PreviewTab): Record<string, string> {
+  plainTabStyles(tab: PreviewTab): Record<string, string> {
     return {
       color: this.tabFg(tab),
-      fontWeight: tab.active ? '600' : '400',
+      ...this.tabFontStyle(tab),
     };
   }
 
-  fadeStyles(tab: PreviewTab, index: number): Record<string, string> {
-    const fade = this.tabBar().tab_fade?.length ? this.tabBar().tab_fade : DEFAULT_FADE_STEPS;
-    const opacity = tab.active ? 1 : (fade[Math.min(index - 1, fade.length - 1)] ?? 0.5);
+  fadeTitleStyles(tab: PreviewTab): Record<string, string> {
     return {
+      backgroundColor: this.tabBg(tab),
       color: this.tabFg(tab),
-      opacity: String(opacity),
-      fontWeight: tab.active ? '600' : '400',
+      ...this.tabFontStyle(tab),
+    };
+  }
+
+  fadeSteps(): readonly number[] {
+    const fade = this.tabBar().tab_fade;
+    return fade?.length ? fade : DEFAULT_FADE_STEPS;
+  }
+
+  reversedFadeSteps(): readonly number[] {
+    return [...this.fadeSteps()].reverse();
+  }
+
+  fadeCellStyles(tab: PreviewTab, alpha: number): Record<string, string> {
+    return {
+      backgroundColor: mix(this.barBg(), this.tabBg(tab), alpha),
     };
   }
 
   dimFg(): string {
-    return rgba(this.colors().foreground, 0.5);
+    return rgba(this.colors().foreground, 0.55);
+  }
+
+  leadingSpaces(): readonly null[] {
+    return new Array(this.sepLeading()).fill(null);
+  }
+
+  trailingSpaces(): readonly null[] {
+    return new Array(this.sepTrailing()).fill(null);
+  }
+
+  separatorStyles(): Record<string, string> {
+    return {
+      color: this.colors().foreground,
+      backgroundColor: this.palette().inactiveBg,
+      fontWeight: '400',
+      fontStyle: 'normal',
+      display: 'inline-block',
+      width: 'var(--cell-w)',
+      textAlign: 'center',
+    };
   }
 }

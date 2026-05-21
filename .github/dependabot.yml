@@ -6,6 +6,8 @@ updates:
       interval: weekly
       day: monday
     open-pull-requests-limit: 5
+    cooldown:
+      default-days: 7
     groups:
       angular:
         patterns:
@@ -26,3 +28,5 @@ updates:
       interval: weekly
       day: monday
     open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7

@@ -3,9 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ConfigStoreService } from '../../services/config-store.service';
 import { ptToPx, rgba, shade } from './color-utils';
 import { PREVIEW_TABS } from './terminal-session';
-import { CHROME_LIGHTS, FONT_SIZE_PT, TAB_BAR_RATIO } from './preview-metrics';
+import { CHROME_LIGHTS, FONT_SIZE_PT } from './preview-metrics';
+import { measureCell } from './cell-metrics';
 
 const ACTIVE_TAB = PREVIEW_TABS.find(t => t.active)?.title ?? 'shell';
+const CHROME_PADDING_Y = 6;
 
 @Component({
   selector: 'app-terminal-chrome',
@@ -53,7 +55,6 @@ const ACTIVE_TAB = PREVIEW_TABS.find(t => t.active)?.title ?? 'shell';
       text-overflow: ellipsis;
     }
     .spacer {
-      /* Reserve room equal to the traffic-light cluster so the title stays centred. */
       width: calc(var(--light-size) * 3 + var(--light-gap) * 2);
       flex-shrink: 0;
     }
@@ -65,11 +66,12 @@ export class TerminalChromeComponent {
   readonly title = ACTIVE_TAB;
   readonly lights = CHROME_LIGHTS;
 
-  /** Chrome height matches the tab bar so the top of the window reads as a single band. */
   private readonly fontSize = computed(() => this.store.configState().fonts.font_size);
+  private readonly family = computed(() => this.store.configState().fonts.font_family);
   private readonly height = computed(() => {
     const pt = Math.max(FONT_SIZE_PT.min, Math.min(FONT_SIZE_PT.max, this.fontSize()));
-    return Math.round(ptToPx(pt) * TAB_BAR_RATIO);
+    const cellPx = measureCell(this.family(), ptToPx(pt)).height;
+    return Math.round(cellPx + CHROME_PADDING_Y * 2);
   });
 
   readonly styles = computed(() => {
