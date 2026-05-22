@@ -1,33 +1,98 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ConfigStoreService } from '../../services/config-store.service';
+import { CommonModule } from "@angular/common";
+import { Component, inject } from "@angular/core";
+import { ConfigStoreService } from "../../services/config-store.service";
 
 interface Category {
-  id: string;
-  label: string;
-  description: string;
-  svgPath: string;
+	id: string;
+	label: string;
+	description: string;
+	svgPath: string;
 }
 
 const CATEGORIES: readonly Category[] = [
-  { id: 'fonts',               label: 'Fonts',          description: 'Typography & rendering',     svgPath: 'M4 7V4h16v3M9 20h6M12 4v16' },
-  { id: 'cursor',              label: 'Cursor',         description: 'Shape & behavior',           svgPath: 'M5 3l14 9-7 1-3 7L5 3z' },
-  { id: 'scrollback',          label: 'Scrollback',     description: 'History & scrolling',        svgPath: 'M3 12h18M3 6h18M3 18h12' },
-  { id: 'mouse',               label: 'Mouse',          description: 'Interactions & URLs',        svgPath: 'M12 2a6 6 0 0 1 6 6v8a6 6 0 0 1-12 0V8a6 6 0 0 1 6-6zM12 2v6M6 8h12' },
-  { id: 'performance',         label: 'Performance',    description: 'Speed & rendering',          svgPath: 'M13 2L3 14h9l-1 8 10-12h-9l1-8z' },
-  { id: 'bell',                label: 'Bell',           description: 'Audio & visual alerts',      svgPath: 'M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0' },
-  { id: 'window_layout',       label: 'Window Layout',  description: 'Size & decorations',         svgPath: 'M3 3h18v18H3zM3 9h18M9 21V9' },
-  { id: 'tab_bar',             label: 'Tab Bar',        description: 'Tab appearance',             svgPath: 'M3 3h4v4H3zM10 3h4v4h-4zM17 3h4v4h-4zM3 10h18v11H3z' },
-  { id: 'colors',              label: 'Colors',         description: 'Color scheme & palette',     svgPath: 'M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0 0V2M2 12h20' },
-  { id: 'advanced',            label: 'Advanced',       description: 'Shell & remote control',     svgPath: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z' },
-  { id: 'os_specific',         label: 'OS Specific',    description: 'Platform options',           svgPath: 'M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM12 17v4M8 21h8' },
-  { id: 'keyboard_shortcuts',  label: 'Shortcuts',      description: 'Key mappings & kitty_mod',   svgPath: 'M4 4h16v16H4zM8 8h8M8 12h8M8 16h5' },
+	{
+		id: "fonts",
+		label: "Fonts",
+		description: "Typography & rendering",
+		svgPath: "M4 7V4h16v3M9 20h6M12 4v16",
+	},
+	{
+		id: "cursor",
+		label: "Cursor",
+		description: "Shape & behavior",
+		svgPath: "M5 3l14 9-7 1-3 7L5 3z",
+	},
+	{
+		id: "scrollback",
+		label: "Scrollback",
+		description: "History & scrolling",
+		svgPath: "M3 12h18M3 6h18M3 18h12",
+	},
+	{
+		id: "mouse",
+		label: "Mouse",
+		description: "Interactions & URLs",
+		svgPath:
+			"M12 2a6 6 0 0 1 6 6v8a6 6 0 0 1-12 0V8a6 6 0 0 1 6-6zM12 2v6M6 8h12",
+	},
+	{
+		id: "performance",
+		label: "Performance",
+		description: "Speed & rendering",
+		svgPath: "M13 2L3 14h9l-1 8 10-12h-9l1-8z",
+	},
+	{
+		id: "bell",
+		label: "Bell",
+		description: "Audio & visual alerts",
+		svgPath:
+			"M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0",
+	},
+	{
+		id: "window_layout",
+		label: "Window Layout",
+		description: "Size & decorations",
+		svgPath: "M3 3h18v18H3zM3 9h18M9 21V9",
+	},
+	{
+		id: "tab_bar",
+		label: "Tab Bar",
+		description: "Tab appearance",
+		svgPath: "M3 3h4v4H3zM10 3h4v4h-4zM17 3h4v4h-4zM3 10h18v11H3z",
+	},
+	{
+		id: "colors",
+		label: "Colors",
+		description: "Color scheme & palette",
+		svgPath:
+			"M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0 0V2M2 12h20",
+	},
+	{
+		id: "advanced",
+		label: "Advanced",
+		description: "Shell & remote control",
+		svgPath:
+			"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z",
+	},
+	{
+		id: "os_specific",
+		label: "OS Specific",
+		description: "Platform options",
+		svgPath:
+			"M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM12 17v4M8 21h8",
+	},
+	{
+		id: "keyboard_shortcuts",
+		label: "Shortcuts",
+		description: "Key mappings & kitty_mod",
+		svgPath: "M4 4h16v16H4zM8 8h8M8 12h8M8 16h5",
+	},
 ];
 
 @Component({
-  selector: 'app-category-navigation',
-  imports: [CommonModule],
-  template: `
+	selector: "app-category-navigation",
+	imports: [CommonModule],
+	template: `
     <nav class="nav" aria-label="Configuration sections">
       <div class="nav__list">
         <span class="nav__header">Configuration</span>
@@ -65,7 +130,8 @@ const CATEGORIES: readonly Category[] = [
       </div>
     </nav>
   `,
-  styles: [`
+	styles: [
+		`
     .nav {
       display: flex;
       flex-direction: column;
@@ -173,15 +239,16 @@ const CATEGORIES: readonly Category[] = [
       color: rgb(var(--kitty-text));
       background: rgb(var(--kitty-surface));
     }
-  `]
+  `,
+	],
 })
 export class CategoryNavigationComponent {
-  readonly configStore = inject(ConfigStoreService);
+	readonly configStore = inject(ConfigStoreService);
 
-  readonly categories = CATEGORIES;
+	readonly categories = CATEGORIES;
 
-  selectCategory(categoryId: string): void {
-    this.configStore.setActiveCategory(categoryId);
-    this.configStore.setSidebarOpen(false);
-  }
+	selectCategory(categoryId: string): void {
+		this.configStore.setActiveCategory(categoryId);
+		this.configStore.setSidebarOpen(false);
+	}
 }

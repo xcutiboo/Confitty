@@ -1,24 +1,24 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KittyVersionService } from '../../../services/kitty-version.service';
-import { createFormHelper } from '../../../utils/form-helpers';
-import { FormSectionComponent } from '../../shared/form-section/form-section.component';
-import { NumberInputComponent } from '../../shared/number-input/number-input.component';
-import { SliderInputComponent } from '../../shared/slider-input/slider-input.component';
-import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.component';
+import { CommonModule } from "@angular/common";
+import { Component, computed, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { KittyVersionService } from "../../../services/kitty-version.service";
+import { createFormHelper } from "../../../utils/form-helpers";
+import { FormSectionComponent } from "../../shared/form-section/form-section.component";
+import { NumberInputComponent } from "../../shared/number-input/number-input.component";
+import { SliderInputComponent } from "../../shared/slider-input/slider-input.component";
+import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.component";
 
 @Component({
-  selector: 'app-scrollback-form',
-  imports: [
-    CommonModule,
-    FormsModule,
-    NumberInputComponent,
-    VersionBadgeComponent,
-    SliderInputComponent,
-    FormSectionComponent,
-  ],
-  template: `
+	selector: "app-scrollback-form",
+	imports: [
+		CommonModule,
+		FormsModule,
+		NumberInputComponent,
+		VersionBadgeComponent,
+		SliderInputComponent,
+		FormSectionComponent,
+	],
+	template: `
     <app-form-section
       title="Scrollback"
       description="Configure terminal history and scrolling behavior"
@@ -219,21 +219,23 @@ import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.
       }
     </app-form-section>
   `,
-  styles: [],
+	styles: [],
 })
 export class ScrollbackFormComponent {
-  private readonly versionService = inject(KittyVersionService);
+	private readonly versionService = inject(KittyVersionService);
 
-  readonly helper = createFormHelper('scrollback');
-  readonly scrollback = this.helper.state.asReadonly();
-  readonly scrollbackPagerAvailable = computed(() =>
-    this.versionService.isOptionAvailable('scrollback_pager')
-  );
-  readonly scrollbarAvailable = computed(() => this.versionService.isOptionAvailable('scrollbar'));
-  readonly pixelScrollAvailable = computed(() =>
-    this.versionService.isOptionAvailable('pixel_scroll')
-  );
-  readonly momentumScrollAvailable = computed(() =>
-    this.versionService.isOptionAvailable('momentum_scroll')
-  );
+	readonly helper = createFormHelper("scrollback");
+	readonly scrollback = this.helper.state.asReadonly();
+	readonly scrollbackPagerAvailable = computed(() =>
+		this.versionService.isOptionAvailable("scrollback_pager"),
+	);
+	readonly scrollbarAvailable = computed(() =>
+		this.versionService.isOptionAvailable("scrollbar"),
+	);
+	readonly pixelScrollAvailable = computed(() =>
+		this.versionService.isOptionAvailable("pixel_scroll"),
+	);
+	readonly momentumScrollAvailable = computed(() =>
+		this.versionService.isOptionAvailable("momentum_scroll"),
+	);
 }

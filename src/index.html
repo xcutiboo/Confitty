@@ -58,10 +58,10 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://storage.ko-fi.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self'; font-src 'self' https://fonts.gstatic.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self';" />
 
     <script>
-      (function () {
+      (() => {
         try {
-          var saved = localStorage.getItem('confitty-theme');
-          var dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+          const saved = localStorage.getItem('confitty-theme');
+          const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
           document.documentElement.classList.toggle('dark', dark);
           document.documentElement.classList.toggle('light', !dark);
         } catch (_) {}

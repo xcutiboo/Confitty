@@ -1,15 +1,15 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ConfigStoreService } from '../../services/config-store.service';
-import { TerminalWindowComponent } from './terminal-window.component';
-import { TerminalPaletteComponent } from './terminal-palette.component';
+import { CommonModule } from "@angular/common";
+import { Component, computed, inject, signal } from "@angular/core";
+import { ConfigStoreService } from "../../services/config-store.service";
+import { TerminalPaletteComponent } from "./terminal-palette.component";
+import { TerminalWindowComponent } from "./terminal-window.component";
 
-type PreviewMode = 'terminal' | 'config';
+type PreviewMode = "terminal" | "config";
 
 @Component({
-  selector: 'app-live-preview',
-  imports: [CommonModule, TerminalWindowComponent, TerminalPaletteComponent],
-  template: `
+	selector: "app-live-preview",
+	imports: [CommonModule, TerminalWindowComponent, TerminalPaletteComponent],
+	template: `
     <div class="h-full flex flex-col bg-kitty-darker">
       <header class="flex items-center justify-between gap-3 px-4 py-3 border-b border-kitty-border bg-kitty-surface flex-shrink-0">
         <div class="flex items-center gap-3 min-w-0">
@@ -110,7 +110,8 @@ type PreviewMode = 'terminal' | 'config';
       </footer>
     </div>
   `,
-  styles: [`
+	styles: [
+		`
     .preview-toggle {
       padding: 4px 10px;
       border-radius: 6px;
@@ -156,45 +157,50 @@ type PreviewMode = 'terminal' | 'config';
     .sep {
       color: rgb(var(--kitty-border-light));
     }
-  `]
+  `,
+	],
 })
 export class LivePreviewComponent {
-  readonly previewMode = signal<PreviewMode>('terminal');
-  readonly copied = signal(false);
+	readonly previewMode = signal<PreviewMode>("terminal");
+	readonly copied = signal(false);
 
-  readonly configStore = inject(ConfigStoreService);
+	readonly configStore = inject(ConfigStoreService);
 
-  readonly configText = computed(() => this.configStore.rawConfigText());
-  readonly configLineCount = computed(() => this.configText().split('\n').length);
+	readonly configText = computed(() => this.configStore.rawConfigText());
+	readonly configLineCount = computed(
+		() => this.configText().split("\n").length,
+	);
 
-  readonly colors = computed(() => this.configStore.configState().colors);
-  readonly fonts = computed(() => this.configStore.configState().fonts);
+	readonly colors = computed(() => this.configStore.configState().colors);
+	readonly fonts = computed(() => this.configStore.configState().fonts);
 
-  readonly cursorLabel = computed(() => {
-    const c = this.configStore.configState().cursor;
-    const blink = c.cursor_blink_interval !== 0 ? ' blink' : '';
-    return `${c.cursor_shape}${blink}`;
-  });
+	readonly cursorLabel = computed(() => {
+		const c = this.configStore.configState().cursor;
+		const blink = c.cursor_blink_interval !== 0 ? " blink" : "";
+		return `${c.cursor_shape}${blink}`;
+	});
 
-  readonly opacityLabel = computed(() => {
-    const o = this.colors().background_opacity;
-    return typeof o === 'number' && o < 1 ? `${Math.round(o * 100)}% opacity` : 'opaque';
-  });
+	readonly opacityLabel = computed(() => {
+		const o = this.colors().background_opacity;
+		return typeof o === "number" && o < 1
+			? `${Math.round(o * 100)}% opacity`
+			: "opaque";
+	});
 
-  copyConfig(): void {
-    void navigator.clipboard.writeText(this.configText()).then(() => {
-      this.copied.set(true);
-      setTimeout(() => this.copied.set(false), 1800);
-    });
-  }
+	copyConfig(): void {
+		void navigator.clipboard.writeText(this.configText()).then(() => {
+			this.copied.set(true);
+			setTimeout(() => this.copied.set(false), 1800);
+		});
+	}
 
-  download(): void {
-    const blob = new Blob([this.configText()], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'kitty.conf';
-    a.click();
-    URL.revokeObjectURL(url);
-  }
+	download(): void {
+		const blob = new Blob([this.configText()], { type: "text/plain" });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = "kitty.conf";
+		a.click();
+		URL.revokeObjectURL(url);
+	}
 }

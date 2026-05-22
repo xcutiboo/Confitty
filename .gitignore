@@ -36,6 +36,3 @@ temp/
 .nx/cache
 .nx/workspace-data
 .nx/polygraph
-
-.claude/worktrees
-.claude/settings.local.json

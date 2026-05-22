@@ -1,10 +1,10 @@
-import { Component, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from "@angular/common";
+import { Component, output } from "@angular/core";
 
 @Component({
-  selector: 'app-about-modal',
-  imports: [CommonModule],
-  template: `
+	selector: "app-about-modal",
+	imports: [CommonModule],
+	template: `
     <div
       class="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
       (click)="onBackdropClick($event)"
@@ -127,18 +127,22 @@ import { CommonModule } from '@angular/common';
       </div>
     </div>
   `,
-  styles: []
+	styles: [],
 })
 export class AboutModalComponent {
-  readonly closeRequested = output<void>();
+	readonly closeRequested = output<void>();
 
-  onBackdropClick(event: MouseEvent): void {
-    if (event.target === event.currentTarget) {
-      this.closeRequested.emit();
-    }
-  }
+	onBackdropClick(event: MouseEvent): void {
+		if (event.target === event.currentTarget) {
+			this.closeRequested.emit();
+		}
+	}
 
-  openKofi(): void {
-    globalThis.open('https://ko-fi.com/xcutiboo', '_blank', 'noopener,noreferrer');
-  }
+	openKofi(): void {
+		globalThis.open(
+			"https://ko-fi.com/xcutiboo",
+			"_blank",
+			"noopener,noreferrer",
+		);
+	}
 }

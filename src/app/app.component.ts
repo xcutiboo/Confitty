@@ -1,23 +1,23 @@
-import { Component, HostListener, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ConfigStoreService } from '../services/config-store.service';
-import { CategoryNavigationComponent } from '../components/category-navigation/category-navigation.component';
-import { ConfigEditorComponent } from '../components/config-editor/config-editor.component';
-import { LivePreviewComponent } from '../components/live-preview/live-preview.component';
-import { HeaderComponent } from '../components/header/header.component';
-import { AboutModalComponent } from '../components/about-modal/about-modal.component';
+import { CommonModule } from "@angular/common";
+import { Component, HostListener, inject, signal } from "@angular/core";
+import { AboutModalComponent } from "../components/about-modal/about-modal.component";
+import { CategoryNavigationComponent } from "../components/category-navigation/category-navigation.component";
+import { ConfigEditorComponent } from "../components/config-editor/config-editor.component";
+import { HeaderComponent } from "../components/header/header.component";
+import { LivePreviewComponent } from "../components/live-preview/live-preview.component";
+import { ConfigStoreService } from "../services/config-store.service";
 
 @Component({
-  selector: 'app-root',
-  imports: [
-    CommonModule,
-    CategoryNavigationComponent,
-    ConfigEditorComponent,
-    LivePreviewComponent,
-    HeaderComponent,
-    AboutModalComponent
-  ],
-  template: `
+	selector: "app-root",
+	imports: [
+		CommonModule,
+		CategoryNavigationComponent,
+		ConfigEditorComponent,
+		LivePreviewComponent,
+		HeaderComponent,
+		AboutModalComponent,
+	],
+	template: `
     <div class="h-screen bg-kitty-darker text-kitty-text flex flex-col overflow-hidden">
       <app-header (aboutRequested)="showAbout.set(true)" />
 
@@ -82,7 +82,8 @@ import { AboutModalComponent } from '../components/about-modal/about-modal.compo
       </footer>
     </div>
   `,
-  styles: [`
+	styles: [
+		`
     :host { display: block; }
 
     @media (min-width: 1024px) {
@@ -93,26 +94,31 @@ import { AboutModalComponent } from '../components/about-modal/about-modal.compo
       .desktop-sidebar, .desktop-preview { display: none; }
       .mobile-sidebar,  .mobile-preview  { display: block; }
     }
-  `]
+  `,
+	],
 })
 export class AppComponent {
-  readonly configStore = inject(ConfigStoreService);
-  readonly showAbout = signal(false);
+	readonly configStore = inject(ConfigStoreService);
+	readonly showAbout = signal(false);
 
-  @HostListener('window:keydown.escape')
-  onEscape(): void {
-    if (this.configStore.sidebarOpen()) {
-      this.configStore.setSidebarOpen(false);
-    }
-    if (this.configStore.previewVisible()) {
-      this.configStore.setPreviewVisible(false);
-    }
-    if (this.showAbout()) {
-      this.showAbout.set(false);
-    }
-  }
+	@HostListener("window:keydown.escape")
+	onEscape(): void {
+		if (this.configStore.sidebarOpen()) {
+			this.configStore.setSidebarOpen(false);
+		}
+		if (this.configStore.previewVisible()) {
+			this.configStore.setPreviewVisible(false);
+		}
+		if (this.showAbout()) {
+			this.showAbout.set(false);
+		}
+	}
 
-  openKofi(): void {
-    globalThis.open('https://ko-fi.com/xcutiboo', '_blank', 'noopener,noreferrer');
-  }
+	openKofi(): void {
+		globalThis.open(
+			"https://ko-fi.com/xcutiboo",
+			"_blank",
+			"noopener,noreferrer",
+		);
+	}
 }

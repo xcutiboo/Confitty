@@ -1,27 +1,27 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KittyLayout } from '../../../models/kitty-types';
-import { KittyVersionService } from '../../../services/kitty-version.service';
-import { createFormHelper } from '../../../utils/form-helpers';
-import { ColorInputComponent } from '../../shared/color-input/color-input.component';
-import { FormSectionComponent } from '../../shared/form-section/form-section.component';
-import { NumberInputComponent } from '../../shared/number-input/number-input.component';
-import { SliderInputComponent } from '../../shared/slider-input/slider-input.component';
-import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.component';
+import { CommonModule } from "@angular/common";
+import { Component, computed, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import type { KittyLayout } from "../../../models/kitty-types";
+import { KittyVersionService } from "../../../services/kitty-version.service";
+import { createFormHelper } from "../../../utils/form-helpers";
+import { ColorInputComponent } from "../../shared/color-input/color-input.component";
+import { FormSectionComponent } from "../../shared/form-section/form-section.component";
+import { NumberInputComponent } from "../../shared/number-input/number-input.component";
+import { SliderInputComponent } from "../../shared/slider-input/slider-input.component";
+import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.component";
 
 @Component({
-  selector: 'app-window-layout-form',
-  imports: [
-    CommonModule,
-    FormsModule,
-    NumberInputComponent,
-    VersionBadgeComponent,
-    SliderInputComponent,
-    ColorInputComponent,
-    FormSectionComponent,
-  ],
-  template: `
+	selector: "app-window-layout-form",
+	imports: [
+		CommonModule,
+		FormsModule,
+		NumberInputComponent,
+		VersionBadgeComponent,
+		SliderInputComponent,
+		ColorInputComponent,
+		FormSectionComponent,
+	],
+	template: `
     <app-form-section
       title="Window Layout"
       description="Configure window sizing, tiling layouts, borders, and padding"
@@ -560,43 +560,59 @@ import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.
       }
     </app-form-section>
   `,
-  styles: [],
+	styles: [],
 })
 export class WindowLayoutFormComponent {
-  private readonly versionService = inject(KittyVersionService);
+	private readonly versionService = inject(KittyVersionService);
 
-  readonly helper = createFormHelper('window_layout');
-  readonly windowLayout = this.helper.state.asReadonly();
-  readonly placementStrategyAvailable = computed(() =>
-    this.versionService.isOptionAvailable('placement_strategy')
-  );
-  readonly windowDragToleranceAvailable = computed(() =>
-    this.versionService.isOptionAvailable('window_drag_tolerance')
-  );
-  readonly windowLogoScaleAvailable = computed(() =>
-    this.versionService.isOptionAvailable('window_logo_scale')
-  );
-  allLayouts: KittyLayout[] = ['Fat', 'Grid', 'Horizontal', 'Splits', 'Stack', 'Tall', 'Vertical'];
+	readonly helper = createFormHelper("window_layout");
+	readonly windowLayout = this.helper.state.asReadonly();
+	readonly placementStrategyAvailable = computed(() =>
+		this.versionService.isOptionAvailable("placement_strategy"),
+	);
+	readonly windowDragToleranceAvailable = computed(() =>
+		this.versionService.isOptionAvailable("window_drag_tolerance"),
+	);
+	readonly windowLogoScaleAvailable = computed(() =>
+		this.versionService.isOptionAvailable("window_logo_scale"),
+	);
+	allLayouts: KittyLayout[] = [
+		"Fat",
+		"Grid",
+		"Horizontal",
+		"Splits",
+		"Stack",
+		"Tall",
+		"Vertical",
+	];
 
-  isAllLayouts(): boolean {
-    return this.windowLayout().enabled_layouts.includes('*');
-  }
+	isAllLayouts(): boolean {
+		return this.windowLayout().enabled_layouts.includes("*");
+	}
 
-  toggleAllLayouts(): void {
-    this.helper.updateField('enabled_layouts', ['*']);
-  }
+	toggleAllLayouts(): void {
+		this.helper.updateField("enabled_layouts", ["*"]);
+	}
 
-  isLayoutEnabled(layout: KittyLayout): boolean {
-    return !this.isAllLayouts() && this.windowLayout().enabled_layouts.includes(layout);
-  }
+	isLayoutEnabled(layout: KittyLayout): boolean {
+		return (
+			!this.isAllLayouts() &&
+			this.windowLayout().enabled_layouts.includes(layout)
+		);
+	}
 
-  toggleLayout(layout: KittyLayout): void {
-    let layouts: KittyLayout[] = this.windowLayout().enabled_layouts.filter(l => l !== '*');
-    if (layouts.includes(layout)) {
-      layouts = layouts.filter(l => l !== layout);
-    } else {
-      layouts = [...layouts, layout];
-    }
-    this.helper.updateField('enabled_layouts', layouts.length === 0 ? ['*'] : layouts);
-  }
+	toggleLayout(layout: KittyLayout): void {
+		let layouts: KittyLayout[] = this.windowLayout().enabled_layouts.filter(
+			(l) => l !== "*",
+		);
+		if (layouts.includes(layout)) {
+			layouts = layouts.filter((l) => l !== layout);
+		} else {
+			layouts = [...layouts, layout];
+		}
+		this.helper.updateField(
+			"enabled_layouts",
+			layouts.length === 0 ? ["*"] : layouts,
+		);
+	}
 }

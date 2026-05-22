@@ -1,33 +1,33 @@
-import { Component, computed, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ConfigStoreService } from '../../services/config-store.service';
-import { readableOn } from './color-utils';
+import { CommonModule } from "@angular/common";
+import { Component, computed, inject } from "@angular/core";
+import { ConfigStoreService } from "../../services/config-store.service";
+import { readableOn } from "./color-utils";
 
 const SWATCHES: { key: keyof IndexedColors; label: string }[] = [
-  { key: 'color0',  label: '0' },
-  { key: 'color1',  label: '1' },
-  { key: 'color2',  label: '2' },
-  { key: 'color3',  label: '3' },
-  { key: 'color4',  label: '4' },
-  { key: 'color5',  label: '5' },
-  { key: 'color6',  label: '6' },
-  { key: 'color7',  label: '7' },
-  { key: 'color8',  label: '8' },
-  { key: 'color9',  label: '9' },
-  { key: 'color10', label: '10' },
-  { key: 'color11', label: '11' },
-  { key: 'color12', label: '12' },
-  { key: 'color13', label: '13' },
-  { key: 'color14', label: '14' },
-  { key: 'color15', label: '15' },
+	{ key: "color0", label: "0" },
+	{ key: "color1", label: "1" },
+	{ key: "color2", label: "2" },
+	{ key: "color3", label: "3" },
+	{ key: "color4", label: "4" },
+	{ key: "color5", label: "5" },
+	{ key: "color6", label: "6" },
+	{ key: "color7", label: "7" },
+	{ key: "color8", label: "8" },
+	{ key: "color9", label: "9" },
+	{ key: "color10", label: "10" },
+	{ key: "color11", label: "11" },
+	{ key: "color12", label: "12" },
+	{ key: "color13", label: "13" },
+	{ key: "color14", label: "14" },
+	{ key: "color15", label: "15" },
 ];
 
 type IndexedColors = Record<`color${number}`, string>;
 
 @Component({
-  selector: 'app-terminal-palette',
-  imports: [CommonModule],
-  template: `
+	selector: "app-terminal-palette",
+	imports: [CommonModule],
+	template: `
     <div class="palette">
       <div class="row">
         <span class="label">ANSI</span>
@@ -45,7 +45,8 @@ type IndexedColors = Record<`color${number}`, string>;
       </div>
     </div>
   `,
-  styles: [`
+	styles: [
+		`
     .palette {
       padding: 10px 14px;
     }
@@ -81,20 +82,23 @@ type IndexedColors = Record<`color${number}`, string>;
     .swatch:hover {
       transform: scale(1.05);
     }
-  `]
+  `,
+	],
 })
 export class TerminalPaletteComponent {
-  private readonly store = inject(ConfigStoreService);
+	private readonly store = inject(ConfigStoreService);
 
-  readonly swatches = SWATCHES;
+	readonly swatches = SWATCHES;
 
-  private readonly colors = computed(() => this.store.configState().colors as unknown as IndexedColors);
+	private readonly colors = computed(
+		() => this.store.configState().colors as unknown as IndexedColors,
+	);
 
-  value(key: keyof IndexedColors): string {
-    return this.colors()[key] ?? '#000000';
-  }
+	value(key: keyof IndexedColors): string {
+		return this.colors()[key] ?? "#000000";
+	}
 
-  textOn(key: keyof IndexedColors): string {
-    return readableOn(this.value(key));
-  }
+	textOn(key: keyof IndexedColors): string {
+		return readableOn(this.value(key));
+	}
 }
