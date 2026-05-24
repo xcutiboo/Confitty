@@ -307,6 +307,7 @@ export interface KittyColorConfig {
 	mark3_background: string;
 	dynamic_background_opacity: boolean;
 	transparent_background_colors: string[];
+	palette_generate: "fixed" | "yes";
 }
 
 export interface KittyAdvancedConfig {
@@ -335,6 +336,7 @@ export interface KittyAdvancedConfig {
 	forward_stdio: boolean;
 	menu_map: string[];
 	action_alias: string[];
+	auto_reload_config: number;
 }
 
 export interface KittyOSSpecificConfig {
