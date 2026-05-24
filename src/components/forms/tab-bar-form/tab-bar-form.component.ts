@@ -62,6 +62,27 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
             <option value="hidden">Hidden</option>
           </select>
         </div>
+
+        <div class="form-group" [class.opacity-60]="!progressBarAvailable()">
+          <label class="block text-sm font-medium text-kitty-text mb-2">
+            Progress Bar Position
+            @if (!progressBarAvailable()) {
+              <app-version-badge version="0.47.0" />
+            }
+          </label>
+          <select
+            [(ngModel)]="tabBar().progress_bar"
+            (ngModelChange)="helper.updateField('progress_bar', $event)"
+            [disabled]="!progressBarAvailable()"
+            class="w-full px-4 py-2 bg-kitty-bg border border-kitty-border rounded-lg text-kitty-text focus:outline-none focus:ring-2 focus:ring-kitty-primary disabled:opacity-50"
+          >
+            <option value="left">Left</option>
+            <option value="right">Right</option>
+            <option value="top">Top</option>
+            <option value="bottom">Bottom</option>
+            <option value="hidden">Hidden</option>
+          </select>
+        </div>
       </div>
 
       @if (helper.advancedMode()) {
@@ -528,6 +549,10 @@ export class TabBarFormComponent {
 	);
 	readonly tabBarDragThresholdAvailable = computed(() =>
 		this.versionService.isOptionAvailable("tab_bar_drag_threshold"),
+	);
+	
+	readonly progressBarAvailable = computed(() =>
+		this.versionService.isOptionAvailable("progress_bar"),
 	);
 
 	readonly tabBarEdges: KittyTabBarEdge[] = ["top", "bottom"];

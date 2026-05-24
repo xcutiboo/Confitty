@@ -1025,8 +1025,12 @@ export class KittyParserService {
 				config.os_specific.macos_traditional_fullscreen =
 					value === "yes" || value === "true";
 				break;
+			case "macos_fullscreen_ignore_safe_area_insets":
+				config.os_specific.macos_fullscreen_ignore_safe_area_insets =
+					value === "yes" || value === "true";
+				break;
 			case "macos_show_window_title_in":
-				config.os_specific.macos_show_window_title_in = value;
+				config.os_specific.macos_show_window_title_in = value as "all" | "window" | "menubar" | "none";
 				break;
 			case "macos_menubar_title_max_length":
 				config.os_specific.macos_menubar_title_max_length = Number.parseInt(
