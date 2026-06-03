@@ -1146,6 +1146,12 @@ export class KittyParserService {
 			case "auto_reload_config":
 				config.advanced.auto_reload_config = Number.parseFloat(value);
 				break;
+			case "notify_on_cmd_finish":
+				config.advanced.notify_on_cmd_finish = value;
+				break;
+			case "terminfo_type":
+				config.advanced.terminfo_type = value as "path" | "direct" | "none";
+				break;
 			default:
 				config.unrecognized_directives.push(`${key} ${value}`);
 		}

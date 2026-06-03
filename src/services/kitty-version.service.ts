@@ -303,6 +303,14 @@ export class KittyVersionService {
 			description: "Directive to clear all keyboard shortcuts",
 			warning: "Place at top of keybindings section",
 		},
+		notify_on_cmd_finish: {
+			minVersion: "0.31.0",
+			description: "Notify when command finishes",
+		},
+		terminfo_type: {
+			minVersion: "0.28.0",
+			description: "Terminfo type",
+		},
 		clear_all_mouse_actions: {
 			minVersion: "0.23.0",
 			description: "Directive to clear all mouse mappings",
