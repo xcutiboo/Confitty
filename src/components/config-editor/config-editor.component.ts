@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, signal } from "@angular/core";
-import { ConfigStoreService } from "../../services/config-store.service";
+import type { ConfigStoreService } from "../../services/config-store.service";
 import { AdvancedFormComponent } from "../forms/advanced-form/advanced-form.component";
 import { BellFormComponent } from "../forms/bell-form/bell-form.component";
 import { ColorsFormComponent } from "../forms/colors-form/colors-form.component";

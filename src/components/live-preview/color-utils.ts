@@ -3,7 +3,7 @@ const LUMA_G = 0.7152;
 const LUMA_B = 0.0722;
 
 function normalizeHex(hex: string): string {
-	if (!hex || !hex.startsWith("#")) return hex;
+	if (!hex?.startsWith("#")) return hex;
 	const body = hex.slice(1);
 	if (body.length === 3) {
 		return `#${body[0]}${body[0]}${body[1]}${body[1]}${body[2]}${body[2]}`;
