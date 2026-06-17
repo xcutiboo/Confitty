@@ -43,7 +43,7 @@ const CHROME_PADDING_Y = 6;
       width: var(--light-size);
       height: var(--light-size);
       border-radius: 50%;
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18);
+      border: 1px solid rgba(0, 0, 0, 0.12);
     }
     .title {
       flex: 1;
