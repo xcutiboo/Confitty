@@ -40,14 +40,14 @@ import { Component, output } from "@angular/core";
           <div>
             <h3 class="text-sm font-semibold text-kitty-primary uppercase tracking-wider mb-2">About Confitty</h3>
             <p class="text-kitty-text text-sm leading-relaxed">
-              Confitty is an advanced visual configuration builder tailored for the Kitty terminal. It provides a real-time, side-by-side rendering environment allowing you to accurately preview layout, font metrics, and color modifications before generating your <code class="text-kitty-primary bg-kitty-bg px-1.5 py-0.5 rounded text-xs font-mono">kitty.conf</code> output.
+              Confitty is a visual configuration builder that saves you from reading Kitty Terminal's 400+ config options. It provides a real-time, side-by-side preview environment so you can tweak layout, font metrics, and colors before generating a clean, diff-only <code class="text-kitty-primary bg-kitty-bg px-1.5 py-0.5 rounded text-xs font-mono">kitty.conf</code> output.
             </p>
           </div>
 
           <div class="border-t border-kitty-border pt-5">
             <h3 class="text-sm font-semibold text-kitty-primary uppercase tracking-wider mb-3">The Mascot</h3>
             <p class="text-kitty-text text-sm leading-relaxed">
-              Our logo is a stylized tribute to Kitty's ghost cat mascot, re-imagined with a vibrant, high-contrast palette and geometric confetti elements reflecting the application's design system.
+              Our mascot is a stylized tribute to Kitty's ghost cat—re-imagined with a high-contrast palette and geometric confetti. She's here to make terminal customization a little more colorful and a lot less tedious.
             </p>
             <p class="text-kitty-text-dim text-xs mt-3">
               This application is an independent, community-driven project and is completely unaffiliated with the official Kitty Terminal maintainers.
