@@ -19,7 +19,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 		FormSectionComponent,
 	],
 	template: `
-    <app-form-section title="Bell" description="Configure audio alerts, visual flash, and system bell behavior">
+    <app-form-section title="Bell" description="Configure audio alerts, visual flash, and system bell behavior" icon="info">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="form-group">
           <label class="flex items-center gap-3 cursor-pointer">

@@ -25,6 +25,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
     <app-form-section
       title="Window Layout"
       description="Configure window sizing, tiling layouts, borders, and padding"
+      icon="sliders"
     >
       <div class="form-group">
         <label class="flex items-center gap-3 cursor-pointer">
