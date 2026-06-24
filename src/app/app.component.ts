@@ -29,7 +29,7 @@ import { ConfigStoreService } from "../services/config-store.service";
         <!-- Mobile overlay backdrop -->
         @if (configStore.sidebarOpen()) {
           <div
-            class="fixed inset-0 bg-black/50 z-30 lg:hidden animate-fade-in will-change-opacity"
+            class="fixed inset-0 bg-kitty-darker/60 backdrop-blur-sm z-30 lg:hidden animate-fade-in will-change-opacity"
             (click)="configStore.setSidebarOpen(false)"
           ></div>
         }
