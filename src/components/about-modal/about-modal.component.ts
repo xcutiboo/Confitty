@@ -47,7 +47,7 @@ import { Component, output } from "@angular/core";
           <div class="border-t border-kitty-border pt-5">
             <h3 class="text-sm font-semibold text-kitty-primary uppercase tracking-wider mb-3">The Mascot</h3>
             <p class="text-kitty-text text-sm leading-relaxed">
-              Our mascot is a stylized tribute to Kitty's ghost cat—re-imagined with a high-contrast palette and geometric confetti. She's here to make terminal customization a little more colorful and a lot less tedious.
+              Our mascot is a fun take on Kitty's ghost cat. We gave her a high-contrast palette and geometric confetti to make customizing your terminal more colorful and a lot less annoying.
             </p>
             <p class="text-kitty-text-dim text-xs mt-3">
               This application is an independent, community-driven project and is completely unaffiliated with the official Kitty Terminal maintainers.
