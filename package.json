@@ -30,7 +30,7 @@
 		"build:dev": "nx build --configuration development",
 		"build:prod": "nx build --configuration production",
 		"typecheck": "tsc --noEmit",
-		"postinstall": "sed -i 's/Your AI agent configuration is outdated. Run \"nx configure-ai-agents\" to update./ /g' node_modules/nx/src/tasks-runner/run-command.js || true"
+		"postinstall": "sed -i 's/Your .* configuration is outdated.*//g' node_modules/nx/src/tasks-runner/run-command.js || true"
 	},
 	"dependencies": {
 		"@angular/common": "21.2.17",

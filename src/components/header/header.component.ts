@@ -8,10 +8,11 @@ import { KittyVersionService } from "../../services/kitty-version.service";
 import { SearchService } from "../../services/search.service";
 import { ThemeService } from "../../services/theme.service";
 import { SearchBarComponent } from "../search-bar/search-bar.component";
+import { TransientBadgeComponent } from "../shared/transient-badge/transient-badge.component";
 
 @Component({
 	selector: "app-header",
-	imports: [CommonModule, FormsModule, SearchBarComponent],
+	imports: [CommonModule, FormsModule, SearchBarComponent, TransientBadgeComponent],
 	template: `
     <header class="h-14 sm:h-16 lg:h-20 bg-kitty-surface border-b border-kitty-border flex items-center justify-between px-3 sm:px-4 lg:px-6 shadow-sm">
       <!-- Left: Logo and mobile menu -->
@@ -31,7 +32,10 @@ import { SearchBarComponent } from "../search-bar/search-bar.component";
 
         <img src="assets/confitty.svg" alt="" class="w-9 h-9 lg:w-10 lg:h-10 flex-shrink-0" onerror="this.style.display='none'" />
         <div class="flex flex-col leading-tight">
-          <h1 class="text-base sm:text-lg lg:text-xl font-bold text-kitty-primary tracking-tight">Confitty</h1>
+          <div class="flex items-center gap-2.5">
+            <h1 class="text-base sm:text-lg lg:text-xl font-bold text-kitty-primary tracking-tight">Confitty</h1>
+            <app-transient-badge [duration]="10000" colorClass="bg-kitty-primary text-kitty-dark">New v1.1.0!</app-transient-badge>
+          </div>
           <span class="hidden xl:inline text-[10px] lg:text-xs text-kitty-text-dim">
             Visual configuration builder for Kitty
           </span>
