@@ -7,23 +7,25 @@
 
   <p>
     <a href="https://github.com/xcutiboo/Confitty/actions">
-      <img src="https://img.shields.io/github/actions/workflow/status/xcutiboo/Confitty/ci.yml?branch=confitty&style=for-the-badge&label=build" alt="Build Status">
+      <img src="https://img.shields.io/github/actions/workflow/status/xcutiboo/Confitty/ci.yml?branch=confitty&style=for-the-badge&logo=githubactions&logoColor=white&color=2ea44f&label=Build" alt="Build Status">
     </a>
-        <a href="https://github.com/xcutiboo/Confitty/releases/latest">
-      <img src="https://img.shields.io/github/v/release/xcutiboo/Confitty?style=for-the-badge&color=FFB5C6&label=release" alt="Latest Release">
+    <a href="https://github.com/xcutiboo/Confitty/releases/latest">
+      <img src="https://img.shields.io/github/v/release/xcutiboo/Confitty?style=for-the-badge&logo=github&logoColor=white&color=FFB5C6&label=Release" alt="Latest Release">
     </a>
     <a href="https://confitty.app">
-      <img src="https://img.shields.io/badge/Live%20Demo-FF6B9D?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Live Demo">
+      <img src="https://img.shields.io/badge/Live_Demo-confitty.app-FF6B9D?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Live Demo">
     </a>
     <a href="./LICENSE">
-      <img src="https://img.shields.io/badge/License-MIT-5A4D50?style=for-the-badge" alt="MIT License">
+      <img src="https://img.shields.io/github/license/xcutiboo/Confitty?style=for-the-badge&logo=opensourceinitiative&logoColor=white&color=5A4D50" alt="MIT License">
     </a>
   </p>
 
   <p>
-    <img src="https://img.shields.io/badge/Angular-21-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular 21">
-    <img src="https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
-    <img src="https://img.shields.io/badge/Bun-1.3+-FDF8F9?style=for-the-badge&logo=bun&logoColor=black" alt="Bun 1.3+">
+    <img src="https://img.shields.io/badge/Angular_21-DD0031?style=for-the-badge&logo=angular&logoColor=white" alt="Angular 21">
+    <img src="https://img.shields.io/badge/TypeScript_6-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
+    <img src="https://img.shields.io/badge/Bun_1.3-FDF8F9?style=for-the-badge&logo=bun&logoColor=black" alt="Bun 1.3+">
+    <img src="https://img.shields.io/badge/Nx_22-143055?style=for-the-badge&logo=nx&logoColor=white" alt="Nx 22">
+    <img src="https://img.shields.io/badge/TailwindCSS_3-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS 3">
   </p>
 
   <p>
