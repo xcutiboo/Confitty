@@ -7,7 +7,8 @@ import { TerminalChromeComponent } from './terminal-chrome.component';
 import { TerminalTabBarComponent } from './terminal-tab-bar.component';
 import { TerminalScreenComponent } from './terminal-screen.component';
 import { PREVIEW_TABS } from './terminal-session';
-import { FONT_SIZE_PT, LINE_HEIGHT_RATIO, TIMINGS, WALLPAPER } from './preview-metrics';
+import { FONT_SIZE_PT, TIMINGS, WALLPAPER } from './preview-metrics';
+import { measureCell } from './cell-metrics';
 
 const TAB_COUNT = PREVIEW_TABS.length;
 
@@ -54,12 +55,11 @@ const TAB_COUNT = PREVIEW_TABS.length;
       min-height: 0;
       display: flex;
       isolation: isolate;
-      border-radius: 10px;
+      border-radius: 6px;
       overflow: hidden;
       box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.04) inset,
         0 16px 48px -24px rgba(0, 0, 0, 0.55),
-        0 0 0 1px rgba(0, 0, 0, 0.18);
+        0 0 0 1px rgba(0, 0, 0, 0.4);
     }
     .wallpaper {
       position: absolute;
@@ -111,6 +111,7 @@ export class TerminalWindowComponent {
   private readonly windowCfg = computed(() => this.store.configState().window_layout);
 
   constructor() {
+    this.fontPresets.loadWebFont('JetBrains Mono');
     effect(() => {
       const family = this.fonts().font_family;
       this.fontPresets.loadWebFont(family);
@@ -141,21 +142,33 @@ export class TerminalWindowComponent {
     const px = ptToPx(pt);
     const opacity = colors.background_opacity ?? 1;
     const blur = colors.background_blur ?? 0;
-    const borderWidth = this.parseBorderWidth(w.window_border_width);
+    const showBorder = this.shouldShowBorder(w);
+    const borderWidth = showBorder ? this.parseBorderWidth(w.window_border_width) : 0;
     const ligatures = fonts.disable_ligatures === 'always' ? 'none' : 'contextual';
+    const features = (fonts.font_features ?? [])
+      .flatMap(line => line.trim().split(/\s+/).slice(1))
+      .filter(tag => tag.length > 0)
+      .map(tag => {
+        const off = tag.startsWith('-');
+        const on  = tag.startsWith('+');
+        const name = (off || on) ? tag.slice(1) : tag;
+        return `"${name}" ${off ? 0 : 1}`;
+      })
+      .join(', ');
 
     return {
       backgroundColor: rgba(colors.background, opacity),
       color: colors.foreground,
-      fontFamily: `"${fonts.font_family}", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`,
+      fontFamily: `"${fonts.font_family}", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`,
       fontSize: `${px}px`,
-      lineHeight: String(LINE_HEIGHT_RATIO),
+      lineHeight: `${measureCell(fonts.font_family, px).height}px`,
       fontVariantLigatures: ligatures,
+      fontFeatureSettings: features || 'normal',
       fontKerning: 'none',
       textRendering: 'geometricPrecision',
       WebkitFontSmoothing: 'antialiased',
       MozOsxFontSmoothing: 'grayscale',
-      borderRadius: '10px',
+      borderRadius: '6px',
       outline: borderWidth ? `${borderWidth}px solid ${w.active_border_color}` : 'none',
       outlineOffset: borderWidth ? `-${borderWidth}px` : '0',
       backdropFilter: blur > 0 && opacity < 1 ? `blur(${blur}px)` : 'none',
@@ -172,26 +185,34 @@ export class TerminalWindowComponent {
 
   readonly canvasStyles = computed(() => {
     const w = this.windowCfg();
-    const padding = w.single_window_padding_width >= 0
+    const padRaw = w.single_window_padding_width >= 0
       ? w.single_window_padding_width
       : w.window_padding_width;
-    const tint = this.colors().background_tint;
-    const tintColor = tint > 0
-      ? `rgba(0, 0, 0, ${Math.min(0.8, tint)})`
-      : 'transparent';
+    const padPx = Math.max(0, ptToPx(padRaw));
+    const marginRaw = w.single_window_margin_width >= 0
+      ? w.single_window_margin_width
+      : w.window_margin_width;
+    const marginPx = Math.max(0, ptToPx(marginRaw));
     return {
-      padding: `${Math.max(10, padding + 14)}px ${Math.max(14, padding + 18)}px`,
-      backgroundColor: tintColor,
+      paddingBlock: `${padPx}px`,
+      paddingInline: `${padPx}px`,
+      marginBlock: `${marginPx}px`,
+      marginInline: `${marginPx}px`,
     } as Record<string, string>;
   });
+
+  private shouldShowBorder(w: ReturnType<typeof this.windowCfg>): boolean {
+    const explicit = (w as unknown as { draw_window_borders_for_single_window?: boolean }).draw_window_borders_for_single_window;
+    return explicit === true;
+  }
 
   private parseBorderWidth(value: string | undefined): number {
     if (!value) return 0;
     const trimmed = value.trim();
     if (!trimmed || trimmed === '0' || trimmed.startsWith('0pt') || trimmed === '0px') return 0;
-    if (trimmed.endsWith('pt')) return Math.round(ptToPx(Number.parseFloat(trimmed)));
-    if (trimmed.endsWith('px')) return Math.round(Number.parseFloat(trimmed));
+    if (trimmed.endsWith('pt')) return Math.max(1, Math.round(ptToPx(Number.parseFloat(trimmed))));
+    if (trimmed.endsWith('px')) return Math.max(1, Math.round(Number.parseFloat(trimmed)));
     const n = Number.parseFloat(trimmed);
-    return Number.isFinite(n) ? Math.round(n) : 0;
+    return Number.isFinite(n) ? Math.max(0, Math.round(n)) : 0;
   }
 }

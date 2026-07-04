@@ -61,3 +61,15 @@ export function readableOn(hex: string): string {
 export function ptToPx(pt: number): number {
   return pt * (96 / 72);
 }
+
+export function mix(a: string, b: string, t: number): string {
+  const ra = toRgb(a);
+  const rb = toRgb(b);
+  if (!ra || !rb) return a;
+  const k = Math.max(0, Math.min(1, t));
+  return toHex(
+    ra[0] + (rb[0] - ra[0]) * k,
+    ra[1] + (rb[1] - ra[1]) * k,
+    ra[2] + (rb[2] - ra[2]) * k,
+  );
+}

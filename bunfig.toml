@@ -1,6 +1,7 @@
 [install]
 # Always use latest compatible versions
 cache = true
+minimumReleaseAge = 604800
 frozen-lockfile = false
 # Prefer exact versions for reproducibility
 exact = true

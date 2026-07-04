@@ -97,4 +97,25 @@ export const SAMPLE_SESSION: Line[] = [
 
   { spans: [...prompt('~/dotfiles'), ansi('curl', 'color2', { bold: true }), fg(' -sI '), fg('https://sw.kovidgoyal.net/kitty/', { url: true }), fg(' | head -1')] },
   { spans: [ansi('HTTP/2 200', 'color2', { italic: true })] },
+
+  { spans: [ansi('┌─────────────┬───────────┐', 'color8')] },
+  { spans: [
+    ansi('│ ', 'color8'),
+    ansi('font', 'color6', { bold: true }),
+    dim('        '),
+    ansi('│ ', 'color8'),
+    ansi('JetBrains', 'color3'),
+    fg(' '),
+    ansi('│', 'color8'),
+  ] },
+  { spans: [
+    ansi('│ ', 'color8'),
+    ansi('ligatures', 'color6', { bold: true }),
+    fg('   '),
+    ansi('│ ', 'color8'),
+    ansi('on', 'color2'),
+    dim('        '),
+    ansi('│', 'color8'),
+  ] },
+  { spans: [ansi('└─────────────┴───────────┘', 'color8')] },
 ];

@@ -4,6 +4,7 @@ import { ConfigStoreService } from '../../services/config-store.service';
 import type { KittyColorConfig } from '../../models/kitty-types';
 import { SAMPLE_SESSION, type AnsiKey, type Line, type Span } from './terminal-session';
 import { TerminalCursorComponent } from './terminal-cursor.component';
+import { mix } from './color-utils';
 
 const ANSI_KEYS: readonly AnsiKey[] = [
   'color0', 'color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7',
@@ -91,9 +92,6 @@ function promptSpans(path: string): Span[] {
       display: block;
       min-height: 1em;
     }
-    .selected {
-      padding: 0 0.05em;
-    }
     .url {
       text-underline-offset: 2px;
     }
@@ -142,26 +140,32 @@ export class TerminalScreenComponent {
 
   spanStyles(span: Span): Record<string, string> {
     const colors = this.colors();
-    const style: Record<string, string> = {
-      color: this.resolveColor(colors, span.color),
-    };
+    let fg = this.resolveColor(colors, span.color);
+    if (span.dim) fg = mix(colors.background, fg, colors.dim_opacity);
+    const style: Record<string, string> = { color: fg };
 
     if (span.bold)   style['fontWeight'] = '700';
     if (span.italic) style['fontStyle']  = 'italic';
-    if (span.dim)    style['opacity']    = String(colors.dim_opacity);
 
     if (span.url) {
       const m = this.mouse();
       style['color'] = m.url_color;
-      style['textDecorationLine']  = 'underline';
-      style['textDecorationStyle'] = this.urlDecoration(m.url_style);
-      style['textDecorationColor'] = m.url_color;
       style['cursor'] = 'pointer';
+      if (m.url_style !== 'none') {
+        style['textDecorationLine']  = 'underline';
+        style['textDecorationStyle'] = this.urlDecoration(m.url_style);
+        style['textDecorationColor'] = m.url_color;
+        style['textUnderlineOffset'] = '2px';
+      }
     }
 
     if (span.selected) {
-      style['color']           = colors.selection_foreground;
-      style['backgroundColor'] = colors.selection_background;
+      const selFg = colors.selection_foreground;
+      const selBg = colors.selection_background;
+      if (selBg && selBg !== 'none') style['backgroundColor'] = selBg;
+      else style['backgroundColor'] = colors.foreground;
+      if (selFg && selFg !== 'none') style['color'] = selFg;
+      else style['color'] = colors.background;
     }
 
     return style;

@@ -67,6 +67,8 @@ export interface KittyCursorConfig {
   cursor_trail_start_threshold: number;
 }
 
+export type KittyScrollbarMode = 'scrolled' | 'always' | 'never' | 'hovered' | 'scrolled-and-hovered';
+
 export interface KittyScrollbackConfig {
   scrollback_lines: number;
   scrollback_pager: string;
@@ -77,7 +79,20 @@ export interface KittyScrollbackConfig {
   touch_scroll_multiplier: number;
   pixel_scroll: boolean;
   momentum_scroll: boolean;
-  scrollbar: string;
+  scrollbar: KittyScrollbarMode;
+  scrollbar_gap: number;
+  scrollbar_handle_color: string;
+  scrollbar_handle_opacity: number;
+  scrollbar_hitbox_expansion: number;
+  scrollbar_hover_width: number;
+  scrollbar_interactive: boolean;
+  scrollbar_jump_on_click: boolean;
+  scrollbar_min_handle_height: number;
+  scrollbar_radius: number;
+  scrollbar_track_color: string;
+  scrollbar_track_hover_opacity: number;
+  scrollbar_track_opacity: number;
+  scrollbar_width: number;
 }
 
 export interface KittyMouseConfig {
@@ -152,6 +167,15 @@ export interface KittyWindowLayoutConfig {
   confirm_os_window_close_count_background: boolean;
   startup_window: string;
   window_drag_tolerance: number;
+  window_title_bar: 'top' | 'bottom';
+  window_title_bar_active_background: string;
+  window_title_bar_active_foreground: string;
+  window_title_bar_inactive_background: string;
+  window_title_bar_inactive_foreground: string;
+  window_title_bar_align: 'left' | 'center' | 'right';
+  window_title_bar_min_windows: number;
+  window_title_template: string;
+  active_window_title_template: string;
 }
 
 export interface KittyTabBarConfig {
@@ -179,6 +203,9 @@ export interface KittyTabBarConfig {
   tab_bar_margin_color: string;
   tab_bar_hide_path: string;
   tab_bar_drag_threshold: number;
+  tab_bar_filter: string;
+  tab_bar_show_new_tab_button: boolean;
+  progress_bar: 'left' | 'right' | 'top' | 'bottom' | 'hidden';
 }
 
 export interface KittyColorConfig {
