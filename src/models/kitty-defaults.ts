@@ -240,6 +240,8 @@ export const DEFAULT_KITTY_CONFIG: KittyConfigAST = {
 		menu_map: [],
 		action_alias: [],
 		auto_reload_config: -1,
+		notify_on_cmd_finish: "never",
+		terminfo_type: "path",
 	},
 	os_specific: {
 		wayland_titlebar_color: "system",
