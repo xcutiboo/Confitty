@@ -56,34 +56,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
             [step]="0.1"
             [disabled]="!mapTimeoutAvailable()"
           />
-
-        <div class="border-t border-kitty-border pt-6">
-          <h3 class="text-lg font-semibold text-kitty-text mb-4">Keyboard Mappings</h3>
-          <p class="text-kitty-text-dim text-sm mb-4">
-            Keyboard shortcuts are parsed from imported kitty.conf files.
-            Direct support for editing shortcuts is planned for a future release.
-          </p>
-
-          @if (keyboardShortcuts().length > 0) {
-            <div class="space-y-2">
-              @for (shortcut of keyboardShortcuts(); track shortcut.chord + shortcut.action) {
-                <div class="flex items-center justify-between bg-kitty-bg rounded px-4 py-2 border border-kitty-border">
-                  <code class="font-mono text-sm text-kitty-accent">{{ shortcut.chord }}</code>
-                  <span class="text-sm text-kitty-text">{{ shortcut.action }}</span>
-                </div>
-              }
-            </div>
-          } @else {
-          }
         </div>
-        <app-number-input
-          [(ngModel)]="advanced().map_timeout"
-          (ngModelChange)="updateAdvancedField('map_timeout', $event)"
-          [min]="0"
-          [step]="0.1"
-          [disabled]="!mapTimeoutAvailable()"
-        />
-      </div>
 
       <div class="border-t border-kitty-border pt-6">
         <h3 class="text-lg font-semibold text-kitty-text mb-4">Keyboard Mappings</h3>

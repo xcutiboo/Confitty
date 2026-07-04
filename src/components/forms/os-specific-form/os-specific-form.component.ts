@@ -302,7 +302,6 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 	styles: [],
 })
 export class OsSpecificFormComponent {
-	private readonly configStore = inject(ConfigStoreService);
 	private readonly versionService = inject(KittyVersionService);
 
 	readonly helper = createFormHelper("os_specific");
