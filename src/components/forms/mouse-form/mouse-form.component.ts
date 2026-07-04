@@ -1,25 +1,25 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KittyMouseConfig } from '../../../models/kitty-types';
-import { KittyVersionService } from '../../../services/kitty-version.service';
-import { createFormHelper } from '../../../utils/form-helpers';
-import { ColorInputComponent } from '../../shared/color-input/color-input.component';
-import { FormSectionComponent } from '../../shared/form-section/form-section.component';
-import { NumberInputComponent } from '../../shared/number-input/number-input.component';
-import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.component';
+import { CommonModule } from "@angular/common";
+import { Component, computed, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import type { KittyMouseConfig } from "../../../models/kitty-types";
+import { KittyVersionService } from "../../../services/kitty-version.service";
+import { createFormHelper } from "../../../utils/form-helpers";
+import { ColorInputComponent } from "../../shared/color-input/color-input.component";
+import { FormSectionComponent } from "../../shared/form-section/form-section.component";
+import { NumberInputComponent } from "../../shared/number-input/number-input.component";
+import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.component";
 
 @Component({
-  selector: 'app-mouse-form',
-  imports: [
-    CommonModule,
-    FormsModule,
-    NumberInputComponent,
-    ColorInputComponent,
-    VersionBadgeComponent,
-    FormSectionComponent,
-  ],
-  template: `
+	selector: "app-mouse-form",
+	imports: [
+		CommonModule,
+		FormsModule,
+		NumberInputComponent,
+		ColorInputComponent,
+		VersionBadgeComponent,
+		FormSectionComponent,
+	],
+	template: `
     <app-form-section
       title="Mouse"
       description="Configure mouse interactions, URL detection, and clipboard behavior"
@@ -394,33 +394,33 @@ import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.
       }
     </app-form-section>
   `,
-  styles: [],
+	styles: [],
 })
 export class MouseFormComponent {
-  private readonly versionService = inject(KittyVersionService);
-  readonly helper = createFormHelper('mouse');
-  readonly mouse = this.helper.state.asReadonly();
-  readonly clearSelectionOnClipboardLossAvailable = computed(() =>
-    this.versionService.isOptionAvailable('clear_selection_on_clipboard_loss')
-  );
+	private readonly versionService = inject(KittyVersionService);
+	readonly helper = createFormHelper("mouse");
+	readonly mouse = this.helper.state.asReadonly();
+	readonly clearSelectionOnClipboardLossAvailable = computed(() =>
+		this.versionService.isOptionAvailable("clear_selection_on_clipboard_loss"),
+	);
 
-  setUrlPrefixes(value: string): void {
-    const prefixes = value
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean);
-    this.helper.updateField('url_prefixes', prefixes);
-  }
+	setUrlPrefixes(value: string): void {
+		const prefixes = value
+			.split(",")
+			.map((s) => s.trim())
+			.filter(Boolean);
+		this.helper.updateField("url_prefixes", prefixes);
+	}
 
-  setPasteActions(value: string): void {
-    const actions = value
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean);
-    this.helper.updateField('paste_actions', actions);
-  }
+	setPasteActions(value: string): void {
+		const actions = value
+			.split(",")
+			.map((s) => s.trim())
+			.filter(Boolean);
+		this.helper.updateField("paste_actions", actions);
+	}
 
-  updateColorMouse(key: keyof KittyMouseConfig, value: string): void {
-    this.helper.updateField(key, value);
-  }
+	updateColorMouse(key: keyof KittyMouseConfig, value: string): void {
+		this.helper.updateField(key, value);
+	}
 }

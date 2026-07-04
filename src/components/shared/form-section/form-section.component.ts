@@ -1,8 +1,8 @@
-import { Component, input } from '@angular/core';
+import { Component, input } from "@angular/core";
 
 @Component({
-  selector: 'app-form-section',
-  template: `
+	selector: "app-form-section",
+	template: `
     <section class="space-y-6">
       <header>
         <h2 class="text-2xl font-bold text-kitty-primary mb-2">{{ title() }}</h2>
@@ -16,6 +16,6 @@ import { Component, input } from '@angular/core';
   `,
 })
 export class FormSectionComponent {
-  readonly title = input.required<string>();
-  readonly description = input.required<string>();
+	readonly title = input.required<string>();
+	readonly description = input.required<string>();
 }

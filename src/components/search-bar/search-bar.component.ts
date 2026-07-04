@@ -1,14 +1,21 @@
-import { Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { SearchService } from '../../services/search.service';
-import type { SearchResult } from '../../search/search.types';
+import { CommonModule } from "@angular/common";
+import {
+	Component,
+	computed,
+	type ElementRef,
+	inject,
+	signal,
+	ViewChild,
+} from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import type { SearchResult } from "../../search/search.types";
+import { SearchService } from "../../services/search.service";
 
 @Component({
-  selector: 'app-search-bar',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  template: `
+	selector: "app-search-bar",
+	standalone: true,
+	imports: [CommonModule, FormsModule],
+	template: `
     <div class="relative">
       <div class="relative">
         <svg
@@ -107,102 +114,104 @@ import type { SearchResult } from '../../search/search.types';
       }
     </div>
   `,
-  styles: [`
+	styles: [
+		`
     mark {
       background: rgb(var(--kitty-primary) / 0.18);
       color: rgb(var(--kitty-primary));
     }
-  `]
+  `,
+	],
 })
 export class SearchBarComponent {
-  @ViewChild('inputEl') inputEl!: ElementRef<HTMLInputElement>;
+	@ViewChild("inputEl") inputEl!: ElementRef<HTMLInputElement>;
 
-  readonly searchService = inject(SearchService);
+	readonly searchService = inject(SearchService);
 
-  inputValue = '';
-  readonly isFocused = signal(false);
-  readonly activeIndex = signal(-1);
+	inputValue = "";
+	readonly isFocused = signal(false);
+	readonly activeIndex = signal(-1);
 
-  readonly isOpen = computed(() =>
-    this.isFocused() && this.searchService.results().length > 0
-  );
+	readonly isOpen = computed(
+		() => this.isFocused() && this.searchService.results().length > 0,
+	);
 
-  onInput(value: string): void {
-    this.activeIndex.set(-1);
-    this.searchService.search(value);
-  }
+	onInput(value: string): void {
+		this.activeIndex.set(-1);
+		this.searchService.search(value);
+	}
 
-  onBlur(): void {
-    setTimeout(() => this.isFocused.set(false), 150);
-  }
+	onBlur(): void {
+		setTimeout(() => this.isFocused.set(false), 150);
+	}
 
-  onKeydown(event: KeyboardEvent): void {
-    const results = this.searchService.results();
+	onKeydown(event: KeyboardEvent): void {
+		const results = this.searchService.results();
 
-    switch (event.key) {
-      case 'ArrowDown': {
-        event.preventDefault();
-        this.activeIndex.update(i => Math.min(i + 1, results.length - 1));
-        break;
-      }
+		switch (event.key) {
+			case "ArrowDown": {
+				event.preventDefault();
+				this.activeIndex.update((i) => Math.min(i + 1, results.length - 1));
+				break;
+			}
 
-      case 'ArrowUp': {
-        event.preventDefault();
-        this.activeIndex.update(i => Math.max(i - 1, -1));
-        break;
-      }
+			case "ArrowUp": {
+				event.preventDefault();
+				this.activeIndex.update((i) => Math.max(i - 1, -1));
+				break;
+			}
 
-      case 'Enter': {
-        event.preventDefault();
-        const idx = this.activeIndex();
-        if (idx >= 0 && idx < results.length) {
-          const result = results[idx];
-          if (result) {
-            this.onSelect(result);
-          }
-        } else if (results.length > 0) {
-          const firstResult = results[0];
-          if (firstResult) {
-            this.onSelect(firstResult);
-          }
-        }
-        break;
-      }
+			case "Enter": {
+				event.preventDefault();
+				const idx = this.activeIndex();
+				if (idx >= 0 && idx < results.length) {
+					const result = results[idx];
+					if (result) {
+						this.onSelect(result);
+					}
+				} else if (results.length > 0) {
+					const firstResult = results[0];
+					if (firstResult) {
+						this.onSelect(firstResult);
+					}
+				}
+				break;
+			}
 
-      case 'Escape':
-        this.clearInput();
-        this.inputEl?.nativeElement.blur();
-        break;
-    }
-  }
+			case "Escape":
+				this.clearInput();
+				this.inputEl?.nativeElement.blur();
+				break;
+		}
+	}
 
-  onSelect(result: SearchResult): void {
-    this.searchService.select(result);
-    this.inputValue = '';
-    this.isFocused.set(false);
-    this.activeIndex.set(-1);
-  }
+	onSelect(result: SearchResult): void {
+		this.searchService.select(result);
+		this.inputValue = "";
+		this.isFocused.set(false);
+		this.activeIndex.set(-1);
+	}
 
-  clearInput(): void {
-    this.inputValue = '';
-    this.searchService.clear();
-    this.activeIndex.set(-1);
-  }
+	clearInput(): void {
+		this.inputValue = "";
+		this.searchService.clear();
+		this.activeIndex.set(-1);
+	}
 
-  getCategoryIcon(category: string): string {
-    const icons: Record<string, string> = {
-      fonts:         '✦',
-      cursor:        '▌',
-      scrollback:    '↕',
-      mouse:         '⊙',
-      performance:   '⚡',
-      bell:          '◎',
-      window_layout: '▣',
-      tab_bar:       '▤',
-      colors:        '◈',
-      advanced:      '⚙',
-      os_specific:   '⊞',
-    };
-    return icons[category] ?? '○';
-  }
+	getCategoryIcon(category: string): string {
+		const icons: Record<string, string> = {
+			fonts: "✦",
+			cursor: "▌",
+			scrollback: "↕",
+			mouse: "⊙",
+			performance: "⚡",
+			bell: "◎",
+			window_layout: "▣",
+			tab_bar: "▤",
+			colors: "◈",
+			advanced: "⚙",
+			os_specific: "⊞",
+		};
+		return icons[category] ?? "○";
+	}
 }

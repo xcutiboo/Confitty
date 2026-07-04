@@ -1,39 +1,39 @@
-import { Component, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ConfigStoreService } from '../../services/config-store.service';
-import { PresetSelectorComponent } from '../preset-selector/preset-selector.component';
-import { FontsFormComponent } from '../forms/fonts-form/fonts-form.component';
-import { CursorFormComponent } from '../forms/cursor-form/cursor-form.component';
-import { ScrollbackFormComponent } from '../forms/scrollback-form/scrollback-form.component';
-import { MouseFormComponent } from '../forms/mouse-form/mouse-form.component';
-import { PerformanceFormComponent } from '../forms/performance-form/performance-form.component';
-import { BellFormComponent } from '../forms/bell-form/bell-form.component';
-import { WindowLayoutFormComponent } from '../forms/window-layout-form/window-layout-form.component';
-import { TabBarFormComponent } from '../forms/tab-bar-form/tab-bar-form.component';
-import { ColorsFormComponent } from '../forms/colors-form/colors-form.component';
-import { AdvancedFormComponent } from '../forms/advanced-form/advanced-form.component';
-import { OsSpecificFormComponent } from '../forms/os-specific-form/os-specific-form.component';
-import { KeyboardShortcutsFormComponent } from '../forms/keyboard-shortcuts-form/keyboard-shortcuts-form.component';
+import { CommonModule } from "@angular/common";
+import { Component, signal } from "@angular/core";
+import { ConfigStoreService } from "../../services/config-store.service";
+import { AdvancedFormComponent } from "../forms/advanced-form/advanced-form.component";
+import { BellFormComponent } from "../forms/bell-form/bell-form.component";
+import { ColorsFormComponent } from "../forms/colors-form/colors-form.component";
+import { CursorFormComponent } from "../forms/cursor-form/cursor-form.component";
+import { FontsFormComponent } from "../forms/fonts-form/fonts-form.component";
+import { KeyboardShortcutsFormComponent } from "../forms/keyboard-shortcuts-form/keyboard-shortcuts-form.component";
+import { MouseFormComponent } from "../forms/mouse-form/mouse-form.component";
+import { OsSpecificFormComponent } from "../forms/os-specific-form/os-specific-form.component";
+import { PerformanceFormComponent } from "../forms/performance-form/performance-form.component";
+import { ScrollbackFormComponent } from "../forms/scrollback-form/scrollback-form.component";
+import { TabBarFormComponent } from "../forms/tab-bar-form/tab-bar-form.component";
+import { WindowLayoutFormComponent } from "../forms/window-layout-form/window-layout-form.component";
+import { PresetSelectorComponent } from "../preset-selector/preset-selector.component";
 
 @Component({
-  selector: 'app-config-editor',
-  imports: [
-    CommonModule,
-    PresetSelectorComponent,
-    FontsFormComponent,
-    CursorFormComponent,
-    ScrollbackFormComponent,
-    MouseFormComponent,
-    PerformanceFormComponent,
-    BellFormComponent,
-    WindowLayoutFormComponent,
-    TabBarFormComponent,
-    ColorsFormComponent,
-    AdvancedFormComponent,
-    OsSpecificFormComponent,
-    KeyboardShortcutsFormComponent
-  ],
-  template: `
+	selector: "app-config-editor",
+	imports: [
+		CommonModule,
+		PresetSelectorComponent,
+		FontsFormComponent,
+		CursorFormComponent,
+		ScrollbackFormComponent,
+		MouseFormComponent,
+		PerformanceFormComponent,
+		BellFormComponent,
+		WindowLayoutFormComponent,
+		TabBarFormComponent,
+		ColorsFormComponent,
+		AdvancedFormComponent,
+		OsSpecificFormComponent,
+		KeyboardShortcutsFormComponent,
+	],
+	template: `
     <div class="p-4 sm:p-6 lg:p-8 bg-kitty-darker min-h-full">
       <div class="max-w-5xl mx-auto space-y-6 lg:space-y-8">
 
@@ -117,10 +117,10 @@ import { KeyboardShortcutsFormComponent } from '../forms/keyboard-shortcuts-form
       </div>
     </div>
   `,
-  styles: []
+	styles: [],
 })
 export class ConfigEditorComponent {
-  readonly presetsExpanded = signal(true);
+	readonly presetsExpanded = signal(true);
 
-  constructor(public readonly configStore: ConfigStoreService) {}
+	constructor(public readonly configStore: ConfigStoreService) {}
 }

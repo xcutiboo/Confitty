@@ -1,26 +1,26 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KittyColorConfig } from '../../../models/kitty-types';
-import { ColorThemesService } from '../../../services/color-themes.service';
-import { KittyVersionService } from '../../../services/kitty-version.service';
-import { createFormHelper } from '../../../utils/form-helpers';
-import { ColorInputComponent } from '../../shared/color-input/color-input.component';
-import { FormSectionComponent } from '../../shared/form-section/form-section.component';
-import { SliderInputComponent } from '../../shared/slider-input/slider-input.component';
-import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.component';
+import { CommonModule } from "@angular/common";
+import { Component, computed, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import type { KittyColorConfig } from "../../../models/kitty-types";
+import { ColorThemesService } from "../../../services/color-themes.service";
+import { KittyVersionService } from "../../../services/kitty-version.service";
+import { createFormHelper } from "../../../utils/form-helpers";
+import { ColorInputComponent } from "../../shared/color-input/color-input.component";
+import { FormSectionComponent } from "../../shared/form-section/form-section.component";
+import { SliderInputComponent } from "../../shared/slider-input/slider-input.component";
+import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.component";
 
 @Component({
-  selector: 'app-colors-form',
-  imports: [
-    CommonModule,
-    FormsModule,
-    VersionBadgeComponent,
-    ColorInputComponent,
-    SliderInputComponent,
-    FormSectionComponent,
-  ],
-  template: `
+	selector: "app-colors-form",
+	imports: [
+		CommonModule,
+		FormsModule,
+		VersionBadgeComponent,
+		ColorInputComponent,
+		SliderInputComponent,
+		FormSectionComponent,
+	],
+	template: `
     <app-form-section title="Colors" description="Customize your terminal color scheme and palette">
       <div class="form-group">
         <label class="block text-sm font-medium text-kitty-text mb-3">
@@ -420,84 +420,89 @@ import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.
       </div>
     </app-form-section>
   `,
-  styles: [],
+	styles: [],
 })
 export class ColorsFormComponent {
-  private readonly versionService = inject(KittyVersionService);
-  readonly colorThemesService = inject(ColorThemesService);
+	private readonly versionService = inject(KittyVersionService);
+	readonly colorThemesService = inject(ColorThemesService);
 
-  readonly helper = createFormHelper('colors');
-  readonly colors = this.helper.state.asReadonly();
-  readonly transparentBackgroundColorsAvailable = computed(() =>
-    this.versionService.isOptionAvailable('transparent_background_colors')
-  );
-  readonly dynamicBackgroundOpacityAvailable = computed(() =>
-    this.versionService.isOptionAvailable('dynamic_background_opacity')
-  );
-  readonly colorIndices = Array.from({ length: 16 }, (_, i) => i);
-  readonly extendedColorIndices = Array.from({ length: 240 }, (_, i) => i + 16);
-  readonly colorNames = [
-    'black',
-    'red',
-    'green',
-    'yellow',
-    'blue',
-    'magenta',
-    'cyan',
-    'white',
-    'br.black',
-    'br.red',
-    'br.green',
-    'br.yellow',
-    'br.blue',
-    'br.magenta',
-    'br.cyan',
-    'br.white',
-  ];
+	readonly helper = createFormHelper("colors");
+	readonly colors = this.helper.state.asReadonly();
+	readonly transparentBackgroundColorsAvailable = computed(() =>
+		this.versionService.isOptionAvailable("transparent_background_colors"),
+	);
+	readonly dynamicBackgroundOpacityAvailable = computed(() =>
+		this.versionService.isOptionAvailable("dynamic_background_opacity"),
+	);
+	readonly colorIndices = Array.from({ length: 16 }, (_, i) => i);
+	readonly extendedColorIndices = Array.from({ length: 240 }, (_, i) => i + 16);
+	readonly colorNames = [
+		"black",
+		"red",
+		"green",
+		"yellow",
+		"blue",
+		"magenta",
+		"cyan",
+		"white",
+		"br.black",
+		"br.red",
+		"br.green",
+		"br.yellow",
+		"br.blue",
+		"br.magenta",
+		"br.cyan",
+		"br.white",
+	];
 
-  applyTheme(themeName: string): void {
-    const theme = this.colorThemesService.getTheme(themeName);
-    if (theme) {
-      const updatedColors = { ...this.colors(), ...theme.colors };
-      this.helper.state.set(updatedColors);
-      this.helper.update();
-    }
-  }
+	applyTheme(themeName: string): void {
+		const theme = this.colorThemesService.getTheme(themeName);
+		if (theme) {
+			const updatedColors = { ...this.colors(), ...theme.colors };
+			this.helper.state.set(updatedColors);
+			this.helper.update();
+		}
+	}
 
-  getThemeColor(themeColors: Partial<KittyColorConfig>, index: number): string {
-    const color = themeColors[`color${index}` as keyof KittyColorConfig];
-    return typeof color === 'string' ? color : '#000';
-  }
+	getThemeColor(themeColors: Partial<KittyColorConfig>, index: number): string {
+		const color = themeColors[`color${index}` as keyof KittyColorConfig];
+		return typeof color === "string" ? color : "#000";
+	}
 
-  getColorValue(index: number): string {
-    return (
-      ((this.colors() as unknown as Record<string, unknown>)[`color${index}`] as string) ||
-      '#000000'
-    );
-  }
+	getColorValue(index: number): string {
+		return (
+			((this.colors() as unknown as Record<string, unknown>)[
+				`color${index}`
+			] as string) || "#000000"
+		);
+	}
 
-  setColorValue(index: number, value: string): void {
-    const key = `color${index}` as keyof KittyColorConfig;
-    this.helper.updateField(key, value);
-  }
+	setColorValue(index: number, value: string): void {
+		const key = `color${index}` as keyof KittyColorConfig;
+		this.helper.updateField(key, value);
+	}
 
-  getMarkColor(group: number, type: 'foreground' | 'background'): string {
-    const key = `mark${group}_${type}` as keyof KittyColorConfig;
-    const val = this.colors()[key] as string;
-    return val || (type === 'foreground' ? '#000000' : '#ffffff');
-  }
+	getMarkColor(group: number, type: "foreground" | "background"): string {
+		const key = `mark${group}_${type}` as keyof KittyColorConfig;
+		const val = this.colors()[key] as string;
+		return val || (type === "foreground" ? "#000000" : "#ffffff");
+	}
 
-  setMarkColor(group: number, type: 'foreground' | 'background', value: string): void {
-    const key = `mark${group}_${type}` as keyof KittyColorConfig;
-    this.helper.updateField(key, value);
-  }
+	setMarkColor(
+		group: number,
+		type: "foreground" | "background",
+		value: string,
+	): void {
+		const key = `mark${group}_${type}` as keyof KittyColorConfig;
+		this.helper.updateField(key, value);
+	}
 
-  setTransparentColors(value: string): void {
-    const colors = value.split('\n').filter(l => l.trim());
-    // Kitty enforces max 7 items for transparent_background_colors
-    if (colors.length > 7) {
-      colors.splice(7);
-    }
-    this.helper.updateField('transparent_background_colors', colors);
-  }
+	setTransparentColors(value: string): void {
+		const colors = value.split("\n").filter((l) => l.trim());
+		// Kitty enforces max 7 items for transparent_background_colors
+		if (colors.length > 7) {
+			colors.splice(7);
+		}
+		this.helper.updateField("transparent_background_colors", colors);
+	}
 }

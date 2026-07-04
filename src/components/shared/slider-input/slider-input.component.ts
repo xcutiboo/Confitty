@@ -1,11 +1,11 @@
-import { Component, input, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { CommonModule } from "@angular/common";
+import { Component, input, output } from "@angular/core";
+import { FormsModule } from "@angular/forms";
 
 @Component({
-  selector: 'app-slider-input',
-  imports: [CommonModule, FormsModule],
-  template: `
+	selector: "app-slider-input",
+	imports: [CommonModule, FormsModule],
+	template: `
     <div class="flex items-center gap-4">
       <input
         type="range"
@@ -37,20 +37,20 @@ import { FormsModule } from '@angular/forms';
         }
       </div>
     }
-  `
+  `,
 })
 export class SliderInputComponent {
-  value = input.required<number>();
-  valueChange = output<number>();
-  
-  min = input<number>(0);
-  max = input<number>(100);
-  step = input<number>(1);
-  disabled = input<boolean>(false);
-  showNumberInput = input<boolean>(false);
-  labels = input<string[]>([]);
+	value = input.required<number>();
+	valueChange = output<number>();
 
-  onChange(value: number): void {
-    this.valueChange.emit(value);
-  }
+	min = input<number>(0);
+	max = input<number>(100);
+	step = input<number>(1);
+	disabled = input<boolean>(false);
+	showNumberInput = input<boolean>(false);
+	labels = input<string[]>([]);
+
+	onChange(value: number): void {
+		this.valueChange.emit(value);
+	}
 }

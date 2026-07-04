@@ -1,16 +1,22 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { NumberInputComponent } from '../../shared/number-input/number-input.component';
-import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.component';
-import { FormSectionComponent } from '../../shared/form-section/form-section.component';
-import { createFormHelper } from '../../../utils/form-helpers';
-import { KittyVersionService } from '../../../services/kitty-version.service';
+import { CommonModule } from "@angular/common";
+import { Component, computed, inject, signal } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { KittyVersionService } from "../../../services/kitty-version.service";
+import { createFormHelper } from "../../../utils/form-helpers";
+import { FormSectionComponent } from "../../shared/form-section/form-section.component";
+import { NumberInputComponent } from "../../shared/number-input/number-input.component";
+import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.component";
 
 @Component({
-  selector: 'app-advanced-form',
-  imports: [CommonModule, FormsModule, NumberInputComponent, VersionBadgeComponent, FormSectionComponent],
-  template: `
+	selector: "app-advanced-form",
+	imports: [
+		CommonModule,
+		FormsModule,
+		NumberInputComponent,
+		VersionBadgeComponent,
+		FormSectionComponent,
+	],
+	template: `
     <app-form-section title="Advanced" description="Shell integration, remote control, startup configuration, and system settings">
       <div class="bg-kitty-warning/10 border border-kitty-warning/30 rounded-lg p-4">
         <p class="text-kitty-warning text-sm">
@@ -315,41 +321,45 @@ import { KittyVersionService } from '../../../services/kitty-version.service';
       </div>
     </app-form-section>
   `,
-  styles: []
+	styles: [],
 })
 export class AdvancedFormComponent {
-  private readonly versionService = inject(KittyVersionService);
+	private readonly versionService = inject(KittyVersionService);
 
-  readonly helper = createFormHelper('advanced');
-  readonly advanced = this.helper.state.asReadonly();
-  readonly startupSessionAvailable = computed(() => this.versionService.isOptionAvailable('startup_session'));
-  readonly filterNotificationAvailable = computed(() => this.versionService.isOptionAvailable('filter_notification'));
+	readonly helper = createFormHelper("advanced");
+	readonly advanced = this.helper.state.asReadonly();
+	readonly startupSessionAvailable = computed(() =>
+		this.versionService.isOptionAvailable("startup_session"),
+	);
+	readonly filterNotificationAvailable = computed(() =>
+		this.versionService.isOptionAvailable("filter_notification"),
+	);
 
-  fastfetchExpanded = signal(false);
-  copiedShell = signal<'bash' | 'zsh' | 'fish' | null>(null);
+	fastfetchExpanded = signal(false);
+	copiedShell = signal<"bash" | "zsh" | "fish" | null>(null);
 
-  readonly bashSnippet = `# ~/.bashrc
+	readonly bashSnippet = `# ~/.bashrc
 if command -v fastfetch &>/dev/null; then
   fastfetch
 fi`;
-  readonly zshSnippet = `# ~/.zshrc
+	readonly zshSnippet = `# ~/.zshrc
 if (( $+commands[fastfetch] )); then
   fastfetch
 fi`;
-  readonly fishSnippet = `# ~/.config/fish/config.fish
+	readonly fishSnippet = `# ~/.config/fish/config.fish
 if command -v fastfetch &>/dev/null
   fastfetch
 end`;
 
-  copySnippet(shell: 'bash' | 'zsh' | 'fish'): void {
-    const snippets: Record<'bash' | 'zsh' | 'fish', string> = {
-      bash: this.bashSnippet,
-      zsh: this.zshSnippet,
-      fish: this.fishSnippet,
-    };
-    navigator.clipboard.writeText(snippets[shell]).then(() => {
-      this.copiedShell.set(shell);
-      setTimeout(() => this.copiedShell.set(null), 2000);
-    });
-  }
+	copySnippet(shell: "bash" | "zsh" | "fish"): void {
+		const snippets: Record<"bash" | "zsh" | "fish", string> = {
+			bash: this.bashSnippet,
+			zsh: this.zshSnippet,
+			fish: this.fishSnippet,
+		};
+		navigator.clipboard.writeText(snippets[shell]).then(() => {
+			this.copiedShell.set(shell);
+			setTimeout(() => this.copiedShell.set(null), 2000);
+		});
+	}
 }

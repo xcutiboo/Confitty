@@ -1,27 +1,27 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KittyCursorConfig } from '../../../models/kitty-types';
-import { KittyVersionService } from '../../../services/kitty-version.service';
-import { createFormHelper } from '../../../utils/form-helpers';
-import { ColorInputComponent } from '../../shared/color-input/color-input.component';
-import { FormSectionComponent } from '../../shared/form-section/form-section.component';
-import { NumberInputComponent } from '../../shared/number-input/number-input.component';
-import { SliderInputComponent } from '../../shared/slider-input/slider-input.component';
-import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.component';
+import { CommonModule } from "@angular/common";
+import { Component, computed, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import type { KittyCursorConfig } from "../../../models/kitty-types";
+import { KittyVersionService } from "../../../services/kitty-version.service";
+import { createFormHelper } from "../../../utils/form-helpers";
+import { ColorInputComponent } from "../../shared/color-input/color-input.component";
+import { FormSectionComponent } from "../../shared/form-section/form-section.component";
+import { NumberInputComponent } from "../../shared/number-input/number-input.component";
+import { SliderInputComponent } from "../../shared/slider-input/slider-input.component";
+import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.component";
 
 @Component({
-  selector: 'app-cursor-form',
-  imports: [
-    CommonModule,
-    FormsModule,
-    NumberInputComponent,
-    VersionBadgeComponent,
-    ColorInputComponent,
-    SliderInputComponent,
-    FormSectionComponent,
-  ],
-  template: `
+	selector: "app-cursor-form",
+	imports: [
+		CommonModule,
+		FormsModule,
+		NumberInputComponent,
+		VersionBadgeComponent,
+		ColorInputComponent,
+		SliderInputComponent,
+		FormSectionComponent,
+	],
+	template: `
     <app-form-section title="Cursor" description="Customize cursor shape, color, and animation">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="form-group">
@@ -258,60 +258,68 @@ import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.
       }
     </app-form-section>
   `,
-  styles: [],
+	styles: [],
 })
 export class CursorFormComponent {
-  private readonly versionService = inject(KittyVersionService);
+	private readonly versionService = inject(KittyVersionService);
 
-  readonly helper = createFormHelper('cursor');
-  readonly cursor = this.helper.state.asReadonly();
-  readonly cursorTrailAvailable = computed(() =>
-    this.versionService.isOptionAvailable('cursor_trail')
-  );
-  readonly cursorStopBlinkingAvailable = computed(() =>
-    this.versionService.isOptionAvailable('cursor_stop_blinking_after')
-  );
-  readonly cursorShapeUnfocusedAvailable = computed(() =>
-    this.versionService.isOptionAvailable('cursor_shape_unfocused')
-  );
+	readonly helper = createFormHelper("cursor");
+	readonly cursor = this.helper.state.asReadonly();
+	readonly cursorTrailAvailable = computed(() =>
+		this.versionService.isOptionAvailable("cursor_trail"),
+	);
+	readonly cursorStopBlinkingAvailable = computed(() =>
+		this.versionService.isOptionAvailable("cursor_stop_blinking_after"),
+	);
+	readonly cursorShapeUnfocusedAvailable = computed(() =>
+		this.versionService.isOptionAvailable("cursor_shape_unfocused"),
+	);
 
-  cursorColorForPicker(): string {
-    return this.cursor().cursor.startsWith('#') ? this.cursor().cursor : '#cccccc';
-  }
+	cursorColorForPicker(): string {
+		return this.cursor().cursor.startsWith("#")
+			? this.cursor().cursor
+			: "#cccccc";
+	}
 
-  cursorTextColorForPicker(): string {
-    return this.cursor().cursor_text_color.startsWith('#')
-      ? this.cursor().cursor_text_color
-      : '#111111';
-  }
+	cursorTextColorForPicker(): string {
+		return this.cursor().cursor_text_color.startsWith("#")
+			? this.cursor().cursor_text_color
+			: "#111111";
+	}
 
-  setCursorShape(shape: string): void {
-    this.helper.updateField('cursor_shape', shape as KittyCursorConfig['cursor_shape']);
-  }
+	setCursorShape(shape: string): void {
+		this.helper.updateField(
+			"cursor_shape",
+			shape as KittyCursorConfig["cursor_shape"],
+		);
+	}
 
-  setCursorColor(value: string): void {
-    this.helper.updateField('cursor', value);
-  }
+	setCursorColor(value: string): void {
+		this.helper.updateField("cursor", value);
+	}
 
-  setCursorTextColor(value: string): void {
-    this.helper.updateField('cursor_text_color', value);
-  }
+	setCursorTextColor(value: string): void {
+		this.helper.updateField("cursor_text_color", value);
+	}
 
-  setTrailDecay(value: string): void {
-    const decay = value
-      .split(/\s+/)
-      .map(Number)
-      .filter(n => !Number.isNaN(n));
-    this.helper.updateField('cursor_trail_decay', decay.length > 0 ? decay : [0.1, 0.4]);
-  }
+	setTrailDecay(value: string): void {
+		const decay = value
+			.split(/\s+/)
+			.map(Number)
+			.filter((n) => !Number.isNaN(n));
+		this.helper.updateField(
+			"cursor_trail_decay",
+			decay.length > 0 ? decay : [0.1, 0.4],
+		);
+	}
 
-  getTrailColor(): string {
-    return this.cursor().cursor_trail_color?.startsWith('#')
-      ? this.cursor().cursor_trail_color
-      : '#cccccc';
-  }
+	getTrailColor(): string {
+		return this.cursor().cursor_trail_color?.startsWith("#")
+			? this.cursor().cursor_trail_color
+			: "#cccccc";
+	}
 
-  setTrailColor(value: string): void {
-    this.helper.updateField('cursor_trail_color', value);
-  }
+	setTrailColor(value: string): void {
+		this.helper.updateField("cursor_trail_color", value);
+	}
 }

@@ -1,14 +1,19 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { SliderInputComponent } from '../../shared/slider-input/slider-input.component';
-import { FormSectionComponent } from '../../shared/form-section/form-section.component';
-import { createFormHelper } from '../../../utils/form-helpers';
+import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { createFormHelper } from "../../../utils/form-helpers";
+import { FormSectionComponent } from "../../shared/form-section/form-section.component";
+import { SliderInputComponent } from "../../shared/slider-input/slider-input.component";
 
 @Component({
-  selector: 'app-performance-form',
-  imports: [CommonModule, FormsModule, SliderInputComponent, FormSectionComponent],
-  template: `
+	selector: "app-performance-form",
+	imports: [
+		CommonModule,
+		FormsModule,
+		SliderInputComponent,
+		FormSectionComponent,
+	],
+	template: `
     <app-form-section title="Performance" description="Tune Kitty's OpenGL rendering pipeline and input event batching">
       <div class="form-group">
         <label class="block text-sm font-medium text-kitty-text mb-2">
@@ -69,9 +74,9 @@ import { createFormHelper } from '../../../utils/form-helpers';
       </p>
     </div>
   `,
-  styles: []
+	styles: [],
 })
 export class PerformanceFormComponent {
-  readonly helper = createFormHelper('performance');
-  readonly performance = this.helper.state.asReadonly();
+	readonly helper = createFormHelper("performance");
+	readonly performance = this.helper.state.asReadonly();
 }

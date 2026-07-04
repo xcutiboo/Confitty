@@ -1,25 +1,28 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { FontPreset, FontPresetsService } from '../../../services/font-presets.service';
-import { KittyVersionService } from '../../../services/kitty-version.service';
-import { createFormHelper } from '../../../utils/form-helpers';
-import { FormSectionComponent } from '../../shared/form-section/form-section.component';
-import { NumberInputComponent } from '../../shared/number-input/number-input.component';
-import { SliderInputComponent } from '../../shared/slider-input/slider-input.component';
-import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.component';
+import { CommonModule } from "@angular/common";
+import { Component, computed, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import {
+	type FontPreset,
+	FontPresetsService,
+} from "../../../services/font-presets.service";
+import { KittyVersionService } from "../../../services/kitty-version.service";
+import { createFormHelper } from "../../../utils/form-helpers";
+import { FormSectionComponent } from "../../shared/form-section/form-section.component";
+import { NumberInputComponent } from "../../shared/number-input/number-input.component";
+import { SliderInputComponent } from "../../shared/slider-input/slider-input.component";
+import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.component";
 
 @Component({
-  selector: 'app-fonts-form',
-  imports: [
-    CommonModule,
-    FormsModule,
-    NumberInputComponent,
-    VersionBadgeComponent,
-    SliderInputComponent,
-    FormSectionComponent,
-  ],
-  template: `
+	selector: "app-fonts-form",
+	imports: [
+		CommonModule,
+		FormsModule,
+		NumberInputComponent,
+		VersionBadgeComponent,
+		SliderInputComponent,
+		FormSectionComponent,
+	],
+	template: `
     <app-form-section
       title="Fonts"
       description="Configure typography, rendering, and glyph settings"
@@ -399,57 +402,57 @@ import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.
       }
     </app-form-section>
   `,
-  styles: [],
+	styles: [],
 })
 export class FontsFormComponent {
-  private readonly versionService = inject(KittyVersionService);
-  readonly fontPresetsService = inject(FontPresetsService);
+	private readonly versionService = inject(KittyVersionService);
+	readonly fontPresetsService = inject(FontPresetsService);
 
-  readonly helper = createFormHelper('fonts');
-  readonly fonts = this.helper.state.asReadonly();
-  readonly textCompositionStrategyAvailable = computed(() =>
-    this.versionService.isOptionAvailable('text_composition_strategy')
-  );
-  readonly fontFeaturesAvailable = computed(() =>
-    this.versionService.isOptionAvailable('font_features')
-  );
-  readonly underlineExclusionAvailable = computed(() =>
-    this.versionService.isOptionAvailable('underline_exclusion')
-  );
+	readonly helper = createFormHelper("fonts");
+	readonly fonts = this.helper.state.asReadonly();
+	readonly textCompositionStrategyAvailable = computed(() =>
+		this.versionService.isOptionAvailable("text_composition_strategy"),
+	);
+	readonly fontFeaturesAvailable = computed(() =>
+		this.versionService.isOptionAvailable("font_features"),
+	);
+	readonly underlineExclusionAvailable = computed(() =>
+		this.versionService.isOptionAvailable("underline_exclusion"),
+	);
 
-  selectFont(family: string): void {
-    this.helper.updateField('font_family', family);
-  }
+	selectFont(family: string): void {
+		this.helper.updateField("font_family", family);
+	}
 
-  getFontFamily(font: FontPreset): string {
-    return `"${font.family}", monospace`;
-  }
+	getFontFamily(font: FontPreset): string {
+		return `"${font.family}", monospace`;
+	}
 
-  setFontFeatures(value: string): void {
-    const features = value.split('\n').filter(l => l.trim());
-    this.helper.updateField('font_features', features);
-  }
+	setFontFeatures(value: string): void {
+		const features = value.split("\n").filter((l) => l.trim());
+		this.helper.updateField("font_features", features);
+	}
 
-  setSymbolMap(value: string): void {
-    const map = value.split('\n').filter(l => l.trim());
-    this.helper.updateField('symbol_map', map);
-  }
+	setSymbolMap(value: string): void {
+		const map = value.split("\n").filter((l) => l.trim());
+		this.helper.updateField("symbol_map", map);
+	}
 
-  setNarrowSymbols(value: string): void {
-    const symbols = value.split('\n').filter(l => l.trim());
-    this.helper.updateField('narrow_symbols', symbols);
-  }
+	setNarrowSymbols(value: string): void {
+		const symbols = value.split("\n").filter((l) => l.trim());
+		this.helper.updateField("narrow_symbols", symbols);
+	}
 
-  setBoxDrawingScale(value: string): void {
-    const scale = value
-      .split(',')
-      .map(s => Number.parseFloat(s.trim()))
-      .filter(n => !Number.isNaN(n));
-    this.helper.updateField('box_drawing_scale', scale);
-  }
+	setBoxDrawingScale(value: string): void {
+		const scale = value
+			.split(",")
+			.map((s) => Number.parseFloat(s.trim()))
+			.filter((n) => !Number.isNaN(n));
+		this.helper.updateField("box_drawing_scale", scale);
+	}
 
-  setModifyFont(value: string): void {
-    const modifications = value.split('\n').filter(l => l.trim());
-    this.helper.updateField('modify_font', modifications);
-  }
+	setModifyFont(value: string): void {
+		const modifications = value.split("\n").filter((l) => l.trim());
+		this.helper.updateField("modify_font", modifications);
+	}
 }

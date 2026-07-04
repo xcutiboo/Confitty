@@ -1,15 +1,21 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { SliderInputComponent } from '../../shared/slider-input/slider-input.component';
-import { NumberInputComponent } from '../../shared/number-input/number-input.component';
-import { FormSectionComponent } from '../../shared/form-section/form-section.component';
-import { createFormHelper } from '../../../utils/form-helpers';
+import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { createFormHelper } from "../../../utils/form-helpers";
+import { FormSectionComponent } from "../../shared/form-section/form-section.component";
+import { NumberInputComponent } from "../../shared/number-input/number-input.component";
+import { SliderInputComponent } from "../../shared/slider-input/slider-input.component";
 
 @Component({
-  selector: 'app-os-specific-form',
-  imports: [CommonModule, FormsModule, SliderInputComponent, NumberInputComponent, FormSectionComponent],
-  template: `
+	selector: "app-os-specific-form",
+	imports: [
+		CommonModule,
+		FormsModule,
+		SliderInputComponent,
+		NumberInputComponent,
+		FormSectionComponent,
+	],
+	template: `
     <app-form-section title="OS Specific" description="Platform-specific settings for macOS and Linux/Wayland">
       <div class="bg-kitty-warning/10 border border-kitty-warning/30 rounded-lg p-4 mb-6">
         <p class="text-kitty-warning text-sm">
@@ -270,9 +276,9 @@ import { createFormHelper } from '../../../utils/form-helpers';
       </div>
     </app-form-section>
   `,
-  styles: []
+	styles: [],
 })
 export class OsSpecificFormComponent {
-  readonly helper = createFormHelper('os_specific');
-  readonly osSpecific = this.helper.state.asReadonly();
+	readonly helper = createFormHelper("os_specific");
+	readonly osSpecific = this.helper.state.asReadonly();
 }

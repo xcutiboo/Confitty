@@ -4,155 +4,212 @@
 
 /* Design tokens - light mode is the default. */
 :root {
-  --kitty-darker:        236 233 228;
-  --kitty-bg:            247 246 243;
-  --kitty-surface:       255 255 255;
-  --kitty-surface-light: 242 241 237;
+	--kitty-darker: 236 233 228;
+	--kitty-bg: 247 246 243;
+	--kitty-surface: 255 255 255;
+	--kitty-surface-light: 242 241 237;
 
-  --kitty-primary:       236 72 153;
-  --kitty-primary-dim:   219 39 119;
-  --kitty-primary-hover: 244 114 182;
-  --kitty-secondary:     192 38 211;
-  --kitty-accent:        217 70 239;
-  --kitty-accent-dim:    162 28 175;
-  --kitty-warning:       180 83 9;
+	--kitty-primary: 236 72 153;
+	--kitty-primary-dim: 219 39 119;
+	--kitty-primary-hover: 244 114 182;
+	--kitty-secondary: 192 38 211;
+	--kitty-accent: 217 70 239;
+	--kitty-accent-dim: 162 28 175;
+	--kitty-warning: 180 83 9;
 
-  --kitty-text:          28 25 23;
-  --kitty-text-dim:      120 113 108;
+	--kitty-text: 28 25 23;
+	--kitty-text-dim: 120 113 108;
 
-  --kitty-border:        229 226 221;
-  --kitty-border-light:  212 209 204;
+	--kitty-border: 229 226 221;
+	--kitty-border-light: 212 209 204;
 
-  /* Foreground used on top of --kitty-primary. */
-  --kitty-dark:          255 255 255;
+	/* Foreground used on top of --kitty-primary. */
+	--kitty-dark: 255 255 255;
 
-  scrollbar-width: thin;
-  scrollbar-color: rgb(var(--kitty-border-light)) transparent;
+	scrollbar-width: thin;
+	scrollbar-color: rgb(var(--kitty-border-light)) transparent;
 }
 
 .dark {
-  --kitty-darker:        13 13 13;
-  --kitty-bg:            22 22 22;
-  --kitty-surface:       30 30 30;
-  --kitty-surface-light: 42 42 42;
+	--kitty-darker: 13 13 13;
+	--kitty-bg: 22 22 22;
+	--kitty-surface: 30 30 30;
+	--kitty-surface-light: 42 42 42;
 
-  --kitty-primary:       255 181 198;
-  --kitty-primary-dim:   254 138 236;
-  --kitty-primary-hover: 255 145 170;
-  --kitty-secondary:     254 138 236;
-  --kitty-accent:        255 157 237;
-  --kitty-accent-dim:    230 120 210;
-  --kitty-warning:       249 175 79;
+	--kitty-primary: 255 181 198;
+	--kitty-primary-dim: 254 138 236;
+	--kitty-primary-hover: 255 145 170;
+	--kitty-secondary: 254 138 236;
+	--kitty-accent: 255 157 237;
+	--kitty-accent-dim: 230 120 210;
+	--kitty-warning: 249 175 79;
 
-  --kitty-text:          224 224 224;
-  --kitty-text-dim:      144 144 144;
+	--kitty-text: 224 224 224;
+	--kitty-text-dim: 144 144 144;
 
-  --kitty-border:        51 51 51;
-  --kitty-border-light:  64 64 64;
+	--kitty-border: 51 51 51;
+	--kitty-border-light: 64 64 64;
 
-  --kitty-dark:          86 77 80;
+	--kitty-dark: 86 77 80;
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	-webkit-tap-highlight-color: transparent;
 }
 
 html {
-  touch-action: manipulation;
-  -webkit-text-size-adjust: 100%;
+	touch-action: manipulation;
+	-webkit-text-size-adjust: 100%;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  background: rgb(var(--kitty-darker));
-  color: rgb(var(--kitty-text));
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6;
+	font-family:
+		-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+		"Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+	background: rgb(var(--kitty-darker));
+	color: rgb(var(--kitty-text));
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	line-height: 1.6;
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
 }
 
-input[type=number] {
-  -moz-appearance: textfield;
-  appearance: textfield;
+input[type="number"] {
+	-moz-appearance: textfield;
+	appearance: textfield;
 }
 
 input[type="range"] {
-  accent-color: rgb(var(--kitty-primary));
-  cursor: pointer;
+	accent-color: rgb(var(--kitty-primary));
+	cursor: pointer;
 }
 
 input[type="checkbox"] {
-  accent-color: rgb(var(--kitty-primary));
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
+	accent-color: rgb(var(--kitty-primary));
+	cursor: pointer;
+	width: 18px;
+	height: 18px;
 }
 
-input[type="color"] { cursor: pointer; }
-button              { cursor: pointer; }
+input[type="color"] {
+	cursor: pointer;
+}
+button {
+	cursor: pointer;
+}
 
-::-webkit-scrollbar        { width: 6px; height: 6px; }
-::-webkit-scrollbar-track  { background: transparent; }
-::-webkit-scrollbar-thumb  { background: rgb(var(--kitty-border-light)); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgb(var(--kitty-text-dim) / 0.5); }
-::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+::-webkit-scrollbar-thumb {
+	background: rgb(var(--kitty-border-light));
+	border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: rgb(var(--kitty-text-dim) / 0.5);
+}
+::-webkit-scrollbar-corner {
+	background: transparent;
+}
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
 
 @keyframes fade-in-up {
-  from { transform: translateY(-8px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+	from {
+		transform: translateY(-8px);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
 }
 
 @keyframes slide-in-right {
-  from { transform: translateX(100%); opacity: 0; }
-  to   { transform: translateX(0);    opacity: 1; }
+	from {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
 }
 
 @keyframes scale-in {
-  from { transform: scale(0.96); opacity: 0; }
-  to   { transform: scale(1);    opacity: 1; }
+	from {
+		transform: scale(0.96);
+		opacity: 0;
+	}
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
 }
 
 @layer utilities {
-  .animate-fade-in        { animation: fade-in        180ms cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-  .animate-fade-in-up     { animation: fade-in-up     220ms cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-  .animate-slide-in-right { animation: slide-in-right 260ms cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-  .animate-scale-in       { animation: scale-in       220ms cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+	.animate-fade-in {
+		animation: fade-in 180ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+	}
+	.animate-fade-in-up {
+		animation: fade-in-up 220ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+	}
+	.animate-slide-in-right {
+		animation: slide-in-right 260ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+	}
+	.animate-scale-in {
+		animation: scale-in 220ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+	}
 
-  @media (prefers-reduced-motion: reduce) {
-    .animate-fade-in,
-    .animate-fade-in-up,
-    .animate-slide-in-right,
-    .animate-scale-in {
-      animation: none;
-      opacity: 1;
-      transform: none;
-    }
-  }
+	@media (prefers-reduced-motion: reduce) {
+		.animate-fade-in,
+		.animate-fade-in-up,
+		.animate-slide-in-right,
+		.animate-scale-in {
+			animation: none;
+			opacity: 1;
+			transform: none;
+		}
+	}
 
-  .will-change-transform { will-change: transform; }
-  .will-change-opacity   { will-change: opacity; }
+	.will-change-transform {
+		will-change: transform;
+	}
+	.will-change-opacity {
+		will-change: opacity;
+	}
 
-  .line-clamp-1,
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .line-clamp-1 { -webkit-line-clamp: 1; line-clamp: 1; }
-  .line-clamp-2 { -webkit-line-clamp: 2; line-clamp: 2; }
+	.line-clamp-1,
+	.line-clamp-2 {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+	.line-clamp-1 {
+		-webkit-line-clamp: 1;
+		line-clamp: 1;
+	}
+	.line-clamp-2 {
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+	}
 }
