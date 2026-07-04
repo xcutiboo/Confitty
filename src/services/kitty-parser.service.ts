@@ -1030,7 +1030,11 @@ export class KittyParserService {
 					value === "yes" || value === "true";
 				break;
 			case "macos_show_window_title_in":
-				config.os_specific.macos_show_window_title_in = value as "all" | "window" | "menubar" | "none";
+				config.os_specific.macos_show_window_title_in = value as
+					| "all"
+					| "window"
+					| "menubar"
+					| "none";
 				break;
 			case "macos_menubar_title_max_length":
 				config.os_specific.macos_menubar_title_max_length = Number.parseInt(

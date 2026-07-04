@@ -308,7 +308,9 @@ export class OsSpecificFormComponent {
 	readonly helper = createFormHelper("os_specific");
 
 	macosSafeAreaAvailable = computed(() =>
-		this.versionService.isOptionAvailable("macos_fullscreen_ignore_safe_area_insets"),
+		this.versionService.isOptionAvailable(
+			"macos_fullscreen_ignore_safe_area_insets",
+		),
 	);
 
 	readonly osSpecific = this.helper.state.asReadonly();
