@@ -58,6 +58,11 @@ Kitty terminal is great. Reading 400+ config options to change your font size? N
 
 She's Kitty Terminal's ghost cat mascot if someone dropped her in pink paint and then set off a confetti cannon directly in her face. She does not know what year it is. She is thriving. The confetti in her fur is permanent. She has accepted this.
 
+## 📢 What's New
+
+> **🎉 Full Kitty 0.47 Support**
+> Confitty now supports all configuration options up to Kitty **0.47.0**, including `progress_bar` UI settings, `macos_fullscreen_ignore_safe_area_insets`, `palette_generate`, and `auto_reload_config`.
+
 ## ✨ Features
 
 ### 🎨 Visual Configuration
