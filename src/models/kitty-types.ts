@@ -337,6 +337,8 @@ export interface KittyAdvancedConfig {
 	menu_map: string[];
 	action_alias: string[];
 	auto_reload_config: number;
+	notify_on_cmd_finish: string;
+	terminfo_type: "path" | "direct" | "none";
 }
 
 export interface KittyOSSpecificConfig {

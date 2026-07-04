@@ -177,6 +177,46 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
                 <span class="text-kitty-text-dim text-xs">seconds (<=0 disables)</span>
               </div>
             </div>
+            
+            <div class="form-group" [class.opacity-60]="!notifyOnCmdFinishAvailable()">
+              <label class="flex items-center gap-2 text-sm font-medium text-kitty-text mb-2">
+                Notify on Command Finish
+                @if (!notifyOnCmdFinishAvailable()) {
+                  <app-version-badge version="0.31.0" />
+                }
+              </label>
+              <select
+                [(ngModel)]="advanced().notify_on_cmd_finish"
+                (ngModelChange)="helper.updateField('notify_on_cmd_finish', $event)"
+                [disabled]="!notifyOnCmdFinishAvailable()"
+                class="w-full px-4 py-2 bg-kitty-bg border border-kitty-border rounded-lg text-kitty-text focus:outline-none focus:ring-2 focus:ring-kitty-primary disabled:opacity-50"
+              >
+                <option value="never">Never (disabled)</option>
+                <option value="unfocused">Unfocused</option>
+                <option value="invisible">Invisible</option>
+              </select>
+              <p class="text-kitty-text-dim text-xs mt-1">When to show notifications for finished long-running commands.</p>
+            </div>
+
+            <div class="form-group" [class.opacity-60]="!terminfoTypeAvailable()">
+              <label class="flex items-center gap-2 text-sm font-medium text-kitty-text mb-2">
+                Terminfo Type
+                @if (!terminfoTypeAvailable()) {
+                  <app-version-badge version="0.28.0" />
+                }
+              </label>
+              <select
+                [(ngModel)]="advanced().terminfo_type"
+                (ngModelChange)="helper.updateField('terminfo_type', $event)"
+                [disabled]="!terminfoTypeAvailable()"
+                class="w-full px-4 py-2 bg-kitty-bg border border-kitty-border rounded-lg text-kitty-text focus:outline-none focus:ring-2 focus:ring-kitty-primary disabled:opacity-50"
+              >
+                <option value="path">Path</option>
+                <option value="direct">Direct</option>
+                <option value="none">None</option>
+              </select>
+              <p class="text-kitty-text-dim text-xs mt-1">How the TERMINFO environment variable is configured.</p>
+            </div>
 
             <div class="form-group">
               <label class="block text-sm font-medium text-kitty-text mb-2">
@@ -356,6 +396,14 @@ export class AdvancedFormComponent {
 
 	autoReloadConfigAvailable = computed(() =>
 		this.versionService.isOptionAvailable("auto_reload_config"),
+	);
+
+	notifyOnCmdFinishAvailable = computed(() =>
+		this.versionService.isOptionAvailable("notify_on_cmd_finish"),
+	);
+
+	terminfoTypeAvailable = computed(() =>
+		this.versionService.isOptionAvailable("terminfo_type"),
 	);
 
 	fastfetchExpanded = signal(false);
