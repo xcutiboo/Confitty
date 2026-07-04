@@ -4,6 +4,7 @@ import { FormsModule } from "@angular/forms";
 import type { KittyTabBarEdge } from "../../../models/kitty-types";
 import { KittyVersionService } from "../../../services/kitty-version.service";
 import { createFormHelper } from "../../../utils/form-helpers";
+import { ColorInputComponent } from "../../shared/color-input/color-input.component";
 import { FormSectionComponent } from "../../shared/form-section/form-section.component";
 import { NumberInputComponent } from "../../shared/number-input/number-input.component";
 import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.component";
@@ -14,6 +15,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 		CommonModule,
 		FormsModule,
 		NumberInputComponent,
+		ColorInputComponent,
 		VersionBadgeComponent,
 		FormSectionComponent,
 	],
@@ -371,38 +373,18 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 
             <div class="form-group">
               <label class="block text-xs font-medium text-kitty-text-dim mb-1.5">Foreground</label>
-              <div class="flex gap-2">
-                <input
-                  type="color"
-                  [ngModel]="tabBar().active_tab_foreground"
-                  (ngModelChange)="helper.updateField('active_tab_foreground', $event)"
-                  class="w-12 h-9 rounded cursor-pointer bg-kitty-bg border border-kitty-border flex-shrink-0"
-                />
-                <input
-                  type="text"
-                  [ngModel]="tabBar().active_tab_foreground"
-                  (ngModelChange)="helper.updateField('active_tab_foreground', $event)"
-                  class="flex-1 px-3 py-1.5 text-sm bg-kitty-bg border border-kitty-border rounded-lg text-kitty-text focus:outline-none focus:ring-2 focus:ring-kitty-primary font-mono"
-                />
-              </div>
+              <app-color-input
+                [value]="tabBar().active_tab_foreground || '#000000'"
+                (valueChange)="helper.updateField('active_tab_foreground', $event)"
+              />
             </div>
 
             <div class="form-group">
               <label class="block text-xs font-medium text-kitty-text-dim mb-1.5">Background</label>
-              <div class="flex gap-2">
-                <input
-                  type="color"
-                  [ngModel]="tabBar().active_tab_background"
-                  (ngModelChange)="helper.updateField('active_tab_background', $event)"
-                  class="w-12 h-9 rounded cursor-pointer bg-kitty-bg border border-kitty-border flex-shrink-0"
-                />
-                <input
-                  type="text"
-                  [ngModel]="tabBar().active_tab_background"
-                  (ngModelChange)="helper.updateField('active_tab_background', $event)"
-                  class="flex-1 px-3 py-1.5 text-sm bg-kitty-bg border border-kitty-border rounded-lg text-kitty-text focus:outline-none focus:ring-2 focus:ring-kitty-primary font-mono"
-                />
-              </div>
+              <app-color-input
+                [value]="tabBar().active_tab_background || '#eee'"
+                (valueChange)="helper.updateField('active_tab_background', $event)"
+              />
             </div>
 
             @if (helper.advancedMode()) {
@@ -429,38 +411,18 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 
             <div class="form-group">
               <label class="block text-xs font-medium text-kitty-text-dim mb-1.5">Foreground</label>
-              <div class="flex gap-2">
-                <input
-                  type="color"
-                  [ngModel]="tabBar().inactive_tab_foreground"
-                  (ngModelChange)="helper.updateField('inactive_tab_foreground', $event)"
-                  class="w-12 h-9 rounded cursor-pointer bg-kitty-bg border border-kitty-border flex-shrink-0"
-                />
-                <input
-                  type="text"
-                  [ngModel]="tabBar().inactive_tab_foreground"
-                  (ngModelChange)="helper.updateField('inactive_tab_foreground', $event)"
-                  class="flex-1 px-3 py-1.5 text-sm bg-kitty-bg border border-kitty-border rounded-lg text-kitty-text focus:outline-none focus:ring-2 focus:ring-kitty-primary font-mono"
-                />
-              </div>
+              <app-color-input
+                [value]="tabBar().inactive_tab_foreground || '#444'"
+                (valueChange)="helper.updateField('inactive_tab_foreground', $event)"
+              />
             </div>
 
             <div class="form-group">
               <label class="block text-xs font-medium text-kitty-text-dim mb-1.5">Background</label>
-              <div class="flex gap-2">
-                <input
-                  type="color"
-                  [ngModel]="tabBar().inactive_tab_background"
-                  (ngModelChange)="helper.updateField('inactive_tab_background', $event)"
-                  class="w-12 h-9 rounded cursor-pointer bg-kitty-bg border border-kitty-border flex-shrink-0"
-                />
-                <input
-                  type="text"
-                  [ngModel]="tabBar().inactive_tab_background"
-                  (ngModelChange)="helper.updateField('inactive_tab_background', $event)"
-                  class="flex-1 px-3 py-1.5 text-sm bg-kitty-bg border border-kitty-border rounded-lg text-kitty-text focus:outline-none focus:ring-2 focus:ring-kitty-primary font-mono"
-                />
-              </div>
+              <app-color-input
+                [value]="tabBar().inactive_tab_background || '#999'"
+                (valueChange)="helper.updateField('inactive_tab_background', $event)"
+              />
             </div>
 
             @if (helper.advancedMode()) {
@@ -492,21 +454,10 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
                   >'none' inherits from terminal background</span
                 >
               </label>
-              <div class="flex gap-2">
-                <input
-                  type="color"
-                  [ngModel]="tabBar().tab_bar_background"
-                  (ngModelChange)="helper.updateField('tab_bar_background', $event)"
-                  class="w-12 h-10 rounded cursor-pointer bg-kitty-bg border border-kitty-border flex-shrink-0"
-                />
-                <input
-                  type="text"
-                  [ngModel]="tabBar().tab_bar_background"
-                  (ngModelChange)="helper.updateField('tab_bar_background', $event)"
-                  class="flex-1 px-3 py-2 text-sm bg-kitty-bg border border-kitty-border rounded-lg text-kitty-text focus:outline-none focus:ring-2 focus:ring-kitty-primary font-mono"
-                  placeholder="none"
-                />
-              </div>
+              <app-color-input
+                [value]="tabBar().tab_bar_background || 'none'"
+                (valueChange)="helper.updateField('tab_bar_background', $event)"
+              />
             </div>
 
             <div class="form-group">
@@ -516,21 +467,10 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
                   >Color of the margin areas around the tab bar</span
                 >
               </label>
-              <div class="flex gap-2">
-                <input
-                  type="color"
-                  [ngModel]="tabBar().tab_bar_margin_color"
-                  (ngModelChange)="helper.updateField('tab_bar_margin_color', $event)"
-                  class="w-12 h-10 rounded cursor-pointer bg-kitty-bg border border-kitty-border flex-shrink-0"
-                />
-                <input
-                  type="text"
-                  [ngModel]="tabBar().tab_bar_margin_color"
-                  (ngModelChange)="helper.updateField('tab_bar_margin_color', $event)"
-                  class="flex-1 px-3 py-2 text-sm bg-kitty-bg border border-kitty-border rounded-lg text-kitty-text focus:outline-none focus:ring-2 focus:ring-kitty-primary font-mono"
-                  placeholder="none"
-                />
-              </div>
+              <app-color-input
+                [value]="tabBar().tab_bar_margin_color || 'none'"
+                (valueChange)="helper.updateField('tab_bar_margin_color', $event)"
+              />
             </div>
           </div>
         }

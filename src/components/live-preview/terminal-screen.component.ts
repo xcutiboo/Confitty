@@ -184,22 +184,29 @@ export class TerminalScreenComponent {
 
 		if (span.url) {
 			const m = this.mouse();
-			style["color"] = m.url_color;
-			style["cursor"] = "pointer";
-			if (m.url_style !== "none") {
-				style["textDecorationLine"] = "underline";
-				style["textDecorationStyle"] = this.urlDecoration(m.url_style);
-				style["textDecorationColor"] = m.url_color;
-				style["textUnderlineOffset"] = "2px";
+			if (m.url_color && m.url_color !== "none") {
+				// biome-ignore lint/complexity/useLiteralKeys: TS4111 requires index access for Record<string, string>
+				style["color"] = m.url_color;
+				style["cursor"] = "pointer";
+				if (m.url_style !== "none") {
+					style["textDecorationLine"] = "underline";
+					style["textDecorationStyle"] = this.urlDecoration(m.url_style);
+					style["textDecorationColor"] = m.url_color;
+					style["textUnderlineOffset"] = "2px";
+				}
 			}
 		}
 
 		if (span.selected) {
-			const selFg = colors.selection_foreground;
 			const selBg = colors.selection_background;
+			const selFg = colors.selection_foreground;
+			// biome-ignore lint/complexity/useLiteralKeys: TS4111 requires index access
 			if (selBg && selBg !== "none") style["backgroundColor"] = selBg;
+			// biome-ignore lint/complexity/useLiteralKeys: TS4111
 			else style["backgroundColor"] = colors.foreground;
+			// biome-ignore lint/complexity/useLiteralKeys: TS4111
 			if (selFg && selFg !== "none") style["color"] = selFg;
+			// biome-ignore lint/complexity/useLiteralKeys: TS4111
 			else style["color"] = colors.background;
 		}
 

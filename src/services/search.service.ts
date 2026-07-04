@@ -2,7 +2,7 @@ import { computed, Injectable, signal } from "@angular/core";
 import { CONFIG_SEARCH_INDEX } from "../search/config-index";
 import { search } from "../search/search.engine";
 import type { SearchResult } from "../search/search.types";
-import { ConfigStoreService } from "./config-store.service";
+import type { ConfigStoreService } from "./config-store.service";
 
 export type {
 	SearchableItem,

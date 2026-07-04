@@ -3,6 +3,7 @@ import { Component, computed, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { KittyVersionService } from "../../../services/kitty-version.service";
 import { createFormHelper } from "../../../utils/form-helpers";
+import { ColorInputComponent } from "../../shared/color-input/color-input.component";
 import { FormSectionComponent } from "../../shared/form-section/form-section.component";
 import { NumberInputComponent } from "../../shared/number-input/number-input.component";
 import { SliderInputComponent } from "../../shared/slider-input/slider-input.component";
@@ -14,6 +15,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 		CommonModule,
 		FormsModule,
 		NumberInputComponent,
+		ColorInputComponent,
 		VersionBadgeComponent,
 		SliderInputComponent,
 		FormSectionComponent,
@@ -82,6 +84,60 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
               <option value="scrolled-and-hovered">Scrolled and Hovered</option>
             </select>
           </div>
+
+          @if (scrollback().scrollbar !== 'never') {
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" [class.opacity-60]="!scrollbarAvailable()">
+              <div class="form-group">
+                <label class="block text-sm font-medium text-kitty-text mb-2">
+                  Scrollbar Width
+                  <span class="text-kitty-text-dim text-xs ml-2">pt (default 8)</span>
+                </label>
+                <app-number-input
+                  [(ngModel)]="scrollback().scrollbar_width"
+                  (ngModelChange)="helper.updateField('scrollbar_width', $event)"
+                  [min]="1"
+                  [step]="1"
+                  [disabled]="!scrollbarAvailable()"
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="block text-sm font-medium text-kitty-text mb-2">
+                  Scrollbar Gap
+                  <span class="text-kitty-text-dim text-xs ml-2">Gap between text and scrollbar (pt)</span>
+                </label>
+                <app-number-input
+                  [(ngModel)]="scrollback().scrollbar_gap"
+                  (ngModelChange)="helper.updateField('scrollbar_gap', $event)"
+                  [min]="0"
+                  [step]="1"
+                  [disabled]="!scrollbarAvailable()"
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="block text-sm font-medium text-kitty-text mb-2">
+                  Scrollbar Handle Color
+                  <span class="text-kitty-text-dim text-xs ml-2">CSS color</span>
+                </label>
+                <app-color-input
+                  [value]="scrollback().scrollbar_handle_color || '#222222'"
+                  (valueChange)="helper.updateField('scrollbar_handle_color', $event)"
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="block text-sm font-medium text-kitty-text mb-2">
+                  Scrollbar Track Color
+                  <span class="text-kitty-text-dim text-xs ml-2">CSS color</span>
+                </label>
+                <app-color-input
+                  [value]="scrollback().scrollbar_track_color || '#444444'"
+                  (valueChange)="helper.updateField('scrollbar_track_color', $event)"
+                />
+              </div>
+            </div>
+          }
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="form-group">

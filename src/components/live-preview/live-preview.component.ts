@@ -108,8 +108,8 @@ type PreviewMode = "terminal" | "config";
             <span class="mx-1.5 opacity-50">·</span>
             {{ configLineCount() }} lines
           </p>
-          <p class="text-[9px] text-kitty-text-dim/60 font-sans tracking-wide">
-            Preview rendering may vary from actual terminal
+          <p class="text-[9px] text-kitty-text-dim/80 font-sans tracking-wide" title="This visualizer is an approximation and might not fully reflect the actual terminal configuration output.">
+            Note: This is an approximate visualizer. Rendering may vary significantly from the actual terminal.
           </p>
         </div>
       </footer>

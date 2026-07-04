@@ -234,9 +234,11 @@ export class PresetSelectorComponent {
 				tabBarSlice[key] = defaultTabBar[key];
 			}
 
+			// biome-ignore lint/complexity/useLiteralKeys: Requires index access on Record<string, unknown>
 			(next["window_layout"] as Record<string, unknown>)[
 				"active_border_color"
 			] = DEFAULT_KITTY_CONFIG.window_layout.active_border_color;
+			// biome-ignore lint/complexity/useLiteralKeys: Requires index access on Record<string, unknown>
 			(next["mouse"] as Record<string, unknown>)["url_color"] =
 				DEFAULT_KITTY_CONFIG.mouse.url_color;
 		}
