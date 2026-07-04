@@ -18,17 +18,6 @@ const MULTILINE_KEYS = new Set([
 
 const COMMA_SEPARATED_KEYS = new Set(["enabled_layouts", "paste_actions"]);
 
-const SPACE_SEPARATED_KEYS = new Set([
-	"box_drawing_scale",
-	"tab_fade",
-	"tab_bar_margin_height",
-	"cursor_trail_decay",
-	"url_prefixes",
-	"clipboard_control",
-	"clone_source_strategies",
-	"file_transfer_confirmation_bypass",
-]);
-
 // Keys that require quoted values when they have leading/trailing spaces
 const QUOTED_STRING_KEYS = new Set([
 	"tab_activity_symbol",
@@ -38,8 +27,7 @@ const QUOTED_STRING_KEYS = new Set([
 	"active_tab_title_template",
 ]);
 
-// Keys with special boolean handling (not standard yes/no)
-const SPECIAL_BOOLEAN_KEYS = new Set<string>([]);
+// (No special boolean keys currently needed)
 
 @Injectable({
 	providedIn: "root",

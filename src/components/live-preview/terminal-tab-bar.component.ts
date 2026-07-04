@@ -384,11 +384,11 @@ export class TerminalTabBarComponent {
 	}
 
 	leadingSpaces(): readonly null[] {
-		return new Array(this.sepLeading()).fill(null);
+		return Array.from({ length: this.sepLeading() }).fill(null) as null[];
 	}
 
 	trailingSpaces(): readonly null[] {
-		return new Array(this.sepTrailing()).fill(null);
+		return Array.from({ length: this.sepTrailing() }).fill(null) as null[];
 	}
 
 	separatorStyles(): Record<string, string> {

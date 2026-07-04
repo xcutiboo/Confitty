@@ -550,7 +550,7 @@ export class TabBarFormComponent {
 	readonly tabBarDragThresholdAvailable = computed(() =>
 		this.versionService.isOptionAvailable("tab_bar_drag_threshold"),
 	);
-	
+
 	readonly progressBarAvailable = computed(() =>
 		this.versionService.isOptionAvailable("progress_bar"),
 	);
