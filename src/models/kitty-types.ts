@@ -349,12 +349,13 @@ export interface KittyOSSpecificConfig {
 	macos_window_resizable: boolean;
 	macos_thicken_font: number;
 	macos_traditional_fullscreen: boolean;
-	macos_show_window_title_in: string;
+	macos_show_window_title_in: "all" | "window" | "menubar" | "none";
 	macos_menubar_title_max_length: number;
 	macos_custom_beam_cursor: boolean;
-	macos_colorspace: KittyMacosColorspace;
+	macos_colorspace: "srgb" | "displayp3" | "default";
 	macos_dock_badge_on_bell: boolean;
-	linux_display_server: KittyLinuxDisplayServer;
+	macos_fullscreen_ignore_safe_area_insets: boolean;
+	linux_display_server: "auto" | "wayland" | "x11";
 }
 
 export interface KittyConfigAST {

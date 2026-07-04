@@ -256,6 +256,7 @@ export const DEFAULT_KITTY_CONFIG: KittyConfigAST = {
 		macos_custom_beam_cursor: false,
 		macos_colorspace: "srgb",
 		macos_dock_badge_on_bell: false,
+		macos_fullscreen_ignore_safe_area_insets: false,
 		linux_display_server: "auto",
 	},
 	keyboard_shortcuts: [],
