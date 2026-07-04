@@ -1,6 +1,6 @@
 import type { KittyColorConfig, KittyTabBarConfig } from '../../models/kitty-types';
 import { DEFAULT_KITTY_CONFIG } from '../../models/kitty-defaults';
-import { shade } from './color-utils';
+import { mix } from './color-utils';
 
 export interface TabPalette {
   barBg: string;
@@ -13,11 +13,13 @@ export interface TabPalette {
 const TAB_DEFAULTS = DEFAULT_KITTY_CONFIG.tab_bar;
 
 /**
- * Tab bar colors in kitty.conf are independent from the main palette by default.
- * When the user has not touched the tab bar fields, fall back to palette-derived
- * values so a Colors-form edit visibly carries through to the preview's tab bar.
+ * When the user has not customised the tab bar slice, we derive colors
+ * from the active palette so a theme swap is visible immediately.
  *
- * The raw config is never mutated; the export pipeline keeps its source values.
+ * The mapping is more aggressive than Kitty's defaults: Kitty ships with
+ * a static gray inactive tab that ignores theme color, which reads as
+ * dead weight in a live preview. We mix 18% toward the foreground so the
+ * inactive tab has a real outline against the bar background.
  */
 export function effectiveTabColors(tabBar: KittyTabBarConfig, colors: KittyColorConfig): TabPalette {
   const fallback = derivedFromPalette(colors);
@@ -45,18 +47,12 @@ export function effectiveTabColors(tabBar: KittyTabBarConfig, colors: KittyColor
   };
 }
 
-/**
- * Pure derivation from the active palette. Exported so the store can
- * reuse the same recipe when it syncs the tab_bar slice on Colors changes.
- */
 export function derivedFromPalette(colors: KittyColorConfig): TabPalette {
   return {
-    barBg:      shade(colors.background, 6),
+    barBg:      colors.background,
     activeBg:   colors.color5 ?? colors.foreground,
-    // Foreground (not background) keeps tabs readable in fade/separator styles
-    // where the tab itself has no bg fill, so text sits directly on the bar bg.
     activeFg:   colors.foreground,
-    inactiveBg: shade(colors.background, 10),
-    inactiveFg: colors.foreground,
+    inactiveBg: mix(colors.background, colors.foreground, 0.22),
+    inactiveFg: mix(colors.background, colors.foreground, 0.65),
   };
 }

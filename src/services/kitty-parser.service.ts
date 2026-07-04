@@ -469,8 +469,51 @@ export class KittyParserService {
       case 'touch_scroll_multiplier':
         config.scrollback.touch_scroll_multiplier = Number.parseFloat(value);
         break;
-      case 'scrollbar':
-        config.scrollback.scrollbar = value;
+      case 'scrollbar': {
+        const allowed = ['scrolled', 'always', 'never', 'hovered', 'scrolled-and-hovered'] as const;
+        if ((allowed as readonly string[]).includes(value)) {
+          config.scrollback.scrollbar = value as typeof allowed[number];
+        }
+        break;
+      }
+      case 'scrollbar_gap':
+        config.scrollback.scrollbar_gap = Number.parseFloat(value);
+        break;
+      case 'scrollbar_handle_color':
+        config.scrollback.scrollbar_handle_color = value;
+        break;
+      case 'scrollbar_handle_opacity':
+        config.scrollback.scrollbar_handle_opacity = Number.parseFloat(value);
+        break;
+      case 'scrollbar_hitbox_expansion':
+        config.scrollback.scrollbar_hitbox_expansion = Number.parseFloat(value);
+        break;
+      case 'scrollbar_hover_width':
+        config.scrollback.scrollbar_hover_width = Number.parseFloat(value);
+        break;
+      case 'scrollbar_interactive':
+        config.scrollback.scrollbar_interactive = value === 'yes' || value === 'true';
+        break;
+      case 'scrollbar_jump_on_click':
+        config.scrollback.scrollbar_jump_on_click = value === 'yes' || value === 'true';
+        break;
+      case 'scrollbar_min_handle_height':
+        config.scrollback.scrollbar_min_handle_height = Number.parseFloat(value);
+        break;
+      case 'scrollbar_radius':
+        config.scrollback.scrollbar_radius = Number.parseFloat(value);
+        break;
+      case 'scrollbar_track_color':
+        config.scrollback.scrollbar_track_color = value;
+        break;
+      case 'scrollbar_track_hover_opacity':
+        config.scrollback.scrollbar_track_hover_opacity = Number.parseFloat(value);
+        break;
+      case 'scrollbar_track_opacity':
+        config.scrollback.scrollbar_track_opacity = Number.parseFloat(value);
+        break;
+      case 'scrollbar_width':
+        config.scrollback.scrollbar_width = Number.parseFloat(value);
         break;
       case 'pixel_scroll':
         config.scrollback.pixel_scroll = value === 'yes' || value === 'true';
@@ -697,6 +740,33 @@ export class KittyParserService {
       case 'window_drag_tolerance':
         config.window_layout.window_drag_tolerance = Number.parseFloat(value);
         break;
+      case 'window_title_bar':
+        if (value === 'top' || value === 'bottom') config.window_layout.window_title_bar = value;
+        break;
+      case 'window_title_bar_active_background':
+        config.window_layout.window_title_bar_active_background = value;
+        break;
+      case 'window_title_bar_active_foreground':
+        config.window_layout.window_title_bar_active_foreground = value;
+        break;
+      case 'window_title_bar_inactive_background':
+        config.window_layout.window_title_bar_inactive_background = value;
+        break;
+      case 'window_title_bar_inactive_foreground':
+        config.window_layout.window_title_bar_inactive_foreground = value;
+        break;
+      case 'window_title_bar_align':
+        if (value === 'left' || value === 'center' || value === 'right') config.window_layout.window_title_bar_align = value;
+        break;
+      case 'window_title_bar_min_windows':
+        config.window_layout.window_title_bar_min_windows = Number.parseInt(value, 10);
+        break;
+      case 'window_title_template':
+        config.window_layout.window_title_template = value;
+        break;
+      case 'active_window_title_template':
+        config.window_layout.active_window_title_template = value;
+        break;
     }
   }
 
@@ -774,6 +844,19 @@ export class KittyParserService {
       case 'tab_bar_drag_threshold':
         config.tab_bar.tab_bar_drag_threshold = Number.parseFloat(value);
         break;
+      case 'tab_bar_filter':
+        config.tab_bar.tab_bar_filter = value;
+        break;
+      case 'tab_bar_show_new_tab_button':
+        config.tab_bar.tab_bar_show_new_tab_button = value === 'yes' || value === 'true';
+        break;
+      case 'progress_bar': {
+        const allowed = ['left', 'right', 'top', 'bottom', 'hidden'] as const;
+        if ((allowed as readonly string[]).includes(value)) {
+          config.tab_bar.progress_bar = value as typeof allowed[number];
+        }
+        break;
+      }
     }
   }
 
