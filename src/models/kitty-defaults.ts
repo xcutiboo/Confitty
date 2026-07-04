@@ -206,6 +206,7 @@ export const DEFAULT_KITTY_CONFIG: KittyConfigAST = {
 		mark3_background: "#f274bc",
 		dynamic_background_opacity: false,
 		transparent_background_colors: [],
+		palette_generate: "fixed",
 	},
 	advanced: {
 		shell: ".",
@@ -238,6 +239,7 @@ export const DEFAULT_KITTY_CONFIG: KittyConfigAST = {
 		forward_stdio: false,
 		menu_map: [],
 		action_alias: [],
+		auto_reload_config: -1,
 	},
 	os_specific: {
 		wayland_titlebar_color: "system",
