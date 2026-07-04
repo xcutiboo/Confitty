@@ -1,20 +1,27 @@
-import { Component, forwardRef, Input, ChangeDetectionStrategy, ChangeDetectorRef, inject } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from "@angular/common";
+import {
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	forwardRef,
+	Input,
+	inject,
+} from "@angular/core";
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Component({
-  selector: 'app-number-input',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'block' },
-  imports: [CommonModule],
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => NumberInputComponent),
-      multi: true,
-    },
-  ],
-  template: `
+	selector: "app-number-input",
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: "block" },
+	imports: [CommonModule],
+	providers: [
+		{
+			provide: NG_VALUE_ACCESSOR,
+			useExisting: forwardRef(() => NumberInputComponent),
+			multi: true,
+		},
+	],
+	template: `
     <div
       class="w-full flex items-stretch h-10 rounded-lg border bg-kitty-bg overflow-hidden transition-colors"
       [class.border-kitty-border]="!focused"
@@ -60,95 +67,95 @@ import { CommonModule } from '@angular/common';
       </button>
     </div>
   `,
-  styles: [],
+	styles: [],
 })
 export class NumberInputComponent implements ControlValueAccessor {
-  @Input() min: number | null = null;
-  @Input() max: number | null = null;
-  @Input() step = 1;
+	@Input() min: number | null = null;
+	@Input() max: number | null = null;
+	@Input() step = 1;
 
-  value = 0;
-  focused = false;
-  disabled = false;
+	value = 0;
+	focused = false;
+	disabled = false;
 
-  private readonly cdr = inject(ChangeDetectorRef);
-  private onChange: (val: number) => void = () => {};
-  private onTouched: () => void = () => {};
+	private readonly cdr = inject(ChangeDetectorRef);
+	private onChange: (val: number) => void = () => {};
+	private onTouched: () => void = () => {};
 
-  get displayValue(): string {
-    return String(this.value);
-  }
+	get displayValue(): string {
+		return String(this.value);
+	}
 
-  writeValue(val: number): void {
-    this.value = val ?? 0;
-    this.cdr.markForCheck();
-  }
+	writeValue(val: number): void {
+		this.value = val ?? 0;
+		this.cdr.markForCheck();
+	}
 
-  registerOnChange(fn: (val: number) => void): void {
-    this.onChange = fn;
-  }
+	registerOnChange(fn: (val: number) => void): void {
+		this.onChange = fn;
+	}
 
-  registerOnTouched(fn: () => void): void {
-    this.onTouched = fn;
-  }
+	registerOnTouched(fn: () => void): void {
+		this.onTouched = fn;
+	}
 
-  setDisabledState(disabled: boolean): void {
-    this.disabled = disabled;
-    this.cdr.markForCheck();
-  }
+	setDisabledState(disabled: boolean): void {
+		this.disabled = disabled;
+		this.cdr.markForCheck();
+	}
 
-  increment(): void {
-    const next = this.clamp(+(this.value + this.step).toFixed(10));
-    this.emit(next);
-  }
+	increment(): void {
+		const next = this.clamp(+(this.value + this.step).toFixed(10));
+		this.emit(next);
+	}
 
-  decrement(): void {
-    const next = this.clamp(+(this.value - this.step).toFixed(10));
-    this.emit(next);
-  }
+	decrement(): void {
+		const next = this.clamp(+(this.value - this.step).toFixed(10));
+		this.emit(next);
+	}
 
-  onFocus(): void {
-    this.focused = true;
-  }
+	onFocus(): void {
+		this.focused = true;
+	}
 
-  onBlur(event: FocusEvent): void {
-    this.focused = false;
-    this.onTouched();
-    const raw = (event.target as HTMLInputElement).value;
-    const parsed = Number.parseFloat(raw);
-    if (!Number.isNaN(parsed)) {
-      this.emit(this.clamp(parsed));
-    }
-  }
+	onBlur(event: FocusEvent): void {
+		this.focused = false;
+		this.onTouched();
+		const raw = (event.target as HTMLInputElement).value;
+		const parsed = Number.parseFloat(raw);
+		if (!Number.isNaN(parsed)) {
+			this.emit(this.clamp(parsed));
+		}
+	}
 
-  onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      this.increment();
-    } else if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      this.decrement();
-    }
-  }
+	onKeydown(event: KeyboardEvent): void {
+		if (event.key === "ArrowUp") {
+			event.preventDefault();
+			this.increment();
+		} else if (event.key === "ArrowDown") {
+			event.preventDefault();
+			this.decrement();
+		}
+	}
 
-  onInputChange(event: Event): void {
-    const raw = (event.target as HTMLInputElement).value;
-    const parsed = Number.parseFloat(raw);
-    if (!Number.isNaN(parsed)) {
-      this.emit(this.clamp(parsed));
-    }
-  }
+	onInputChange(event: Event): void {
+		const raw = (event.target as HTMLInputElement).value;
+		const parsed = Number.parseFloat(raw);
+		if (!Number.isNaN(parsed)) {
+			this.emit(this.clamp(parsed));
+		}
+	}
 
-  private clamp(val: number): number {
-    if (this.min !== null && val < this.min) return this.min;
-    if (this.max !== null && val > this.max) return this.max;
-    return val;
-  }
+	private clamp(val: number): number {
+		if (this.min !== null && val < this.min) return this.min;
+		if (this.max !== null && val > this.max) return this.max;
+		return val;
+	}
 
-  private emit(val: number): void {
-    this.value = val;
-    this.onChange(val);
-    this.onTouched();
-    this.cdr.markForCheck();
-  }
+	private emit(val: number): void {
+		this.value = val;
+		this.onChange(val);
+		this.onTouched();
+		this.cdr.markForCheck();
+	}
 }

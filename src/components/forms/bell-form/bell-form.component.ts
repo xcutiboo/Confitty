@@ -1,17 +1,24 @@
-import { Component, computed, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { NumberInputComponent } from '../../shared/number-input/number-input.component';
-import { ColorInputComponent } from '../../shared/color-input/color-input.component';
-import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.component';
-import { FormSectionComponent } from '../../shared/form-section/form-section.component';
-import { createFormHelper } from '../../../utils/form-helpers';
-import { KittyVersionService } from '../../../services/kitty-version.service';
+import { CommonModule } from "@angular/common";
+import { Component, computed, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { KittyVersionService } from "../../../services/kitty-version.service";
+import { createFormHelper } from "../../../utils/form-helpers";
+import { ColorInputComponent } from "../../shared/color-input/color-input.component";
+import { FormSectionComponent } from "../../shared/form-section/form-section.component";
+import { NumberInputComponent } from "../../shared/number-input/number-input.component";
+import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.component";
 
 @Component({
-  selector: 'app-bell-form',
-  imports: [CommonModule, FormsModule, NumberInputComponent, ColorInputComponent, VersionBadgeComponent, FormSectionComponent],
-  template: `
+	selector: "app-bell-form",
+	imports: [
+		CommonModule,
+		FormsModule,
+		NumberInputComponent,
+		ColorInputComponent,
+		VersionBadgeComponent,
+		FormSectionComponent,
+	],
+	template: `
     <app-form-section title="Bell" description="Configure audio alerts, visual flash, and system bell behavior">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="form-group">
@@ -145,16 +152,20 @@ import { KittyVersionService } from '../../../services/kitty-version.service';
       }
     </app-form-section>
   `,
-  styles: []
+	styles: [],
 })
 export class BellFormComponent {
-  private readonly versionService = inject(KittyVersionService);
+	private readonly versionService = inject(KittyVersionService);
 
-  readonly helper = createFormHelper('bell');
-  readonly bell = this.helper.state.asReadonly();
-  readonly linuxBellThemeAvailable = computed(() => this.versionService.isOptionAvailable('linux_bell_theme'));
+	readonly helper = createFormHelper("bell");
+	readonly bell = this.helper.state.asReadonly();
+	readonly linuxBellThemeAvailable = computed(() =>
+		this.versionService.isOptionAvailable("linux_bell_theme"),
+	);
 
-  visualBellColorForPicker(): string {
-    return this.bell().visual_bell_color?.startsWith('#') ? this.bell().visual_bell_color : '#ff0000';
-  }
+	visualBellColorForPicker(): string {
+		return this.bell().visual_bell_color?.startsWith("#")
+			? this.bell().visual_bell_color
+			: "#ff0000";
+	}
 }

@@ -1,16 +1,22 @@
-import { Component, computed, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ConfigStoreService } from '../../../services/config-store.service';
-import { KittyVersionService } from '../../../services/kitty-version.service';
-import { NumberInputComponent } from '../../shared/number-input/number-input.component';
-import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.component';
-import { FormSectionComponent } from '../../shared/form-section/form-section.component';
+import { CommonModule } from "@angular/common";
+import { Component, computed, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { ConfigStoreService } from "../../../services/config-store.service";
+import { KittyVersionService } from "../../../services/kitty-version.service";
+import { FormSectionComponent } from "../../shared/form-section/form-section.component";
+import { NumberInputComponent } from "../../shared/number-input/number-input.component";
+import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.component";
 
 @Component({
-  selector: 'app-keyboard-shortcuts-form',
-  imports: [CommonModule, FormsModule, NumberInputComponent, VersionBadgeComponent, FormSectionComponent],
-  template: `
+	selector: "app-keyboard-shortcuts-form",
+	imports: [
+		CommonModule,
+		FormsModule,
+		NumberInputComponent,
+		VersionBadgeComponent,
+		FormSectionComponent,
+	],
+	template: `
     <app-form-section title="Keyboard Shortcuts" description="Configure global modifier key and keyboard mappings">
         <div class="form-group">
           <label class="block text-sm font-medium text-kitty-text mb-2">
@@ -104,23 +110,25 @@ import { FormSectionComponent } from '../../shared/form-section/form-section.com
       </div>
     </app-form-section>
   `,
-  styles: []
+	styles: [],
 })
 export class KeyboardShortcutsFormComponent {
-  private readonly configStore = inject(ConfigStoreService);
-  private readonly versionService = inject(KittyVersionService);
+	private readonly configStore = inject(ConfigStoreService);
+	private readonly versionService = inject(KittyVersionService);
 
-  readonly config = computed(() => this.configStore.configState());
-  readonly keyboardShortcuts = computed(() => this.config().keyboard_shortcuts);
-  readonly kittyMod = computed(() => this.config().kitty_mod);
-  readonly advanced = computed(() => this.config().advanced);
-  readonly mapTimeoutAvailable = computed(() => this.versionService.isOptionAvailable('map_timeout'));
+	readonly config = computed(() => this.configStore.configState());
+	readonly keyboardShortcuts = computed(() => this.config().keyboard_shortcuts);
+	readonly kittyMod = computed(() => this.config().kitty_mod);
+	readonly advanced = computed(() => this.config().advanced);
+	readonly mapTimeoutAvailable = computed(() =>
+		this.versionService.isOptionAvailable("map_timeout"),
+	);
 
-  updateKittyMod(value: string): void {
-    this.configStore.setKittyMod(value);
-  }
+	updateKittyMod(value: string): void {
+		this.configStore.setKittyMod(value);
+	}
 
-  updateAdvancedField(field: string, value: unknown): void {
-    this.configStore.updateSection('advanced', { [field]: value });
-  }
+	updateAdvancedField(field: string, value: unknown): void {
+		this.configStore.updateSection("advanced", { [field]: value });
+	}
 }

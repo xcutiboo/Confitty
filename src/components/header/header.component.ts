@@ -1,18 +1,18 @@
-import { Component, effect, inject, output, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ConfigStoreService } from '../../services/config-store.service';
-import { KittyGeneratorService } from '../../services/kitty-generator.service';
-import { KittyParserService } from '../../services/kitty-parser.service';
-import { ThemeService } from '../../services/theme.service';
-import { SearchBarComponent } from '../search-bar/search-bar.component';
-import { SearchService } from '../../services/search.service';
-import { KittyVersionService } from '../../services/kitty-version.service';
+import { CommonModule } from "@angular/common";
+import { Component, effect, inject, output, signal } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { ConfigStoreService } from "../../services/config-store.service";
+import { KittyGeneratorService } from "../../services/kitty-generator.service";
+import { KittyParserService } from "../../services/kitty-parser.service";
+import { KittyVersionService } from "../../services/kitty-version.service";
+import { SearchService } from "../../services/search.service";
+import { ThemeService } from "../../services/theme.service";
+import { SearchBarComponent } from "../search-bar/search-bar.component";
 
 @Component({
-  selector: 'app-header',
-  imports: [CommonModule, FormsModule, SearchBarComponent],
-  template: `
+	selector: "app-header",
+	imports: [CommonModule, FormsModule, SearchBarComponent],
+	template: `
     <header class="h-14 sm:h-16 lg:h-20 bg-kitty-surface border-b border-kitty-border flex items-center justify-between px-3 sm:px-4 lg:px-6 shadow-sm">
       <!-- Left: Logo and mobile menu -->
       <div class="flex items-center gap-2 sm:gap-3 lg:gap-5 flex-shrink-0">
@@ -229,58 +229,60 @@ import { KittyVersionService } from '../../services/kitty-version.service';
       </div>
     }
   `,
-  styles: []
+	styles: [],
 })
 export class HeaderComponent {
-  readonly aboutRequested = output<void>();
-  readonly mobileSearchOpen = signal(false);
-  readonly mobileMenuOpen = signal(false);
+	readonly aboutRequested = output<void>();
+	readonly mobileSearchOpen = signal(false);
+	readonly mobileMenuOpen = signal(false);
 
-  readonly versionService = inject(KittyVersionService);
-  selectedVersion = this.versionService.currentVersion();
+	readonly versionService = inject(KittyVersionService);
+	selectedVersion = this.versionService.currentVersion();
 
-  onVersionChange(version: string): void {
-    this.versionService.setVersion(version);
-    this.selectedVersion = version;
-  }
+	onVersionChange(version: string): void {
+		this.versionService.setVersion(version);
+		this.selectedVersion = version;
+	}
 
-  constructor(
-    public readonly configStore: ConfigStoreService,
-    public readonly themeService: ThemeService,
-    private readonly generator: KittyGeneratorService,
-    private readonly parser: KittyParserService,
-    private readonly searchService: SearchService
-  ) {
-    effect(() => {
-      const hasResults = this.searchService.results().length > 0;
-      const wasOpen = this.mobileSearchOpen();
-      if (wasOpen && !hasResults) {
-        this.mobileSearchOpen.set(false);
-      }
-    });
-  }
+	constructor(
+		public readonly configStore: ConfigStoreService,
+		public readonly themeService: ThemeService,
+		private readonly generator: KittyGeneratorService,
+		private readonly parser: KittyParserService,
+		private readonly searchService: SearchService,
+	) {
+		effect(() => {
+			const hasResults = this.searchService.results().length > 0;
+			const wasOpen = this.mobileSearchOpen();
+			if (wasOpen && !hasResults) {
+				this.mobileSearchOpen.set(false);
+			}
+		});
+	}
 
-  handleImport(): void {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.conf';
-    input.onchange = (e: Event) => this.onFileSelected(e);
-    input.click();
-  }
+	handleImport(): void {
+		const input = document.createElement("input");
+		input.type = "file";
+		input.accept = ".conf";
+		input.onchange = (e: Event) => this.onFileSelected(e);
+		input.click();
+	}
 
-  private async onFileSelected(event: Event): Promise<void> {
-    const file = (event.target as HTMLInputElement)?.files?.[0];
-    if (!file) return;
+	private async onFileSelected(event: Event): Promise<void> {
+		const file = (event.target as HTMLInputElement)?.files?.[0];
+		if (!file) return;
 
-    try {
-      const content = await file.text();
-      this.configStore.loadConfig(this.parser.parseConfig(content));
-    } catch {
-      alert('Failed to parse configuration file. Please check the file format.');
-    }
-  }
+		try {
+			const content = await file.text();
+			this.configStore.loadConfig(this.parser.parseConfig(content));
+		} catch {
+			alert(
+				"Failed to parse configuration file. Please check the file format.",
+			);
+		}
+	}
 
-  handleExport(): void {
-    this.generator.downloadConfig(this.configStore.configState());
-  }
+	handleExport(): void {
+		this.generator.downloadConfig(this.configStore.configState());
+	}
 }

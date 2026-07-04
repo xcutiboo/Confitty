@@ -1,23 +1,23 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KittyTabBarEdge } from '../../../models/kitty-types';
-import { KittyVersionService } from '../../../services/kitty-version.service';
-import { createFormHelper } from '../../../utils/form-helpers';
-import { FormSectionComponent } from '../../shared/form-section/form-section.component';
-import { NumberInputComponent } from '../../shared/number-input/number-input.component';
-import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.component';
+import { CommonModule } from "@angular/common";
+import { Component, computed, inject } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import type { KittyTabBarEdge } from "../../../models/kitty-types";
+import { KittyVersionService } from "../../../services/kitty-version.service";
+import { createFormHelper } from "../../../utils/form-helpers";
+import { FormSectionComponent } from "../../shared/form-section/form-section.component";
+import { NumberInputComponent } from "../../shared/number-input/number-input.component";
+import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.component";
 
 @Component({
-  selector: 'app-tab-bar-form',
-  imports: [
-    CommonModule,
-    FormsModule,
-    NumberInputComponent,
-    VersionBadgeComponent,
-    FormSectionComponent,
-  ],
-  template: `
+	selector: "app-tab-bar-form",
+	imports: [
+		CommonModule,
+		FormsModule,
+		NumberInputComponent,
+		VersionBadgeComponent,
+		FormSectionComponent,
+	],
+	template: `
     <app-form-section
       title="Tab Bar"
       description="Customize tab bar appearance, behavior, and color scheme"
@@ -516,34 +516,34 @@ import { VersionBadgeComponent } from '../../shared/version-badge/version-badge.
       </div>
     </app-form-section>
   `,
-  styles: [],
+	styles: [],
 })
 export class TabBarFormComponent {
-  private readonly versionService = inject(KittyVersionService);
+	private readonly versionService = inject(KittyVersionService);
 
-  readonly helper = createFormHelper('tab_bar');
-  readonly tabBar = this.helper.state.asReadonly();
-  readonly powerlineStyleAvailable = computed(() =>
-    this.versionService.isOptionAvailable('tab_bar_style_powerline')
-  );
-  readonly tabBarDragThresholdAvailable = computed(() =>
-    this.versionService.isOptionAvailable('tab_bar_drag_threshold')
-  );
+	readonly helper = createFormHelper("tab_bar");
+	readonly tabBar = this.helper.state.asReadonly();
+	readonly powerlineStyleAvailable = computed(() =>
+		this.versionService.isOptionAvailable("tab_bar_style_powerline"),
+	);
+	readonly tabBarDragThresholdAvailable = computed(() =>
+		this.versionService.isOptionAvailable("tab_bar_drag_threshold"),
+	);
 
-  readonly tabBarEdges: KittyTabBarEdge[] = ['top', 'bottom'];
+	readonly tabBarEdges: KittyTabBarEdge[] = ["top", "bottom"];
 
-  get tabBarMarginHeightTop(): number {
-    return this.tabBar().tab_bar_margin_height?.[0] || 0;
-  }
+	get tabBarMarginHeightTop(): number {
+		return this.tabBar().tab_bar_margin_height?.[0] || 0;
+	}
 
-  get tabBarMarginHeightBottom(): number {
-    return this.tabBar().tab_bar_margin_height?.[1] || 0;
-  }
+	get tabBarMarginHeightBottom(): number {
+		return this.tabBar().tab_bar_margin_height?.[1] || 0;
+	}
 
-  setMarginHeight(): void {
-    this.helper.updateField('tab_bar_margin_height', [
-      this.tabBarMarginHeightTop,
-      this.tabBarMarginHeightBottom,
-    ]);
-  }
+	setMarginHeight(): void {
+		this.helper.updateField("tab_bar_margin_height", [
+			this.tabBarMarginHeightTop,
+			this.tabBarMarginHeightBottom,
+		]);
+	}
 }

@@ -1,40 +1,72 @@
-import { Component, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ConfigStoreService } from '../../services/config-store.service';
-import type { KittyColorConfig } from '../../models/kitty-types';
-import { SAMPLE_SESSION, type AnsiKey, type Line, type Span } from './terminal-session';
-import { TerminalCursorComponent } from './terminal-cursor.component';
-import { mix } from './color-utils';
+import { CommonModule } from "@angular/common";
+import {
+	Component,
+	computed,
+	type ElementRef,
+	inject,
+	signal,
+	viewChild,
+} from "@angular/core";
+import type { KittyColorConfig } from "../../models/kitty-types";
+import { ConfigStoreService } from "../../services/config-store.service";
+import { mix } from "./color-utils";
+import { TerminalCursorComponent } from "./terminal-cursor.component";
+import {
+	type AnsiKey,
+	type Line,
+	SAMPLE_SESSION,
+	type Span,
+} from "./terminal-session";
 
 const ANSI_KEYS: readonly AnsiKey[] = [
-  'color0', 'color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7',
-  'color8', 'color9', 'color10', 'color11', 'color12', 'color13', 'color14', 'color15',
+	"color0",
+	"color1",
+	"color2",
+	"color3",
+	"color4",
+	"color5",
+	"color6",
+	"color7",
+	"color8",
+	"color9",
+	"color10",
+	"color11",
+	"color12",
+	"color13",
+	"color14",
+	"color15",
 ];
 
 function isAnsiKey(value: string): value is AnsiKey {
-  return (ANSI_KEYS as readonly string[]).includes(value);
+	return (ANSI_KEYS as readonly string[]).includes(value);
 }
 
-function fg(text: string): Span                       { return { text, color: 'fg' }; }
-function ansi(text: string, color: AnsiKey): Span     { return { text, color }; }
-function dim(text: string): Span                      { return { text, color: 'fg', dim: true }; }
+function fg(text: string): Span {
+	return { text, color: "fg" };
+}
+function ansi(text: string, color: AnsiKey): Span {
+	return { text, color };
+}
+function dim(text: string): Span {
+	return { text, color: "fg", dim: true };
+}
 function promptSpans(path: string): Span[] {
-  return [
-    { text: 'user',  color: 'color2', bold: true },
-    { text: '@',     color: 'color8' },
-    { text: 'kitty', color: 'color6', bold: true },
-    { text: ' ' },
-    { text: path,    color: 'color4', bold: true },
-    { text: ' ' },
-    { text: '❯',     color: 'color5', bold: true },
-    { text: ' ' },
-  ];
+	return [
+		{ text: "user", color: "color2", bold: true },
+		{ text: "@", color: "color8" },
+		{ text: "kitty", color: "color6", bold: true },
+		{ text: " " },
+		{ text: path, color: "color4", bold: true },
+		{ text: " " },
+		{ text: "❯", color: "color5", bold: true },
+		{ text: " " },
+	];
 }
 
 @Component({
-  selector: 'app-terminal-screen',
-  imports: [CommonModule, TerminalCursorComponent],
-  template: `
+	selector: "app-terminal-screen",
+	imports: [CommonModule, TerminalCursorComponent],
+	template: `
     <div
       class="screen"
       role="textbox"
@@ -80,7 +112,8 @@ function promptSpans(path: string): Span[] {
       />
     </div>
   `,
-  styles: [`
+	styles: [
+		`
     .screen {
       flex: 1;
       min-height: 0;
@@ -103,131 +136,148 @@ function promptSpans(path: string): Span[] {
       opacity: 0;
       pointer-events: none;
     }
-  `]
+  `,
+	],
 })
 export class TerminalScreenComponent {
-  private readonly store = inject(ConfigStoreService);
-  private readonly hidden = viewChild.required<ElementRef<HTMLInputElement>>('hiddenInput');
+	private readonly store = inject(ConfigStoreService);
+	private readonly hidden =
+		viewChild.required<ElementRef<HTMLInputElement>>("hiddenInput");
 
-  readonly session = SAMPLE_SESSION;
-  readonly activePrompt = promptSpans('~/dotfiles');
-  readonly buffer = signal('');
-  readonly history = signal<Line[]>([]);
+	readonly session = SAMPLE_SESSION;
+	readonly activePrompt = promptSpans("~/dotfiles");
+	readonly buffer = signal("");
+	readonly history = signal<Line[]>([]);
 
-  private readonly colors = computed(() => this.store.configState().colors);
-  private readonly mouse = computed(() => this.store.configState().mouse);
+	private readonly colors = computed(() => this.store.configState().colors);
+	private readonly mouse = computed(() => this.store.configState().mouse);
 
-  readonly foreground = computed(() => this.colors().foreground);
+	readonly foreground = computed(() => this.colors().foreground);
 
-  focusInput(): void {
-    this.hidden().nativeElement.focus();
-  }
+	focusInput(): void {
+		this.hidden().nativeElement.focus();
+	}
 
-  onInput(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.buffer.set(value);
-  }
+	onInput(event: Event): void {
+		const value = (event.target as HTMLInputElement).value;
+		this.buffer.set(value);
+	}
 
-  onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      const cmd = this.buffer().trim();
-      this.commitLine(cmd);
-      this.buffer.set('');
-      this.hidden().nativeElement.value = '';
-    }
-  }
+	onKeydown(event: KeyboardEvent): void {
+		if (event.key === "Enter") {
+			event.preventDefault();
+			const cmd = this.buffer().trim();
+			this.commitLine(cmd);
+			this.buffer.set("");
+			this.hidden().nativeElement.value = "";
+		}
+	}
 
-  spanStyles(span: Span): Record<string, string> {
-    const colors = this.colors();
-    let fg = this.resolveColor(colors, span.color);
-    if (span.dim) fg = mix(colors.background, fg, colors.dim_opacity);
-    const style: Record<string, string> = { color: fg };
+	spanStyles(span: Span): Record<string, string> {
+		const colors = this.colors();
+		let fg = this.resolveColor(colors, span.color);
+		if (span.dim) fg = mix(colors.background, fg, colors.dim_opacity);
+		const style: Record<string, string> = { color: fg };
 
-    if (span.bold)   style['fontWeight'] = '700';
-    if (span.italic) style['fontStyle']  = 'italic';
+		if (span.bold) style["fontWeight"] = "700";
+		if (span.italic) style["fontStyle"] = "italic";
 
-    if (span.url) {
-      const m = this.mouse();
-      style['color'] = m.url_color;
-      style['cursor'] = 'pointer';
-      if (m.url_style !== 'none') {
-        style['textDecorationLine']  = 'underline';
-        style['textDecorationStyle'] = this.urlDecoration(m.url_style);
-        style['textDecorationColor'] = m.url_color;
-        style['textUnderlineOffset'] = '2px';
-      }
-    }
+		if (span.url) {
+			const m = this.mouse();
+			style["color"] = m.url_color;
+			style["cursor"] = "pointer";
+			if (m.url_style !== "none") {
+				style["textDecorationLine"] = "underline";
+				style["textDecorationStyle"] = this.urlDecoration(m.url_style);
+				style["textDecorationColor"] = m.url_color;
+				style["textUnderlineOffset"] = "2px";
+			}
+		}
 
-    if (span.selected) {
-      const selFg = colors.selection_foreground;
-      const selBg = colors.selection_background;
-      if (selBg && selBg !== 'none') style['backgroundColor'] = selBg;
-      else style['backgroundColor'] = colors.foreground;
-      if (selFg && selFg !== 'none') style['color'] = selFg;
-      else style['color'] = colors.background;
-    }
+		if (span.selected) {
+			const selFg = colors.selection_foreground;
+			const selBg = colors.selection_background;
+			if (selBg && selBg !== "none") style["backgroundColor"] = selBg;
+			else style["backgroundColor"] = colors.foreground;
+			if (selFg && selFg !== "none") style["color"] = selFg;
+			else style["color"] = colors.background;
+		}
 
-    return style;
-  }
+		return style;
+	}
 
-  fgStyles(): Record<string, string> {
-    return { color: this.foreground() };
-  }
+	fgStyles(): Record<string, string> {
+		return { color: this.foreground() };
+	}
 
-  private commitLine(cmd: string): void {
-    const echo: Line = { spans: [...this.activePrompt, fg(cmd)] };
+	private commitLine(cmd: string): void {
+		const echo: Line = { spans: [...this.activePrompt, fg(cmd)] };
 
-    if (!cmd) {
-      this.history.update(h => [...h, { spans: [...this.activePrompt] }]);
-      return;
-    }
-    if (cmd === 'clear') {
-      this.history.set([]);
-      return;
-    }
+		if (!cmd) {
+			this.history.update((h) => [...h, { spans: [...this.activePrompt] }]);
+			return;
+		}
+		if (cmd === "clear") {
+			this.history.set([]);
+			return;
+		}
 
-    const reply = this.respond(cmd);
-    this.history.update(h => reply ? [...h, echo, reply] : [...h, echo]);
-  }
+		const reply = this.respond(cmd);
+		this.history.update((h) => (reply ? [...h, echo, reply] : [...h, echo]));
+	}
 
-  private respond(cmd: string): Line | null {
-    const [head, ...rest] = cmd.split(/\s+/);
-    switch (head) {
-      case 'help':
-        return {
-          spans: [dim('available: '), ansi('clear', 'color3'), dim(', '), ansi('help', 'color3'), dim(', '), ansi('echo', 'color3'), dim(' <text>')],
-        };
-      case 'echo':
-        return { spans: [fg(rest.join(' '))] };
-      case 'pwd':
-        return { spans: [fg('/home/you/dotfiles')] };
-      case 'date':
-        return { spans: [fg(new Date().toString())] };
-      case 'whoami':
-        return { spans: [ansi('user', 'color2', )] };
-      default:
-        return {
-          spans: [ansi(head ?? '', 'color1'), fg(': command not found')],
-        };
-    }
-  }
+	private respond(cmd: string): Line | null {
+		const [head, ...rest] = cmd.split(/\s+/);
+		switch (head) {
+			case "help":
+				return {
+					spans: [
+						dim("available: "),
+						ansi("clear", "color3"),
+						dim(", "),
+						ansi("help", "color3"),
+						dim(", "),
+						ansi("echo", "color3"),
+						dim(" <text>"),
+					],
+				};
+			case "echo":
+				return { spans: [fg(rest.join(" "))] };
+			case "pwd":
+				return { spans: [fg("/home/you/dotfiles")] };
+			case "date":
+				return { spans: [fg(new Date().toString())] };
+			case "whoami":
+				return { spans: [ansi("user", "color2")] };
+			default:
+				return {
+					spans: [ansi(head ?? "", "color1"), fg(": command not found")],
+				};
+		}
+	}
 
-  private resolveColor(colors: KittyColorConfig, key: Span['color']): string {
-    if (!key || key === 'fg') return colors.foreground;
-    if (isAnsiKey(key)) return colors[key];
-    return colors.foreground;
-  }
+	private resolveColor(colors: KittyColorConfig, key: Span["color"]): string {
+		if (!key || key === "fg") return colors.foreground;
+		if (isAnsiKey(key)) return colors[key];
+		return colors.foreground;
+	}
 
-  private urlDecoration(style: string): string {
-    switch (style) {
-      case 'double':   return 'double';
-      case 'curly':    return 'wavy';
-      case 'dotted':   return 'dotted';
-      case 'dashed':   return 'dashed';
-      case 'straight': return 'solid';
-      case 'none':     return 'solid';
-      default:         return 'solid';
-    }
-  }
+	private urlDecoration(style: string): string {
+		switch (style) {
+			case "double":
+				return "double";
+			case "curly":
+				return "wavy";
+			case "dotted":
+				return "dotted";
+			case "dashed":
+				return "dashed";
+			case "straight":
+				return "solid";
+			case "none":
+				return "solid";
+			default:
+				return "solid";
+		}
+	}
 }
