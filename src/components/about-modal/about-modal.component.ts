@@ -9,11 +9,11 @@ import { Component, output } from "@angular/core";
       class="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
       (click)="onBackdropClick($event)"
     >
-      <div class="absolute inset-0 bg-black/70 backdrop-blur-sm animate-fade-in"></div>
+      <div class="absolute inset-0 bg-kitty-darker/60 backdrop-blur-sm animate-fade-in"></div>
 
       <div class="relative w-full max-w-lg max-h-[90vh] flex flex-col glass-panel rounded-2xl overflow-hidden animate-scale-in">
 
-        <div class="relative flex items-center gap-5 px-7 py-7 border-b border-kitty-border bg-kitty-bg">
+        <div class="relative flex items-center gap-5 px-7 py-7 border-b border-kitty-border bg-kitty-surface-light/50">
           <img
             src="assets/confitty.svg"
             alt="Confitty mascot"
@@ -26,7 +26,7 @@ import { Component, output } from "@angular/core";
           </div>
           <button
             (click)="closeRequested.emit()"
-            class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-lg bg-kitty-surface-light hover:bg-kitty-bg text-kitty-text-dim hover:text-kitty-text transition-colors"
+            class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-lg bg-transparent hover:bg-kitty-surface-light text-kitty-text-dim hover:text-kitty-text transition-colors"
             aria-label="Close"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -181,7 +181,7 @@ import { SearchBarComponent } from "../search-bar/search-bar.component";
     <!-- Mobile Actions Menu Overlay -->
     @if (mobileMenuOpen()) {
       <div class="fixed inset-0 z-50 lg:hidden" (click)="mobileMenuOpen.set(false)">
-        <div class="absolute inset-0 bg-black/50 animate-fade-in"></div>
+        <div class="absolute inset-0 bg-kitty-darker/60 backdrop-blur-sm animate-fade-in"></div>
         <div class="absolute right-2 top-14 sm:top-16 w-56 bg-kitty-surface border border-kitty-border rounded-xl shadow-2xl animate-fade-in-up p-2 will-change-transform" (click)="$event.stopPropagation()">
           <div class="px-3 py-2 text-xs font-semibold text-kitty-text-dim uppercase tracking-wider border-b border-kitty-border mb-2">Actions</div>
           <button (click)="mobileSearchOpen.set(true); mobileMenuOpen.set(false)" class="w-full px-3 py-2.5 rounded-lg text-left text-sm text-kitty-text hover:bg-kitty-surface-light transition-all duration-150 flex items-center gap-3 active:scale-[0.98]">
