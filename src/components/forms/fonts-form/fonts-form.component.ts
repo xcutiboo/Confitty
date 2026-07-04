@@ -26,6 +26,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
     <app-form-section
       title="Fonts"
       description="Configure typography, rendering, and glyph settings"
+      icon="edit"
     >
       <div class="form-group">
         <label class="block text-sm font-medium text-kitty-text mb-3">

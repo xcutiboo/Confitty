@@ -23,7 +23,8 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 	template: `
     <app-form-section
       title="Scrollback"
-      description="Configure terminal history and scrolling behavior"
+      description="Configure terminal scrollback history and paging limits"
+      icon="refresh"
     >
       <div class="form-group">
         <label class="block text-sm font-medium text-kitty-text mb-2">

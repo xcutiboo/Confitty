@@ -17,7 +17,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 		FormSectionComponent,
 	],
 	template: `
-    <app-form-section title="Keyboard Shortcuts" description="Configure global modifier key and keyboard mappings">
+    <app-form-section title="Keyboard Shortcuts" description="Configure global modifier key and keyboard mappings" icon="edit">
         <div class="form-group">
           <label class="block text-sm font-medium text-kitty-text mb-2">
             Kitty Mod

@@ -22,7 +22,8 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 	template: `
     <app-form-section
       title="Tab Bar"
-      description="Customize tab bar appearance, behavior, and color scheme"
+      description="Customize the appearance and behavior of the tab bar"
+      icon="copy"
     >
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="form-group">

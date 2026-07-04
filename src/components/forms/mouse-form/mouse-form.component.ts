@@ -22,7 +22,8 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 	template: `
     <app-form-section
       title="Mouse"
-      description="Configure mouse interactions, URL detection, and clipboard behavior"
+      description="Configure mouse interactions, scrolling, and link behavior"
+      icon="external"
     >
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="form-group">

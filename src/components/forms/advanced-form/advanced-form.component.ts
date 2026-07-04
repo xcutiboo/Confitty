@@ -17,7 +17,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 		FormSectionComponent,
 	],
 	template: `
-    <app-form-section title="Advanced" description="Shell integration, remote control, startup configuration, and system settings">
+    <app-form-section title="Advanced" description="Shell integration, remote control, startup configuration, and system settings" icon="sliders">
       <div class="bg-kitty-warning/10 border border-kitty-warning/30 rounded-lg p-4">
         <p class="text-kitty-warning text-sm">
           Settings marked

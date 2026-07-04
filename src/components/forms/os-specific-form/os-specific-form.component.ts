@@ -20,7 +20,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 		VersionBadgeComponent,
 	],
 	template: `
-    <app-form-section title="OS Specific" description="Platform-specific settings for macOS and Linux/Wayland">
+    <app-form-section title="OS Specific" description="Platform-specific settings for macOS and Linux/Wayland" icon="info">
       <div class="bg-kitty-warning/10 border border-kitty-warning/30 rounded-lg p-4 mb-6">
         <p class="text-kitty-warning text-sm">
           Settings marked
