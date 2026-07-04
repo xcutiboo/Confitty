@@ -115,6 +115,31 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
                 <app-version-badge version="0.46.0" />
               }
             </div>
+
+            <div class="mt-4 form-group" [class.opacity-60]="!paletteGenerateAvailable()">
+              <div class="flex items-center gap-2">
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    [checked]="colors().palette_generate === 'yes'"
+                    (change)="updatePaletteGenerate($event)"
+                    [disabled]="!paletteGenerateAvailable()"
+                    class="w-5 h-5 rounded flex-shrink-0 disabled:opacity-50"
+                  />
+                  <div>
+                    <span class="text-sm font-medium text-kitty-text"
+                      >Generate 256-color Palette</span
+                    >
+                    <p class="text-kitty-text-dim text-xs mt-0.5">
+                      Generate colors 16..255 from the first 16 base colors.
+                    </p>
+                  </div>
+                </label>
+                @if (!paletteGenerateAvailable()) {
+                  <app-version-badge version="0.47.0" />
+                }
+              </div>
+            </div>
           </div>
 
           <div class="border-t border-kitty-border pt-6 mt-6">
@@ -434,6 +459,19 @@ export class ColorsFormComponent {
 	readonly dynamicBackgroundOpacityAvailable = computed(() =>
 		this.versionService.isOptionAvailable("dynamic_background_opacity"),
 	);
+
+	paletteGenerateAvailable = computed(() =>
+		this.versionService.isOptionAvailable("palette_generate"),
+	);
+
+	updatePaletteGenerate(event: Event) {
+		const target = event.target as HTMLInputElement;
+		this.helper.updateField(
+			"palette_generate",
+			target.checked ? "yes" : "fixed",
+		);
+	}
+
 	readonly colorIndices = Array.from({ length: 16 }, (_, i) => i);
 	readonly extendedColorIndices = Array.from({ length: 240 }, (_, i) => i + 16);
 	readonly colorNames = [

@@ -159,6 +159,25 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
               />
             </div>
 
+            <div class="form-group" [class.opacity-60]="!autoReloadConfigAvailable()">
+              <label class="flex items-center gap-2 text-sm font-medium text-kitty-text mb-2">
+                Auto-reload config
+                @if (!autoReloadConfigAvailable()) {
+                  <app-version-badge version="0.47.0" />
+                }
+              </label>
+              <div class="flex items-center gap-2">
+                <app-number-input
+                  [(ngModel)]="advanced().auto_reload_config"
+                  (ngModelChange)="helper.updateField('auto_reload_config', $event)"
+                  [disabled]="!autoReloadConfigAvailable()"
+                  [min]="-1"
+                  [step]="0.1"
+                />
+                <span class="text-kitty-text-dim text-xs">seconds (<=0 disables)</span>
+              </div>
+            </div>
+
             <div class="form-group">
               <label class="block text-sm font-medium text-kitty-text mb-2">
                 Allow OSC 8 Hyperlinks
@@ -333,6 +352,10 @@ export class AdvancedFormComponent {
 	);
 	readonly filterNotificationAvailable = computed(() =>
 		this.versionService.isOptionAvailable("filter_notification"),
+	);
+
+	autoReloadConfigAvailable = computed(() =>
+		this.versionService.isOptionAvailable("auto_reload_config"),
 	);
 
 	fastfetchExpanded = signal(false);

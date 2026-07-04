@@ -355,6 +355,7 @@ export class KittyParserService {
 				"selection_background",
 				"dynamic_background_opacity",
 				"transparent_background_colors",
+				"palette_generate",
 			].includes(key)
 		);
 	}
@@ -1137,6 +1138,9 @@ export class KittyParserService {
 				if (!config.advanced.file_transfer_confirmation_bypass)
 					config.advanced.file_transfer_confirmation_bypass = [];
 				config.advanced.file_transfer_confirmation_bypass.push(value);
+				break;
+			case "auto_reload_config":
+				config.advanced.auto_reload_config = Number.parseFloat(value);
 				break;
 			default:
 				config.unrecognized_directives.push(`${key} ${value}`);
