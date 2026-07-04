@@ -1,10 +1,13 @@
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
+import { Component, computed, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { ConfigStoreService } from "../../../services/config-store.service";
+import { KittyVersionService } from "../../../services/kitty-version.service";
 import { createFormHelper } from "../../../utils/form-helpers";
 import { FormSectionComponent } from "../../shared/form-section/form-section.component";
 import { NumberInputComponent } from "../../shared/number-input/number-input.component";
 import { SliderInputComponent } from "../../shared/slider-input/slider-input.component";
+import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.component";
 
 @Component({
 	selector: "app-os-specific-form",
@@ -14,6 +17,7 @@ import { SliderInputComponent } from "../../shared/slider-input/slider-input.com
 		SliderInputComponent,
 		NumberInputComponent,
 		FormSectionComponent,
+		VersionBadgeComponent,
 	],
 	template: `
     <app-form-section title="OS Specific" description="Platform-specific settings for macOS and Linux/Wayland">
@@ -165,9 +169,28 @@ import { SliderInputComponent } from "../../shared/slider-input/slider-input.com
                   />
                   <div>
                     <span class="text-sm font-medium text-kitty-text">Window Resizable</span>
-                    <p class="text-kitty-text-dim text-xs mt-0.5">Allow the OS window to be resized by dragging the edges</p>
+                    <p class="text-kitty-text-dim text-xs mt-0.5">Don't render the titlebar in fullscreen</p>
                   </div>
                 </label>
+              </div>
+
+              <div class="form-group" [class.opacity-60]="!macosSafeAreaAvailable()">
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="osSpecific().macos_fullscreen_ignore_safe_area_insets"
+                    (ngModelChange)="helper.updateField('macos_fullscreen_ignore_safe_area_insets', $event)"
+                    [disabled]="!macosSafeAreaAvailable()"
+                    class="w-5 h-5 rounded flex-shrink-0 disabled:opacity-50"
+                  />
+                  <div>
+                    <span class="text-sm font-medium text-kitty-text">Ignore Safe Area In Fullscreen</span>
+                    <p class="text-kitty-text-dim text-xs mt-0.5">Don't restrict content behind notch in fullscreen mode</p>
+                  </div>
+                </label>
+                @if (!macosSafeAreaAvailable()) {
+                  <app-version-badge version="0.47.0" />
+                }
               </div>
 
               <div class="form-group">
@@ -279,6 +302,14 @@ import { SliderInputComponent } from "../../shared/slider-input/slider-input.com
 	styles: [],
 })
 export class OsSpecificFormComponent {
+	private readonly configStore = inject(ConfigStoreService);
+	private readonly versionService = inject(KittyVersionService);
+
 	readonly helper = createFormHelper("os_specific");
+
+	macosSafeAreaAvailable = computed(() =>
+		this.versionService.isOptionAvailable("macos_fullscreen_ignore_safe_area_insets"),
+	);
+
 	readonly osSpecific = this.helper.state.asReadonly();
 }
