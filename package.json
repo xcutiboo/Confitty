@@ -29,35 +29,36 @@
     "build": "nx build --configuration production",
     "build:dev": "nx build --configuration development",
     "build:prod": "nx build --configuration production",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "postinstall": "sed -i 's/Your AI agent configuration is outdated. Run \"nx configure-ai-agents\" to update./ /g' node_modules/nx/src/tasks-runner/run-command.js || true"
   },
   "dependencies": {
-    "@angular/common": "^21.2.5",
-    "@angular/compiler": "^21.2.5",
-    "@angular/core": "^21.2.5",
-    "@angular/forms": "^21.2.5",
-    "@angular/platform-browser": "^21.2.5",
-    "@angular/platform-browser-dynamic": "^21.2.5",
-    "@angular/router": "^21.2.5",
-    "rxjs": "^7.8.2",
-    "tslib": "^2.8.1",
-    "zone.js": "^0.16.1"
+    "@angular/common": "21.2.17",
+    "@angular/compiler": "21.2.17",
+    "@angular/core": "21.2.17",
+    "@angular/forms": "21.2.17",
+    "@angular/platform-browser": "21.2.17",
+    "@angular/platform-browser-dynamic": "21.2.17",
+    "@angular/router": "21.2.17",
+    "rxjs": "7.8.2",
+    "tslib": "2.8.1",
+    "zone.js": "0.16.2"
   },
   "devDependencies": {
-    "@angular-devkit/core": "^21.2.3",
-    "@angular-devkit/schematics": "^21.2.3",
-    "@angular/build": "^21.2.3",
-    "@angular/cli": "^21.2.3",
-    "@angular/compiler-cli": "^21.2.5",
+    "@angular-devkit/core": "21.2.17",
+    "@angular-devkit/schematics": "21.2.17",
+    "@angular/build": "21.2.17",
+    "@angular/cli": "21.2.17",
+    "@angular/compiler-cli": "21.2.17",
     "@nx/angular": "22.6.4",
     "@nx/workspace": "22.6.4",
-    "@schematics/angular": "^21.2.3",
-    "@types/node": "^25.5.0",
-    "autoprefixer": "^10.4.27",
+    "@schematics/angular": "21.2.17",
+    "@types/node": "25.9.4",
+    "autoprefixer": "10.5.2",
     "nx": "22.6.4",
-    "postcss": "^8.5.8",
-    "tailwindcss": "^3.4.19",
-    "typescript": "^6.0.2"
+    "postcss": "8.5.15",
+    "tailwindcss": "3.4.19",
+    "typescript": "6.0.3"
   },
   "packageManager": "bun@1.3.11"
 }
