@@ -21,7 +21,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 		FormSectionComponent,
 	],
 	template: `
-    <app-form-section title="Colors" description="Customize your terminal color scheme and palette">
+    <app-form-section title="Colors" description="Customize your terminal color scheme and palette" icon="palette">
       <div class="form-group">
         <label class="block text-sm font-medium text-kitty-text mb-3">
           Color Themes

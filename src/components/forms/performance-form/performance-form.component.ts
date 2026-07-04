@@ -14,7 +14,7 @@ import { SliderInputComponent } from "../../shared/slider-input/slider-input.com
 		FormSectionComponent,
 	],
 	template: `
-    <app-form-section title="Performance" description="Tune Kitty's OpenGL rendering pipeline and input event batching">
+    <app-form-section title="Performance" description="Tune Kitty's OpenGL rendering pipeline and input event batching" icon="refresh">
       <div class="form-group">
         <label class="block text-sm font-medium text-kitty-text mb-2">
           Repaint Delay

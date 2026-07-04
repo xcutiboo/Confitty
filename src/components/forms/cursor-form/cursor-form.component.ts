@@ -22,7 +22,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 		FormSectionComponent,
 	],
 	template: `
-    <app-form-section title="Cursor" description="Customize cursor shape, color, and animation">
+    <app-form-section title="Cursor" description="Customize cursor shape, color, and animation" icon="sparkles">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="form-group">
           <label class="block text-sm font-medium text-kitty-text mb-2">
