@@ -12,6 +12,7 @@
     <a href="https://github.com/xcutiboo/Confitty/releases/latest">
       <img src="https://img.shields.io/github/v/release/xcutiboo/Confitty?style=for-the-badge&logo=github&logoColor=white&color=FFB5C6&label=Release" alt="Latest Release">
     </a>
+    <img src="https://img.shields.io/badge/UPDATE-Design_Revamp-7A52FF?style=for-the-badge&logo=sparkles&logoColor=white" alt="Latest Update">
     <a href="https://confitty.app">
       <img src="https://img.shields.io/badge/Live_Demo-confitty.app-FF6B9D?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Live Demo">
     </a>
