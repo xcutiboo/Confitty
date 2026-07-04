@@ -100,13 +100,18 @@ type PreviewMode = "terminal" | "config";
             <span>Export</span>
           </button>
         </div>
-        <p class="text-[10px] text-kitty-text-dim font-mono leading-snug truncate">
-          <span class="text-kitty-accent">~/.config/kitty/kitty.conf</span>
-          <span class="mx-1.5 opacity-50">·</span>
-          Reload: <span class="text-kitty-accent">Ctrl+Shift+F5</span>
-          <span class="mx-1.5 opacity-50">·</span>
-          {{ configLineCount() }} lines
-        </p>
+        <div class="flex items-center justify-between gap-4">
+          <p class="text-[10px] text-kitty-text-dim font-mono leading-snug truncate">
+            <span class="text-kitty-accent">~/.config/kitty/kitty.conf</span>
+            <span class="mx-1.5 opacity-50">·</span>
+            Reload: <span class="text-kitty-accent">Ctrl+Shift+F5</span>
+            <span class="mx-1.5 opacity-50">·</span>
+            {{ configLineCount() }} lines
+          </p>
+          <p class="text-[9px] text-kitty-text-dim/60 font-sans tracking-wide">
+            Preview rendering may vary from actual terminal
+          </p>
+        </div>
       </footer>
     </div>
   `,
