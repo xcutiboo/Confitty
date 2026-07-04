@@ -1,12 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { Component, effect, inject, output, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import type { ConfigStoreService } from "../../services/config-store.service";
-import type { KittyGeneratorService } from "../../services/kitty-generator.service";
-import type { KittyParserService } from "../../services/kitty-parser.service";
+import { ConfigStoreService } from "../../services/config-store.service";
+import { KittyGeneratorService } from "../../services/kitty-generator.service";
+import { KittyParserService } from "../../services/kitty-parser.service";
 import { KittyVersionService } from "../../services/kitty-version.service";
-import type { SearchService } from "../../services/search.service";
-import type { ThemeService } from "../../services/theme.service";
+import { SearchService } from "../../services/search.service";
+import { ThemeService } from "../../services/theme.service";
 import { SearchBarComponent } from "../search-bar/search-bar.component";
 
 @Component({

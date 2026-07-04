@@ -67,13 +67,14 @@ html {
 
 body {
 	font-family:
-		-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+		"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
 		"Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 	background: rgb(var(--kitty-darker));
 	color: rgb(var(--kitty-text));
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	line-height: 1.6;
+	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -223,5 +224,13 @@ button {
 	.line-clamp-2 {
 		-webkit-line-clamp: 2;
 		line-clamp: 2;
+	}
+
+	.glass-panel {
+		background: rgba(var(--kitty-surface), 0.7);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid rgba(var(--kitty-border), 0.5);
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 	}
 }

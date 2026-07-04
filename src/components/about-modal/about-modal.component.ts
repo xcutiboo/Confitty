@@ -11,7 +11,7 @@ import { Component, output } from "@angular/core";
     >
       <div class="absolute inset-0 bg-black/70 backdrop-blur-sm animate-fade-in"></div>
 
-      <div class="relative w-full max-w-lg max-h-[90vh] flex flex-col bg-kitty-surface border border-kitty-border rounded-2xl shadow-2xl overflow-hidden animate-scale-in">
+      <div class="relative w-full max-w-lg max-h-[90vh] flex flex-col glass-panel rounded-2xl overflow-hidden animate-scale-in">
 
         <div class="relative flex items-center gap-5 px-7 py-7 border-b border-kitty-border bg-kitty-bg">
           <img
@@ -38,29 +38,24 @@ import { Component, output } from "@angular/core";
         <div class="p-6 space-y-5 overflow-y-auto">
 
           <div>
-            <h3 class="text-sm font-semibold text-kitty-primary uppercase tracking-wider mb-2">what even is this</h3>
+            <h3 class="text-sm font-semibold text-kitty-primary uppercase tracking-wider mb-2">About Confitty</h3>
             <p class="text-kitty-text text-sm leading-relaxed">
-              Kitty terminal is great. reading 400+ config options to change your font size? not so great.
-              Confitty is a visual config builder. Tweak everything, see it live in the preview, then export
-              your <code class="text-kitty-primary bg-kitty-bg px-1.5 py-0.5 rounded text-xs font-mono">kitty.conf</code> when you're done.
-              no documentation trauma required.
+              Confitty is an advanced visual configuration builder tailored for the Kitty terminal. It provides a real-time, side-by-side rendering environment allowing you to accurately preview layout, font metrics, and color modifications before generating your <code class="text-kitty-primary bg-kitty-bg px-1.5 py-0.5 rounded text-xs font-mono">kitty.conf</code> output.
             </p>
           </div>
 
           <div class="border-t border-kitty-border pt-5">
-            <h3 class="text-sm font-semibold text-kitty-primary uppercase tracking-wider mb-3">meet the mascot</h3>
+            <h3 class="text-sm font-semibold text-kitty-primary uppercase tracking-wider mb-3">The Mascot</h3>
             <p class="text-kitty-text text-sm leading-relaxed">
-              She's Kitty Terminal's ghost cat mascot, if someone dropped her in pink paint and
-              then set off a confetti cannon directly in her face. She does not know what year it is.
-              She is thriving. The confetti in her fur is permanent. She has accepted this.
+              Our logo is a stylized tribute to Kitty's ghost cat mascot, re-imagined with a vibrant, high-contrast palette and geometric confetti elements reflecting the application's design system.
             </p>
             <p class="text-kitty-text-dim text-xs mt-3">
-              Officially unaffiliated with the actual Kitty Terminal project.
+              This application is an independent, community-driven project and is completely unaffiliated with the official Kitty Terminal maintainers.
             </p>
           </div>
 
           <div class="border-t border-kitty-border pt-5">
-            <h3 class="text-sm font-semibold text-kitty-primary uppercase tracking-wider mb-3">links & stuff</h3>
+            <h3 class="text-sm font-semibold text-kitty-primary uppercase tracking-wider mb-3">Resources & Links</h3>
             <div class="flex flex-col gap-3">
 
               <div class="flex flex-col sm:flex-row gap-3">
