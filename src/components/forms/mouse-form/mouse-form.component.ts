@@ -237,6 +237,27 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
                 [step]="0.05"
               />
             </div>
+
+            <div class="form-group" [class.opacity-60]="!dragThresholdAvailable()">
+              <div class="flex items-center gap-2 mb-2">
+                <label class="block text-sm font-medium text-kitty-text">
+                  Drag Threshold
+                  <span class="text-kitty-text-dim text-xs ml-2"
+                    >Pixels the pointer must move to start dragging a tab or window (0 disables dragging)</span
+                  >
+                </label>
+                @if (!dragThresholdAvailable()) {
+                  <app-version-badge version="0.46.0" />
+                }
+              </div>
+              <app-number-input
+                [(ngModel)]="mouse().drag_threshold"
+                (ngModelChange)="helper.updateField('drag_threshold', $event)"
+                [min]="0"
+                [step]="1"
+                [disabled]="!dragThresholdAvailable()"
+              />
+            </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
@@ -403,6 +424,9 @@ export class MouseFormComponent {
 	readonly mouse = this.helper.state.asReadonly();
 	readonly clearSelectionOnClipboardLossAvailable = computed(() =>
 		this.versionService.isOptionAvailable("clear_selection_on_clipboard_loss"),
+	);
+	readonly dragThresholdAvailable = computed(() =>
+		this.versionService.isOptionAvailable("drag_threshold"),
 	);
 
 	setUrlPrefixes(value: string): void {

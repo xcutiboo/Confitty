@@ -63,6 +63,15 @@
 			},
 			"outputs": ["{options.outputPath}"]
 		},
+		"test": {
+			"executor": "@angular/build:unit-test",
+			"options": {
+				"buildTarget": "confitty:build:development",
+				"tsConfig": "tsconfig.spec.json",
+				"runner": "vitest",
+				"watch": false
+			}
+		},
 		"serve": {
 			"executor": "@angular/build:dev-server",
 			"configurations": {
