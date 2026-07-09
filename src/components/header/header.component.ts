@@ -1,14 +1,52 @@
 import { CommonModule } from "@angular/common";
-import { Component, effect, inject, output, signal } from "@angular/core";
+import { Component, inject, output, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ConfigStoreService } from "../../services/config-store.service";
 import { KittyGeneratorService } from "../../services/kitty-generator.service";
 import { KittyParserService } from "../../services/kitty-parser.service";
 import { KittyVersionService } from "../../services/kitty-version.service";
-import { SearchService } from "../../services/search.service";
 import { ThemeService } from "../../services/theme.service";
+import { DEFAULT_KITTY_CONFIG } from "../../models/kitty-defaults";
+import type { KittyConfigAST } from "../../models/kitty-types";
 import { SearchBarComponent } from "../search-bar/search-bar.component";
 import { TransientBadgeComponent } from "../shared/transient-badge/transient-badge.component";
+
+interface ImportStatus {
+	tone: "success" | "error";
+	message: string;
+}
+
+/**
+ * How many settings a parsed file actually carried. Counted structurally rather
+ * than from the generated output, so options gated behind a newer Kitty version
+ * still count as recognised.
+ */
+function countDirectives(config: KittyConfigAST): number {
+	let count =
+		config.keyboard_shortcuts.length +
+		config.mouse_mappings.length +
+		config.unrecognized_directives.length;
+
+	if (config.kitty_mod !== DEFAULT_KITTY_CONFIG.kitty_mod) count += 1;
+
+	for (const [name, section] of Object.entries(config)) {
+		if (
+			typeof section !== "object" ||
+			section === null ||
+			Array.isArray(section)
+		) {
+			continue;
+		}
+		const defaults = DEFAULT_KITTY_CONFIG[
+			name as keyof KittyConfigAST
+		] as unknown as Record<string, unknown>;
+		for (const [field, value] of Object.entries(section)) {
+			if (JSON.stringify(value) !== JSON.stringify(defaults[field])) count += 1;
+		}
+	}
+
+	return count;
+}
 
 @Component({
 	selector: "app-header",
@@ -182,6 +220,29 @@ import { TransientBadgeComponent } from "../shared/transient-badge/transient-bad
       </div>
     </header>
 
+    @if (importStatus(); as status) {
+      <div
+        class="px-3 sm:px-4 lg:px-6 py-2 border-b flex items-start gap-2 text-sm"
+        [class]="status.tone === 'error'
+          ? 'bg-red-500/10 border-red-500/30 text-red-200'
+          : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-200'"
+        role="status"
+        aria-live="polite"
+      >
+        <span class="flex-1 min-w-0">{{ status.message }}</span>
+        <button
+          type="button"
+          (click)="dismissImportStatus()"
+          class="flex-shrink-0 opacity-70 hover:opacity-100 transition-opacity"
+          aria-label="Dismiss message"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    }
+
     <!-- Mobile Actions Menu Overlay -->
     @if (mobileMenuOpen()) {
       <div class="fixed inset-0 z-50 lg:hidden" (click)="mobileMenuOpen.set(false)">
@@ -224,7 +285,7 @@ import { TransientBadgeComponent } from "../shared/transient-badge/transient-bad
     @if (mobileSearchOpen()) {
       <div class="fixed inset-0 z-50 bg-kitty-surface p-4 lg:hidden animate-fade-in flex flex-col">
         <div class="flex items-center gap-3 mb-4">
-          <app-search-bar class="flex-1" />
+          <app-search-bar class="flex-1" (resultSelected)="mobileSearchOpen.set(false)" />
           <button (click)="mobileSearchOpen.set(false)" class="w-10 h-10 flex items-center justify-center rounded-lg bg-kitty-surface-light hover:bg-kitty-bg text-kitty-text-dim hover:text-kitty-text transition-all duration-200 active:scale-95 flex-shrink-0">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
@@ -239,6 +300,11 @@ export class HeaderComponent {
 	readonly aboutRequested = output<void>();
 	readonly mobileSearchOpen = signal(false);
 	readonly mobileMenuOpen = signal(false);
+	readonly importStatus = signal<ImportStatus | null>(null);
+
+	dismissImportStatus(): void {
+		this.importStatus.set(null);
+	}
 
 	readonly versionService = inject(KittyVersionService);
 	selectedVersion = this.versionService.currentVersion();
@@ -253,22 +319,13 @@ export class HeaderComponent {
 		public readonly themeService: ThemeService,
 		private readonly generator: KittyGeneratorService,
 		private readonly parser: KittyParserService,
-		private readonly searchService: SearchService,
-	) {
-		effect(() => {
-			const hasResults = this.searchService.results().length > 0;
-			const wasOpen = this.mobileSearchOpen();
-			if (wasOpen && !hasResults) {
-				this.mobileSearchOpen.set(false);
-			}
-		});
-	}
+	) {}
 
 	handleImport(): void {
 		const input = document.createElement("input");
 		input.type = "file";
-		input.accept = ".conf";
-		input.onchange = (e: Event) => this.onFileSelected(e);
+		input.accept = ".conf,text/plain";
+		input.onchange = (e: Event) => void this.onFileSelected(e);
 		input.click();
 	}
 
@@ -276,14 +333,35 @@ export class HeaderComponent {
 		const file = (event.target as HTMLInputElement)?.files?.[0];
 		if (!file) return;
 
+		let content: string;
 		try {
-			const content = await file.text();
-			this.configStore.loadConfig(this.parser.parseConfig(content));
+			content = await file.text();
 		} catch {
-			alert(
-				"Failed to parse configuration file. Please check the file format.",
-			);
+			this.importStatus.set({
+				tone: "error",
+				message: `Could not read ${file.name}.`,
+			});
+			return;
 		}
+
+		// The parser is deliberately lenient, so a file that happens not to be a
+		// kitty.conf parses "successfully" into nothing. Replacing the user's work
+		// on that basis would be silent data loss, so check before committing.
+		const parsed = this.parser.parseConfig(content);
+		const recognised = countDirectives(parsed);
+		if (recognised === 0) {
+			this.importStatus.set({
+				tone: "error",
+				message: `No kitty settings found in ${file.name}. Nothing was changed.`,
+			});
+			return;
+		}
+
+		this.configStore.loadConfig(parsed);
+		this.importStatus.set({
+			tone: "success",
+			message: `Imported ${recognised} setting${recognised === 1 ? "" : "s"} from ${file.name}.`,
+		});
 	}
 
 	handleExport(): void {

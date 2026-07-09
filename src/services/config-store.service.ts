@@ -1,36 +1,84 @@
-import { computed, Injectable, inject, signal } from "@angular/core";
+import { computed, effect, Injectable, inject, signal } from "@angular/core";
 import { derivedFromPalette } from "../components/live-preview/tab-colors";
+import { sanitizeConfig } from "../models/config-serialization";
 import { DEFAULT_KITTY_CONFIG } from "../models/kitty-defaults";
 import type { KittyConfigAST } from "../models/kitty-types";
+import { ConfigPersistenceService } from "./config-persistence.service";
 import { KittyGeneratorService } from "./kitty-generator.service";
+
+/** Long enough to coalesce a burst of typing, short enough to survive a tab close. */
+const PERSIST_DEBOUNCE_MS = 400;
+
+/** Matches the `lg` breakpoint where the layout switches from overlay to split pane. */
+const WIDE_VIEWPORT = "(min-width: 1024px)";
+
+function wideViewportQuery(): MediaQueryList | null {
+	return typeof globalThis.matchMedia === "function"
+		? globalThis.matchMedia(WIDE_VIEWPORT)
+		: null;
+}
+
+function isWideViewport(): boolean {
+	return wideViewportQuery()?.matches ?? true;
+}
 
 @Injectable({ providedIn: "root" })
 export class ConfigStoreService {
 	private readonly generator = inject(KittyGeneratorService);
+	private readonly persistence = inject(ConfigPersistenceService);
 
-	private readonly _configState = signal<KittyConfigAST>(
-		structuredClone(DEFAULT_KITTY_CONFIG),
-	);
+	/** True when the editor opened onto restored work rather than a clean slate. */
+	private readonly _restoredFromStorage = signal<boolean>(false);
+	private readonly _configState = signal<KittyConfigAST>(this.hydrate());
+	private persistTimer: ReturnType<typeof setTimeout> | null = null;
 	private readonly _searchQuery = signal<string>("");
 	private readonly _activeCategory = signal<string>("fonts");
 	private readonly _advancedMode = signal<boolean>(false);
 	private readonly _sidebarOpen = signal<boolean>(false);
 	// Preview is hidden by default on narrow viewports; users see the editor first.
-	private readonly _previewVisible = signal<boolean>(
-		typeof globalThis !== "undefined" &&
-			typeof globalThis.matchMedia === "function"
-			? globalThis.matchMedia("(min-width: 1024px)").matches
-			: true,
-	);
+	private readonly _wideViewport = signal<boolean>(isWideViewport());
+	private readonly _previewVisible = signal<boolean>(isWideViewport());
+	/** Set once the user toggles the preview, so resizing stops overriding them. */
+	private previewChosenByUser = false;
 	/** Becomes true the moment the Tab Bar form writes a color, freezes palette auto-sync. */
 	private readonly _tabBarColorsCustomised = signal<boolean>(false);
 
+	constructor() {
+		// Without this the initial measurement sticks forever: shrinking a desktop
+		// window past the breakpoint left the preview mounted as a full-screen
+		// overlay covering the header, with only its own close button to escape.
+		wideViewportQuery()?.addEventListener("change", (event) => {
+			this._wideViewport.set(event.matches);
+			if (!this.previewChosenByUser) this._previewVisible.set(event.matches);
+			if (event.matches) this._sidebarOpen.set(false);
+		});
+
+		// Signals fire per keystroke, so coalesce before touching storage.
+		effect(() => {
+			const snapshot = this._configState();
+			if (this.persistTimer) clearTimeout(this.persistTimer);
+			this.persistTimer = setTimeout(
+				() => this.persistence.save(snapshot),
+				PERSIST_DEBOUNCE_MS,
+			);
+		});
+	}
+
+	private hydrate(): KittyConfigAST {
+		const stored = this.persistence.load();
+		if (!stored) return structuredClone(DEFAULT_KITTY_CONFIG);
+		this._restoredFromStorage.set(true);
+		return stored;
+	}
+
 	readonly configState = this._configState.asReadonly();
+	readonly restoredFromStorage = this._restoredFromStorage.asReadonly();
 	readonly searchQuery = this._searchQuery.asReadonly();
 	readonly activeCategory = this._activeCategory.asReadonly();
 	readonly advancedMode = this._advancedMode.asReadonly();
 	readonly sidebarOpen = this._sidebarOpen.asReadonly();
 	readonly previewVisible = this._previewVisible.asReadonly();
+	readonly wideViewport = this._wideViewport.asReadonly();
 	readonly tabBarLocked = this._tabBarColorsCustomised.asReadonly();
 
 	readonly rawConfigText = computed(() =>
@@ -75,9 +123,11 @@ export class ConfigStoreService {
 		this._sidebarOpen.set(open);
 	}
 	togglePreview(): void {
+		this.previewChosenByUser = true;
 		this._previewVisible.update((v) => !v);
 	}
 	setPreviewVisible(v: boolean): void {
+		this.previewChosenByUser = true;
 		this._previewVisible.set(v);
 	}
 
@@ -93,22 +143,26 @@ export class ConfigStoreService {
 
 	resetToDefaults(): void {
 		this._tabBarColorsCustomised.set(false);
+		this._restoredFromStorage.set(false);
 		this._configState.set(structuredClone(DEFAULT_KITTY_CONFIG));
+		this.persistence.clear();
 	}
 
 	exportToJSON(): string {
 		return JSON.stringify(this._configState(), null, 2);
 	}
 
+	/** Accepts arbitrary JSON; anything unrecognised falls back to the default. */
 	importFromJSON(json: string): boolean {
+		let parsed: unknown;
 		try {
-			this._tabBarColorsCustomised.set(false);
-			this._configState.set(JSON.parse(json));
-			return true;
-		} catch (err) {
-			console.error("Failed to parse JSON:", err);
+			parsed = JSON.parse(json);
+		} catch {
 			return false;
 		}
+		this._tabBarColorsCustomised.set(false);
+		this._configState.set(sanitizeConfig(parsed));
+		return true;
 	}
 
 	/**
