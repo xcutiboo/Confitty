@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  No lastmod: Google only honours it when it is verifiably accurate, and a
+  hand-maintained date on a single-page app drifts within a release or two.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://confitty.app/</loc>
-    <lastmod>2026-05-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
   </url>
 </urlset>

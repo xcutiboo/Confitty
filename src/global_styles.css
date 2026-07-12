@@ -66,9 +66,14 @@ html {
 }
 
 body {
+	/*
+	 * Platform UI font rather than a webfont: it costs no request, cannot block
+	 * the first paint, and keeps visitors' IPs off a third-party font host,
+	 * which matters for a tool that promises to phone home to nobody.
+	 */
 	font-family:
-		"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-		"Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+		system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+		"Ubuntu", "Cantarell", "Helvetica Neue", sans-serif;
 	background: rgb(var(--kitty-darker));
 	color: rgb(var(--kitty-text));
 	-webkit-font-smoothing: antialiased;
@@ -227,10 +232,10 @@ button {
 	}
 
 	.glass-panel {
-		background: rgba(var(--kitty-surface), 0.7);
+		background: rgb(var(--kitty-surface) / 0.7);
 		backdrop-filter: blur(12px);
 		-webkit-backdrop-filter: blur(12px);
-		border: 1px solid rgba(var(--kitty-border), 0.5);
+		border: 1px solid rgb(var(--kitty-border) / 0.5);
 		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 	}
 }
