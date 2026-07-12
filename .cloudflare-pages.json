@@ -1,7 +1,0 @@
-{
-	"build": {
-		"command": "bun run build:prod",
-		"output": "dist/confitty",
-		"node_version": "22"
-	}
-}

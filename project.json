@@ -43,8 +43,7 @@
 					{
 						"glob": "**/*",
 						"input": "src/assets",
-						"output": "assets",
-						"ignore": ["dividers/**"]
+						"output": "assets"
 					},
 					"src/_headers",
 					"src/_redirects",
