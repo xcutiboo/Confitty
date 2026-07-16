@@ -1,38 +1,11 @@
 [install]
-# Always use latest compatible versions
-cache = true
-minimumReleaseAge = 604800
-frozen-lockfile = false
-# Prefer exact versions for reproducibility
-exact = true
-# Enable production registry for faster installs
 registry = "https://registry.npmjs.org/"
 
-[run]
-# Enable hot module replacement for development
-hot = true
-# Use system shell for compatibility
-shell = "system"
+# Pin exact versions: the lockfile is the record, and a caret in package.json
+# only invites drift between a local install and CI.
+exact = true
 
-[build]
-# Optimize for production builds
-target = "browser"
-minify = true
-sourcemap = false
-# Enable tree shaking
-treeShaking = true
-# Split code into chunks for better caching
-splitting = true
-
-[test]
-# Configure test runner
-coverage = true
-coverageReporter = ["text", "html"]
-
-[bun]
-# Enable experimental features for better performance
-experimental = true
-# Lock file configuration
-lockfile = true
-# Enable TypeScript support
-tsconfig = "tsconfig.json"
+# Refuse packages published in the last seven days. Compromised releases are
+# usually caught and yanked within hours, so a short quarantine removes most of
+# the exposure to a hijacked publish at close to no cost.
+minimumReleaseAge = 604800
