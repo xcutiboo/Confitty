@@ -8,7 +8,9 @@ import { KittyVersionService } from "../../services/kitty-version.service";
 import { ThemeService } from "../../services/theme.service";
 import { DEFAULT_KITTY_CONFIG } from "../../models/kitty-defaults";
 import type { KittyConfigAST } from "../../models/kitty-types";
+import { CONFIG_SEARCH_INDEX } from "../../search/config-index";
 import { SearchBarComponent } from "../search-bar/search-bar.component";
+import { DialogShellComponent } from "../shared/dialog-shell/dialog-shell.component";
 import { TransientBadgeComponent } from "../shared/transient-badge/transient-badge.component";
 
 interface ImportStatus {
@@ -50,7 +52,13 @@ function countDirectives(config: KittyConfigAST): number {
 
 @Component({
 	selector: "app-header",
-	imports: [CommonModule, FormsModule, SearchBarComponent, TransientBadgeComponent],
+	imports: [
+		CommonModule,
+		FormsModule,
+		SearchBarComponent,
+		DialogShellComponent,
+		TransientBadgeComponent,
+	],
 	template: `
     <header class="h-14 sm:h-16 lg:h-20 bg-kitty-surface border-b border-kitty-border flex items-center justify-between px-3 sm:px-4 lg:px-6 shadow-sm">
       <!-- Left: Logo and mobile menu -->
@@ -243,11 +251,10 @@ function countDirectives(config: KittyConfigAST): number {
       </div>
     }
 
-    <!-- Mobile Actions Menu Overlay -->
+    <!-- Mobile Actions Menu -->
     @if (mobileMenuOpen()) {
-      <div class="fixed inset-0 z-50 lg:hidden" (click)="mobileMenuOpen.set(false)">
-        <div class="absolute inset-0 bg-kitty-darker/60 backdrop-blur-sm animate-fade-in"></div>
-        <div class="absolute right-2 top-14 sm:top-16 w-56 bg-kitty-surface border border-kitty-border rounded-xl shadow-2xl animate-fade-in-up p-2 will-change-transform" (click)="$event.stopPropagation()">
+      <app-dialog-shell label="Actions" panelClass="items-start justify-end !p-2" (closed)="mobileMenuOpen.set(false)">
+        <div class="mt-12 sm:mt-14 w-56 bg-kitty-surface border border-kitty-border rounded-xl shadow-2xl p-2">
           <div class="px-3 py-2 text-xs font-semibold text-kitty-text-dim uppercase tracking-wider border-b border-kitty-border mb-2">Actions</div>
           <button (click)="mobileSearchOpen.set(true); mobileMenuOpen.set(false)" class="w-full px-3 py-2.5 rounded-lg text-left text-sm text-kitty-text hover:bg-kitty-surface-light transition-all duration-150 flex items-center gap-3 active:scale-[0.98]">
             <svg class="w-4 h-4 text-kitty-text-dim" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -278,20 +285,47 @@ function countDirectives(config: KittyConfigAST): number {
             About Confitty
           </button>
         </div>
-      </div>
+      </app-dialog-shell>
     }
 
-    <!-- Mobile Search Overlay -->
+    <!-- Search, presented as a full-height sheet on narrow viewports -->
     @if (mobileSearchOpen()) {
-      <div class="fixed inset-0 z-50 bg-kitty-surface p-4 lg:hidden animate-fade-in flex flex-col">
-        <div class="flex items-center gap-3 mb-4">
-          <app-search-bar class="flex-1" (resultSelected)="mobileSearchOpen.set(false)" />
-          <button (click)="mobileSearchOpen.set(false)" class="w-10 h-10 flex items-center justify-center rounded-lg bg-kitty-surface-light hover:bg-kitty-bg text-kitty-text-dim hover:text-kitty-text transition-all duration-200 active:scale-95 flex-shrink-0">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
+      <app-dialog-shell label="Search settings" panelClass="!p-0 items-stretch" (closed)="mobileSearchOpen.set(false)">
+        <div class="w-full h-full bg-kitty-surface flex flex-col p-4 gap-4">
+          <div class="flex items-center gap-3">
+            <app-search-bar class="flex-1" (resultSelected)="mobileSearchOpen.set(false)" />
+            <button
+              type="button"
+              (click)="mobileSearchOpen.set(false)"
+              class="w-11 h-11 flex items-center justify-center rounded-lg bg-kitty-surface-light hover:bg-kitty-bg text-kitty-text-dim hover:text-kitty-text transition-colors flex-shrink-0"
+              aria-label="Close search"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <!--
+            Jumping straight to a category is faster than typing for most of
+            these, and it keeps the sheet from opening onto an empty screen.
+          -->
+          <div>
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-kitty-text-dim mb-2">Jump to a section</h2>
+            <div class="flex flex-wrap gap-2">
+              @for (category of quickCategories; track category.id) {
+                <button
+                  type="button"
+                  (click)="jumpToCategory(category.id)"
+                  class="px-3 py-2 rounded-lg text-sm bg-kitty-surface-light hover:bg-kitty-bg text-kitty-text border border-kitty-border transition-colors"
+                >{{ category.label }}</button>
+              }
+            </div>
+          </div>
+
+          <p class="text-xs text-kitty-text-dim mt-auto">
+            Type at least two characters to search {{ searchableCount }} settings by name or description.
+          </p>
         </div>
-        <p class="text-xs text-kitty-text-dim text-center">Type to search settings, press Enter to select</p>
-      </div>
+      </app-dialog-shell>
     }
   `,
 	styles: [],
@@ -301,6 +335,21 @@ export class HeaderComponent {
 	readonly mobileSearchOpen = signal(false);
 	readonly mobileMenuOpen = signal(false);
 	readonly importStatus = signal<ImportStatus | null>(null);
+	readonly searchableCount = CONFIG_SEARCH_INDEX.length;
+
+	readonly quickCategories = [
+		{ id: "fonts", label: "Fonts" },
+		{ id: "colors", label: "Colours" },
+		{ id: "cursor", label: "Cursor" },
+		{ id: "tab_bar", label: "Tab bar" },
+		{ id: "window_layout", label: "Window" },
+		{ id: "keyboard_shortcuts", label: "Shortcuts" },
+	];
+
+	jumpToCategory(id: string): void {
+		this.configStore.setActiveCategory(id);
+		this.mobileSearchOpen.set(false);
+	}
 
 	dismissImportStatus(): void {
 		this.importStatus.set(null);

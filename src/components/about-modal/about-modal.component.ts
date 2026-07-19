@@ -1,22 +1,17 @@
-import { CommonModule } from "@angular/common";
 import { Component, output } from "@angular/core";
+import { DialogShellComponent } from "../shared/dialog-shell/dialog-shell.component";
 
 @Component({
 	selector: "app-about-modal",
-	imports: [CommonModule],
+	imports: [DialogShellComponent],
 	template: `
-    <div
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
-      (click)="onBackdropClick($event)"
-    >
-      <div class="absolute inset-0 bg-kitty-darker/60 backdrop-blur-sm animate-fade-in"></div>
-
-      <div class="relative w-full max-w-lg max-h-[90vh] flex flex-col glass-panel rounded-2xl overflow-hidden animate-scale-in">
+    <app-dialog-shell label="About Confitty" (closed)="closeRequested.emit()">
+      <div class="relative w-full max-w-lg max-h-[90dvh] flex flex-col glass-panel rounded-2xl overflow-hidden">
 
         <div class="relative flex items-center gap-5 px-7 py-7 border-b border-kitty-border bg-kitty-surface-light/50">
           <img
             src="assets/confitty.svg"
-            alt="Confitty mascot"
+            alt=""
             class="w-16 h-16 flex-shrink-0"
             onerror="this.style.display='none'"
           />
@@ -25,8 +20,9 @@ import { Component, output } from "@angular/core";
             <p class="text-kitty-primary text-sm font-medium mt-1.5">Visual config builder for Kitty Terminal</p>
           </div>
           <button
+            type="button"
             (click)="closeRequested.emit()"
-            class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-lg bg-transparent hover:bg-kitty-surface-light text-kitty-text-dim hover:text-kitty-text transition-colors"
+            class="absolute top-3 right-3 w-9 h-9 flex items-center justify-center rounded-lg bg-transparent hover:bg-kitty-surface-light text-kitty-text-dim hover:text-kitty-text transition-colors"
             aria-label="Close"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,7 +36,7 @@ import { Component, output } from "@angular/core";
           <div>
             <h3 class="text-sm font-semibold text-kitty-primary uppercase tracking-wider mb-2">About Confitty</h3>
             <p class="text-kitty-text text-sm leading-relaxed">
-              Confitty is a visual configuration builder that saves you from reading Kitty Terminal's 400+ config options. It provides a real-time, side-by-side preview environment so you can tweak layout, font metrics, and colors before generating a clean, diff-only <code class="text-kitty-primary bg-kitty-bg px-1.5 py-0.5 rounded text-xs font-mono">kitty.conf</code> output.
+              Confitty saves you from reading reference documentation for the roughly 225 options Kitty exposes. Tweak layout, font metrics and colours with a live preview beside you, then export a <code class="text-kitty-primary bg-kitty-bg px-1.5 py-0.5 rounded text-xs font-mono">kitty.conf</code> containing only what you actually changed.
             </p>
           </div>
 
@@ -120,18 +116,12 @@ import { Component, output } from "@angular/core";
 
         </div>
       </div>
-    </div>
+    </app-dialog-shell>
   `,
 	styles: [],
 })
 export class AboutModalComponent {
 	readonly closeRequested = output<void>();
-
-	onBackdropClick(event: MouseEvent): void {
-		if (event.target === event.currentTarget) {
-			this.closeRequested.emit();
-		}
-	}
 
 	openKofi(): void {
 		globalThis.open(

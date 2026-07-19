@@ -93,13 +93,12 @@ export class AppComponent {
 	readonly configStore = inject(ConfigStoreService);
 	readonly showAbout = signal(false);
 
-	/** Dismiss one layer at a time, topmost first, the way stacked dialogs behave. */
+	/**
+	 * Dismiss one layer at a time, topmost first. The about dialog is not listed:
+	 * it is a native <dialog>, which handles Escape itself.
+	 */
 	@HostListener("window:keydown.escape")
 	onEscape(): void {
-		if (this.showAbout()) {
-			this.showAbout.set(false);
-			return;
-		}
 		if (this.configStore.sidebarOpen()) {
 			this.configStore.setSidebarOpen(false);
 			return;
