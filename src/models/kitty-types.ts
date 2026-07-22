@@ -18,7 +18,8 @@ export type KittyTabBarAlign =
 	| "end"
 	| "left"
 	| "right";
-export type KittyTabBarEdge = "top" | "bottom";
+/** left and right produce a vertical tab bar; added in Kitty 0.48. */
+export type KittyTabBarEdge = "top" | "bottom" | "left" | "right";
 export type KittyTabSwitchStrategy = "previous" | "left" | "right" | "last";
 export type KittyTabPowerlineStyle = "angled" | "slanted" | "round";
 export type KittyRemoteControl =
@@ -369,6 +370,9 @@ export interface KittyOSSpecificConfig {
 	macos_colorspace: "srgb" | "displayp3" | "default";
 	macos_dock_badge_on_bell: boolean;
 	macos_fullscreen_ignore_safe_area_insets: boolean;
+	/** NSWindow level for panel OS windows; "unset" leaves Kitty's handling alone. */
+	macos_ns_window_layer: string;
+	macos_use_physical_screen_frame: boolean;
 	linux_display_server: "auto" | "wayland" | "x11";
 }
 

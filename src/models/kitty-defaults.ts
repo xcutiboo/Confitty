@@ -272,6 +272,8 @@ export const DEFAULT_KITTY_CONFIG: KittyConfigAST = {
 		macos_colorspace: "srgb",
 		macos_dock_badge_on_bell: true,
 		macos_fullscreen_ignore_safe_area_insets: false,
+		macos_ns_window_layer: "unset",
+		macos_use_physical_screen_frame: false,
 		linux_display_server: "auto",
 	},
 	keyboard_shortcuts: [],

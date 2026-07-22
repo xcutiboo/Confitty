@@ -456,7 +456,7 @@ export class TabBarFormComponent {
 		this.versionService.isOptionAvailable("progress_bar"),
 	);
 
-	readonly tabBarEdges: KittyTabBarEdge[] = ["top", "bottom"];
+	readonly tabBarEdges: KittyTabBarEdge[] = ["top", "bottom", "left", "right"];
 
 	get tabBarMarginHeightTop(): number {
 		return this.tabBar().tab_bar_margin_height?.[0] || 0;

@@ -226,6 +226,30 @@ describe("KittyGeneratorService", () => {
 			expect(directives(output)).toContain("show_hyperlink_targets ctrl");
 		});
 
+		it("emits the vertical tab bar edges added in 0.48", () => {
+			const output = generator().generateConfig(
+				configWith((c) => {
+					c.tab_bar.tab_bar_edge = "left";
+				}),
+			);
+
+			expect(directives(output)).toContain("tab_bar_edge left");
+		});
+
+		it("emits the macOS panel options added in 0.48", () => {
+			const output = generator().generateConfig(
+				configWith((c) => {
+					c.os_specific.macos_ns_window_layer = "floating";
+					c.os_specific.macos_use_physical_screen_frame = true;
+				}),
+			);
+
+			expect(directives(output)).toEqual([
+				"macos_ns_window_layer floating",
+				"macos_use_physical_screen_frame yes",
+			]);
+		});
+
 		it("emits drag_threshold under its real Kitty name", () => {
 			const output = generator().generateConfig(
 				configWith((c) => {

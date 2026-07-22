@@ -1057,6 +1057,13 @@ export class KittyParserService {
 				config.os_specific.macos_fullscreen_ignore_safe_area_insets =
 					value === "yes" || value === "true";
 				break;
+			case "macos_ns_window_layer":
+				config.os_specific.macos_ns_window_layer = value;
+				break;
+			case "macos_use_physical_screen_frame":
+				config.os_specific.macos_use_physical_screen_frame =
+					value === "yes" || value === "true";
+				break;
 			case "macos_show_window_title_in":
 				config.os_specific.macos_show_window_title_in = value as
 					| "all"

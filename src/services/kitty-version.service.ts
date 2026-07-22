@@ -37,11 +37,16 @@ export class KittyVersionService {
 		{
 			version: "0.47.0",
 			label: "0.47.0",
-			description: "Latest. Adds progress bar, auto-reload, palette generate.",
+			description: "Adds progress bar, auto-reload, palette generate.",
+		},
+		{
+			version: "0.48.0",
+			label: "0.48.0",
+			description: "Latest. Adds vertical tab bars and macOS panel controls.",
 		},
 	];
 
-	readonly currentVersion = signal<string>("0.47.0");
+	readonly currentVersion = signal<string>("0.48.0");
 
 	readonly featureRequirements: Record<string, FeatureRequirement> = {
 		scrollback_pager: {
@@ -152,6 +157,16 @@ export class KittyVersionService {
 			minVersion: "0.46.0",
 			description: "Drag tabs and windows to reorder or detach them",
 			warning: "Mouse drag support",
+		},
+		macos_ns_window_layer: {
+			minVersion: "0.48.0",
+			description: "NSWindow level for panel OS windows",
+			warning: "macOS only",
+		},
+		macos_use_physical_screen_frame: {
+			minVersion: "0.48.0",
+			description: "Place panels over the menu bar and Dock",
+			warning: "macOS only",
 		},
 		transparent_background_colors: {
 			minVersion: "0.36.3",

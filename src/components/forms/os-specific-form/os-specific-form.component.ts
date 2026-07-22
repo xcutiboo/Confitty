@@ -1,7 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { ConfigStoreService } from "../../../services/config-store.service";
 import { KittyVersionService } from "../../../services/kitty-version.service";
 import { createFormHelper } from "../../../utils/form-helpers";
 import { FormSectionComponent } from "../../shared/form-section/form-section.component";
@@ -193,6 +192,47 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
                 }
               </div>
 
+              <div class="form-group" [class.opacity-60]="!macosPanelOptionsAvailable()">
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="osSpecific().macos_use_physical_screen_frame"
+                    (ngModelChange)="helper.updateField('macos_use_physical_screen_frame', $event)"
+                    [disabled]="!macosPanelOptionsAvailable()"
+                    class="w-5 h-5 rounded flex-shrink-0 disabled:opacity-50"
+                  />
+                  <div>
+                    <span class="text-sm font-medium text-kitty-text">Panels Use Physical Screen Frame</span>
+                    <p class="text-kitty-text-dim text-xs mt-0.5">Let panel windows draw over the menu bar and Dock</p>
+                  </div>
+                </label>
+                @if (!macosPanelOptionsAvailable()) {
+                  <app-version-badge version="0.48.0" />
+                }
+              </div>
+
+              <div class="form-group" [class.opacity-60]="!macosPanelOptionsAvailable()">
+                <div class="flex items-center gap-2 mb-2">
+                  <label class="block text-sm font-medium text-kitty-text">
+                    Panel Window Layer
+                    <span class="text-kitty-text-dim text-xs ml-2"
+                      >NSWindow level for panel windows; "unset" leaves Kitty's handling alone</span
+                    >
+                  </label>
+                  @if (!macosPanelOptionsAvailable()) {
+                    <app-version-badge version="0.48.0" />
+                  }
+                </div>
+                <input
+                  type="text"
+                  [(ngModel)]="osSpecific().macos_ns_window_layer"
+                  (ngModelChange)="helper.updateField('macos_ns_window_layer', $event)"
+                  [disabled]="!macosPanelOptionsAvailable()"
+                  class="w-full px-4 py-2 bg-kitty-bg border border-kitty-border rounded-lg text-kitty-text focus:outline-none focus:ring-2 focus:ring-kitty-primary font-mono text-sm disabled:opacity-50"
+                  placeholder="unset"
+                />
+              </div>
+
               <div class="form-group">
                 <label class="flex items-center gap-3 cursor-pointer">
                   <input
@@ -306,10 +346,14 @@ export class OsSpecificFormComponent {
 
 	readonly helper = createFormHelper("os_specific");
 
-	macosSafeAreaAvailable = computed(() =>
+	readonly macosSafeAreaAvailable = computed(() =>
 		this.versionService.isOptionAvailable(
 			"macos_fullscreen_ignore_safe_area_insets",
 		),
+	);
+
+	readonly macosPanelOptionsAvailable = computed(() =>
+		this.versionService.isOptionAvailable("macos_ns_window_layer"),
 	);
 
 	readonly osSpecific = this.helper.state.asReadonly();

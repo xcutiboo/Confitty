@@ -40,11 +40,27 @@ const TAB_COUNT = PREVIEW_TABS.length;
         @if (showTabBar() && tabBarEdge() === 'bottom') {
           <app-terminal-tab-bar edge="bottom" />
         }
+
+        @if (showTabBar() && verticalTabBar()) {
+          <p class="vertical-tabs-note">
+            Vertical tab bars are exported correctly but not drawn here.
+          </p>
+        }
       </div>
     </div>
   `,
 	styles: [
 		`
+    .vertical-tabs-note {
+      padding: 6px 10px;
+      font-size: 11px;
+      line-height: 1.4;
+      text-align: center;
+      color: rgb(var(--kitty-text-dim));
+      background: rgb(var(--kitty-surface));
+      border-top: 1px solid rgb(var(--kitty-border));
+    }
+
     :host {
       display: flex;
       flex: 1;
@@ -134,6 +150,16 @@ export class TerminalWindowComponent {
 		);
 	});
 	readonly tabBarEdge = computed(() => this.tabBar().tab_bar_edge);
+
+	/**
+	 * Kitty 0.48 added left and right edges. The bar itself is horizontal-only
+	 * here, and silently dropping it would make the preview claim the tab bar is
+	 * hidden when the exported config says otherwise.
+	 */
+	readonly verticalTabBar = computed(() => {
+		const edge = this.tabBarEdge();
+		return edge === "left" || edge === "right";
+	});
 
 	readonly wallpaperOpacity = computed(() => {
 		const opacity = this.colors().background_opacity ?? 1;
