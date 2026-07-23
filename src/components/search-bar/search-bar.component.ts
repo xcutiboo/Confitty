@@ -94,7 +94,7 @@ import { SearchService } from "../../services/search.service";
                   </div>
                 </div>
 
-                <span class="px-2 py-0.5 bg-kitty-bg rounded-md text-[10px] font-medium text-kitty-primary flex-shrink-0 self-start mt-0.5">
+                <span class="px-2 py-0.5 bg-kitty-bg rounded-md text-2xs font-medium text-kitty-primary flex-shrink-0 self-start mt-0.5">
                   {{ result.item.categoryLabel }}
                 </span>
               </div>
@@ -102,13 +102,13 @@ import { SearchService } from "../../services/search.service";
           }
 
           <div class="px-4 py-2 border-t border-kitty-border/40 bg-kitty-bg/50 flex items-center justify-between">
-            <span class="text-[10px] text-kitty-text-dim">
+            <span class="text-2xs text-kitty-text-dim">
               {{ searchService.results().length }} result{{ searchService.results().length !== 1 ? 's' : '' }}
             </span>
-            <span class="text-[10px] text-kitty-text-dim flex items-center gap-2">
-              <kbd class="px-1.5 py-0.5 bg-kitty-surface border border-kitty-border rounded text-[9px] font-mono">↑↓</kbd> navigate
-              <kbd class="px-1.5 py-0.5 bg-kitty-surface border border-kitty-border rounded text-[9px] font-mono">↵</kbd> go
-              <kbd class="px-1.5 py-0.5 bg-kitty-surface border border-kitty-border rounded text-[9px] font-mono">esc</kbd> close
+            <span class="text-2xs text-kitty-text-dim flex items-center gap-2">
+              <kbd class="px-1.5 py-0.5 bg-kitty-surface border border-kitty-border rounded text-2xs font-mono">↑↓</kbd> navigate
+              <kbd class="px-1.5 py-0.5 bg-kitty-surface border border-kitty-border rounded text-2xs font-mono">↵</kbd> go
+              <kbd class="px-1.5 py-0.5 bg-kitty-surface border border-kitty-border rounded text-2xs font-mono">esc</kbd> close
             </span>
           </div>
         </div>

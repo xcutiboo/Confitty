@@ -327,7 +327,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
                   <pre class="bg-kitty-bg border border-kitty-border rounded-lg px-4 py-3 text-xs font-mono text-[#b3b1ad] overflow-x-auto">{{ bashSnippet }}</pre>
                   <button
                     (click)="copySnippet('bash')"
-                    class="absolute top-2 right-2 px-2 py-1 rounded text-[10px] font-medium transition-all duration-150"
+                    class="absolute top-2 right-2 px-2 py-1 rounded text-2xs font-medium transition-all duration-150"
                     [class.bg-kitty-primary]="copiedShell() === 'bash'"
                     [class.text-kitty-dark]="copiedShell() === 'bash'"
                     [class.bg-kitty-surface-light]="copiedShell() !== 'bash'"
@@ -343,7 +343,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
                   <pre class="bg-kitty-bg border border-kitty-border rounded-lg px-4 py-3 text-xs font-mono text-[#b3b1ad] overflow-x-auto">{{ zshSnippet }}</pre>
                   <button
                     (click)="copySnippet('zsh')"
-                    class="absolute top-2 right-2 px-2 py-1 rounded text-[10px] font-medium transition-all duration-150"
+                    class="absolute top-2 right-2 px-2 py-1 rounded text-2xs font-medium transition-all duration-150"
                     [class.bg-kitty-primary]="copiedShell() === 'zsh'"
                     [class.text-kitty-dark]="copiedShell() === 'zsh'"
                     [class.bg-kitty-surface-light]="copiedShell() !== 'zsh'"
@@ -359,7 +359,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
                   <pre class="bg-kitty-bg border border-kitty-border rounded-lg px-4 py-3 text-xs font-mono text-[#b3b1ad] overflow-x-auto">{{ fishSnippet }}</pre>
                   <button
                     (click)="copySnippet('fish')"
-                    class="absolute top-2 right-2 px-2 py-1 rounded text-[10px] font-medium transition-all duration-150"
+                    class="absolute top-2 right-2 px-2 py-1 rounded text-2xs font-medium transition-all duration-150"
                     [class.bg-kitty-primary]="copiedShell() === 'fish'"
                     [class.text-kitty-dark]="copiedShell() === 'fish'"
                     [class.bg-kitty-surface-light]="copiedShell() !== 'fish'"

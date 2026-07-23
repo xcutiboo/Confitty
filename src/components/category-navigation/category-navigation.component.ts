@@ -150,7 +150,7 @@ const CATEGORIES: readonly Category[] = [
     .nav__header {
       display: block;
       padding: 4px 12px 12px;
-      font-size: 10px;
+      font-size: 0.6875rem;
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
@@ -206,12 +206,12 @@ const CATEGORIES: readonly Category[] = [
       line-height: 1.25;
     }
     .nav__label {
-      font-size: 13px;
+      font-size: 0.8125rem;
       font-weight: 500;
     }
     .nav__description {
       margin-top: 2px;
-      font-size: 10px;
+      font-size: 0.6875rem;
       opacity: 0.6;
       white-space: nowrap;
       overflow: hidden;
@@ -228,7 +228,7 @@ const CATEGORIES: readonly Category[] = [
       width: 100%;
       padding: 10px 12px;
       border-radius: 8px;
-      font-size: 12px;
+      font-size: 0.75rem;
       font-weight: 500;
       color: rgb(var(--kitty-text-dim));
       background: rgb(var(--kitty-darker));

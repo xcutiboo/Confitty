@@ -7,7 +7,7 @@ import { Component, input, signal, OnInit, OnDestroy } from "@angular/core";
 	template: `
     @if (isVisible()) {
       <span 
-        class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold tracking-wide uppercase transition-all duration-500 ease-in-out"
+        class="inline-flex items-center px-2 py-0.5 rounded text-2xs font-bold tracking-wide uppercase transition-all duration-500 ease-in-out"
         [ngClass]="[
           colorClass(),
           isFading() ? 'opacity-0 scale-95' : 'opacity-100 scale-100'

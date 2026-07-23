@@ -373,7 +373,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
               <div class="grid grid-cols-4 md:grid-cols-8 gap-2 mt-4">
                 @for (i of extendedColorIndices; track i) {
                   <div class="form-group">
-                    <label class="block text-[10px] font-medium text-kitty-text-dim mb-1">
+                    <label class="block text-2xs font-medium text-kitty-text-dim mb-1">
                       {{ i }}
                     </label>
                     <app-color-input

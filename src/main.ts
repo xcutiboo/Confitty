@@ -21,7 +21,7 @@ function showBootstrapFailure(error: unknown): void {
 
 	const heading = document.createElement("h1");
 	heading.textContent = "Confitty could not start";
-	heading.style.cssText = "font-size:20px;font-weight:600;margin:0";
+	heading.style.cssText = "font-size:1.25rem;font-weight:600;margin:0";
 
 	const detail = document.createElement("p");
 	detail.textContent =

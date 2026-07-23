@@ -48,7 +48,7 @@ const CHROME_PADDING_Y = 6;
     .title {
       flex: 1;
       text-align: center;
-      font-size: 11px;
+      font-size: 0.6875rem;
       color: var(--chrome-fg);
       letter-spacing: 0.02em;
       white-space: nowrap;

@@ -15,7 +15,7 @@ type CopyState = "idle" | "copied" | "failed";
     <div class="h-full flex flex-col bg-kitty-darker">
       <header class="flex items-center justify-between gap-3 px-4 py-3 border-b border-kitty-border bg-kitty-surface flex-shrink-0">
         <div class="flex items-center gap-3 min-w-0">
-          <span class="text-[10px] font-semibold uppercase tracking-[0.18em] text-kitty-text-dim">Preview</span>
+          <span class="text-2xs font-semibold uppercase tracking-[0.18em] text-kitty-text-dim">Preview</span>
           <div class="flex gap-0.5 rounded-md bg-kitty-darker p-0.5">
             <button
               type="button"
@@ -87,7 +87,7 @@ type CopyState = "idle" | "copied" | "failed";
 
       @if (previewMode() === 'config') {
         <div class="flex-1 min-h-0 overflow-y-auto px-4 py-4 bg-kitty-darker">
-          <pre class="text-[11.5px] leading-[1.65] font-mono whitespace-pre-wrap break-words text-kitty-text">{{ configText() }}</pre>
+          <pre class="text-xs leading-[1.65] font-mono whitespace-pre-wrap break-words text-kitty-text">{{ configText() }}</pre>
         </div>
       } @else {
         <div class="flex-1 min-h-0 flex flex-col gap-3 p-4">
@@ -98,7 +98,7 @@ type CopyState = "idle" | "copied" | "failed";
 
       <footer class="flex flex-col gap-2 border-t border-kitty-border bg-kitty-surface px-4 py-3 flex-shrink-0">
         <div class="flex items-center gap-3">
-          <div class="flex items-center gap-2 min-w-0 flex-1 text-[11px] text-kitty-text-dim font-mono flex-wrap">
+          <div class="flex items-center gap-2 min-w-0 flex-1 text-2xs text-kitty-text-dim font-mono flex-wrap">
             <span class="dot" [style.background]="colors().background" [title]="'background ' + colors().background"></span>
             <span class="dot" [style.background]="colors().foreground" [title]="'foreground ' + colors().foreground"></span>
             <span class="truncate max-w-[160px]" [title]="fonts().font_family">{{ fonts().font_family }} · {{ fonts().font_size }}pt</span>
@@ -110,7 +110,7 @@ type CopyState = "idle" | "copied" | "failed";
           <button
             type="button"
             (click)="download()"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] font-semibold transition-colors bg-kitty-primary text-kitty-dark hover:bg-kitty-primary-hover flex-shrink-0"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-2xs font-semibold transition-colors bg-kitty-primary text-kitty-dark hover:bg-kitty-primary-hover flex-shrink-0"
           >
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
@@ -119,14 +119,14 @@ type CopyState = "idle" | "copied" | "failed";
           </button>
         </div>
         <div class="flex items-center justify-between gap-4">
-          <p class="text-[10px] text-kitty-text-dim font-mono leading-snug truncate">
+          <p class="text-2xs text-kitty-text-dim font-mono leading-snug truncate">
             <span class="text-kitty-accent">~/.config/kitty/kitty.conf</span>
             <span class="mx-1.5 opacity-50">·</span>
             Reload: <span class="text-kitty-accent">Ctrl+Shift+F5</span>
             <span class="mx-1.5 opacity-50">·</span>
             {{ configLineCount() }} lines
           </p>
-          <p class="text-[9px] text-kitty-text-dim/80 font-sans tracking-wide" title="This visualizer is an approximation and might not fully reflect the actual terminal configuration output.">
+          <p class="text-2xs text-kitty-text-dim/80 font-sans tracking-wide" title="This visualizer is an approximation and might not fully reflect the actual terminal configuration output.">
             Note: This is an approximate visualizer. Rendering may vary significantly from the actual terminal.
           </p>
         </div>
@@ -138,7 +138,7 @@ type CopyState = "idle" | "copied" | "failed";
     .preview-toggle {
       padding: 4px 10px;
       border-radius: 6px;
-      font-size: 11px;
+      font-size: 0.6875rem;
       font-weight: 500;
       color: rgb(var(--kitty-text-dim));
       transition: background-color 150ms ease, color 150ms ease;
@@ -156,7 +156,7 @@ type CopyState = "idle" | "copied" | "failed";
       gap: 6px;
       padding: 4px 8px;
       border-radius: 6px;
-      font-size: 11px;
+      font-size: 0.6875rem;
       font-weight: 500;
       color: rgb(var(--kitty-text));
       background: rgb(var(--kitty-surface-light));

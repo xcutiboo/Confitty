@@ -158,7 +158,7 @@ function sectionFor(key: string): keyof KittyConfigAST | undefined {
                   class="flex-shrink-0 w-14 h-14 rounded-md overflow-hidden border border-kitty-border group-hover:border-kitty-primary/50 transition-colors flex flex-col"
                   [style.background]="getPresetColor(preset, 'background')"
                 >
-                  <div class="flex-1 grid place-items-center font-mono text-[13px] font-bold tracking-tight"
+                  <div class="flex-1 grid place-items-center font-mono text-sm font-bold tracking-tight"
                        [style.color]="getPresetColor(preset, 'foreground')">
                     Aa
                   </div>
@@ -171,11 +171,11 @@ function sectionFor(key: string): keyof KittyConfigAST | undefined {
               }
               <div class="flex-1 min-w-0">
                 <div class="text-sm font-semibold text-kitty-text group-hover:text-kitty-primary transition-colors leading-tight">{{ preset.name }}</div>
-                <p class="text-[11px] leading-relaxed text-kitty-text-dim line-clamp-2 mt-0.5">{{ preset.description }}</p>
+                <p class="text-2xs leading-relaxed text-kitty-text-dim line-clamp-2 mt-0.5">{{ preset.description }}</p>
                 @if (preset.tags && preset.tags.length > 0) {
                   <div class="flex gap-1 flex-wrap mt-1.5">
                     @for (tag of preset.tags.slice(0, 3); track tag) {
-                      <span class="text-[9px] px-1.5 py-0.5 rounded bg-kitty-surface-light text-kitty-text-dim border border-kitty-border">{{ tag }}</span>
+                      <span class="text-2xs px-1.5 py-0.5 rounded bg-kitty-surface-light text-kitty-text-dim border border-kitty-border">{{ tag }}</span>
                     }
                   </div>
                 }

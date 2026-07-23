@@ -3,6 +3,12 @@ module.exports = {
 	content: ["./src/**/*.{html,ts}"],
 	theme: {
 		extend: {
+			fontSize: {
+				// Dense chrome — status strips, meta rows, badges. In rem so it
+				// tracks the reader's browser font size, and with a looser line
+				// height because small text needs more of it to stay legible.
+				"2xs": ["0.6875rem", { lineHeight: "1.45" }],
+			},
 			colors: {
 				"kitty-dark": "rgb(var(--kitty-dark) / <alpha-value>)",
 				"kitty-darker": "rgb(var(--kitty-darker) / <alpha-value>)",

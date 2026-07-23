@@ -56,7 +56,7 @@ type IndexedColors = Record<`color${number}`, string>;
       gap: 10px;
     }
     .label {
-      font-size: 10px;
+      font-size: 0.6875rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: rgb(var(--kitty-text-dim));
@@ -73,7 +73,7 @@ type IndexedColors = Record<`color${number}`, string>;
       aspect-ratio: 1;
       border-radius: 4px;
       border: 1px solid rgb(var(--kitty-border));
-      font-size: 9px;
+      font-size: 0.6875rem;
       font-weight: 600;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       letter-spacing: -0.02em;
