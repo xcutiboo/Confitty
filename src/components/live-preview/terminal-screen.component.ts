@@ -117,9 +117,29 @@ function promptSpans(path: string): Span[] {
     .screen {
       flex: 1;
       min-height: 0;
-      overflow: hidden;
+      /*
+       * The sample lines are authored at a fixed column width so the palette and
+       * spacing read clearly. A larger font size, or a narrow preview pane, puts
+       * the end of a line past the right edge; scrolling keeps it reachable
+       * rather than silently cut off. Wrapping instead would preserve terminal
+       * behaviour but destroy the column alignment the preview exists to show.
+       */
+      overflow: auto;
+      overscroll-behavior: contain;
       white-space: pre;
       cursor: text;
+    }
+    .screen::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .screen::-webkit-scrollbar-thumb {
+      background: currentColor;
+      opacity: 0.25;
+      border-radius: 3px;
+    }
+    .screen::-webkit-scrollbar-track {
+      background: transparent;
     }
     .line {
       display: block;

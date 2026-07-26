@@ -126,8 +126,8 @@ type CopyState = "idle" | "copied" | "failed";
             <span class="mx-1.5 opacity-50">·</span>
             {{ configLineCount() }} lines
           </p>
-          <p class="text-2xs text-kitty-text-dim/80 font-sans tracking-wide" title="This visualizer is an approximation and might not fully reflect the actual terminal configuration output.">
-            Note: This is an approximate visualizer. Rendering may vary significantly from the actual terminal.
+          <p class="text-2xs text-kitty-text-dim/80 flex-shrink-0">
+            Approximate preview — your terminal will differ in detail.
           </p>
         </div>
       </footer>

@@ -26,6 +26,17 @@
 	/* Foreground used on top of --kitty-primary. */
 	--kitty-dark: 255 255 255;
 
+	/*
+	 * Motion tokens. Everything here is short and functional: state changes that
+	 * confirm an interaction, never movement for its own sake. --ease is a
+	 * standard ease-in-out; --ease-out lands quickly and is for things entering.
+	 */
+	--ease: cubic-bezier(0.4, 0, 0.2, 1);
+	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+	--duration-fast: 120ms;
+	--duration-base: 180ms;
+	--duration-slow: 260ms;
+
 	scrollbar-width: thin;
 	scrollbar-color: rgb(var(--kitty-border-light)) transparent;
 }
@@ -124,6 +135,18 @@ button {
 	cursor: pointer;
 }
 
+/*
+ * A keyboard focus ring for anything that does not already draw its own. Form
+ * controls set focus:ring themselves and win on specificity; this exists so a
+ * plain button cannot end up with no focus indicator at all, which is what most
+ * of them had. :focus-visible keeps it off pointer interactions.
+ */
+:focus-visible {
+	outline: 2px solid rgb(var(--kitty-primary));
+	outline-offset: 2px;
+	border-radius: 4px;
+}
+
 ::-webkit-scrollbar {
 	width: 6px;
 	height: 6px;
@@ -186,16 +209,16 @@ button {
 
 @layer utilities {
 	.animate-fade-in {
-		animation: fade-in 180ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+		animation: fade-in var(--duration-base) var(--ease) forwards;
 	}
 	.animate-fade-in-up {
-		animation: fade-in-up 220ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+		animation: fade-in-up var(--duration-slow) var(--ease-out) forwards;
 	}
 	.animate-slide-in-right {
-		animation: slide-in-right 260ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+		animation: slide-in-right var(--duration-slow) var(--ease-out) forwards;
 	}
 	.animate-scale-in {
-		animation: scale-in 220ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+		animation: scale-in var(--duration-slow) var(--ease-out) forwards;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
