@@ -106,6 +106,9 @@ const COLOR_OVERRIDES = new Set([
 	"dim_opacity",
 ]);
 
+/** Enough to browse without burying the settings form underneath. */
+const PRESET_PAGE_SIZE = 6;
+
 const TAB_BAR_COLOR_KEYS = new Set([
 	"active_tab_background",
 	"active_tab_foreground",
@@ -132,7 +135,7 @@ function sectionFor(key: string): keyof KittyConfigAST | undefined {
           @for (cat of categories; track cat.id) {
             <button
               type="button"
-              (click)="selectedCategory.set(cat.id)"
+              (click)="selectCategory(cat.id)"
               class="px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors"
               [class.bg-kitty-primary]="selectedCategory() === cat.id"
               [class.text-kitty-dark]="selectedCategory() === cat.id"
@@ -145,8 +148,8 @@ function sectionFor(key: string): keyof KittyConfigAST | undefined {
         </div>
       </div>
 
-      <div class="grid grid-cols-1 gap-2 max-h-96 overflow-y-auto pr-1">
-        @for (preset of filteredPresets(); track preset.id) {
+      <div class="grid grid-cols-1 gap-2">
+        @for (preset of visiblePresets(); track preset.id) {
           <button
             type="button"
             (click)="applyPreset(preset)"
@@ -184,6 +187,21 @@ function sectionFor(key: string): keyof KittyConfigAST | undefined {
           </button>
         }
       </div>
+
+      @if (hiddenPresetCount() > 0) {
+        <button
+          type="button"
+          (click)="showAllPresets.set(!showAllPresets())"
+          class="mt-3 w-full py-2.5 rounded-lg text-xs font-medium border border-kitty-border text-kitty-text-dim hover:text-kitty-text hover:border-kitty-primary/60 transition-colors"
+          [attr.aria-expanded]="showAllPresets()"
+        >
+          @if (showAllPresets()) {
+            Show fewer
+          } @else {
+            Show {{ hiddenPresetCount() }} more
+          }
+        </button>
+      }
     </div>
   `,
 })
@@ -197,6 +215,28 @@ export class PresetSelectorComponent {
 	readonly filteredPresets = computed(() =>
 		this.presetsService.getPresetsByCategory(this.selectedCategory()),
 	);
+
+	readonly showAllPresets = signal(false);
+
+	/**
+	 * The themes list runs to 47 entries. It used to sit in its own scroll box
+	 * inside the already-scrolling editor, so the wheel would move the inner list
+	 * until it bottomed out and only then the page. Showing a first page and
+	 * expanding on request keeps one scrollbar on screen.
+	 */
+	readonly visiblePresets = computed(() => {
+		const presets = this.filteredPresets();
+		return this.showAllPresets() ? presets : presets.slice(0, PRESET_PAGE_SIZE);
+	});
+
+	readonly hiddenPresetCount = computed(() =>
+		Math.max(0, this.filteredPresets().length - PRESET_PAGE_SIZE),
+	);
+
+	selectCategory(id: ConfigPreset["category"]): void {
+		this.selectedCategory.set(id);
+		this.showAllPresets.set(false);
+	}
 
 	readonly paletteKeys: readonly string[] = [
 		"color1",

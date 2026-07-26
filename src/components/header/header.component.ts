@@ -11,7 +11,6 @@ import type { KittyConfigAST } from "../../models/kitty-types";
 import { CONFIG_SEARCH_INDEX } from "../../search/config-index";
 import { SearchBarComponent } from "../search-bar/search-bar.component";
 import { DialogShellComponent } from "../shared/dialog-shell/dialog-shell.component";
-import { TransientBadgeComponent } from "../shared/transient-badge/transient-badge.component";
 
 interface ImportStatus {
 	tone: "success" | "error";
@@ -57,7 +56,6 @@ function countDirectives(config: KittyConfigAST): number {
 		FormsModule,
 		SearchBarComponent,
 		DialogShellComponent,
-		TransientBadgeComponent,
 	],
 	template: `
     <header class="h-14 sm:h-16 lg:h-20 bg-kitty-surface border-b border-kitty-border flex items-center justify-between px-3 sm:px-4 lg:px-6 shadow-sm">
@@ -80,7 +78,6 @@ function countDirectives(config: KittyConfigAST): number {
         <div class="flex flex-col leading-tight">
           <div class="flex items-center gap-2.5">
             <h1 class="text-base sm:text-lg lg:text-xl font-bold text-kitty-primary tracking-tight">Confitty</h1>
-            <app-transient-badge [duration]="10000" colorClass="bg-kitty-primary text-kitty-dark">New v1.1.0!</app-transient-badge>
           </div>
           <span class="hidden xl:inline text-2xs lg:text-xs text-kitty-text-dim">
             Visual configuration builder for Kitty
