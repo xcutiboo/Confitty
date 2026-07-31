@@ -51,13 +51,15 @@ import {
       backdrop-filter: blur(4px);
     }
 
+    /*
+     * Alignment deliberately lives in panelClass rather than here: component
+     * styles carry an encapsulation attribute, so they outrank any utility
+     * class a host passes in and silently win.
+     */
     .shell__panel {
       display: flex;
-      align-items: center;
-      justify-content: center;
       width: 100%;
       height: 100%;
-      padding: 1rem;
     }
 
     .shell[open] {
@@ -84,8 +86,8 @@ import {
 })
 export class DialogShellComponent {
 	readonly label = input.required<string>();
-	/** Classes for the centring wrapper, so hosts can make it a sheet instead. */
-	readonly panelClass = input<string>("");
+	/** Layout for the wrapper that positions the panel inside the viewport. */
+	readonly panelClass = input<string>("items-center justify-center p-4");
 	readonly closed = output<void>();
 
 	private readonly dialog =

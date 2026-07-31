@@ -250,7 +250,7 @@ function countDirectives(config: KittyConfigAST): number {
 
     <!-- Mobile Actions Menu -->
     @if (mobileMenuOpen()) {
-      <app-dialog-shell label="Actions" panelClass="items-start justify-end !p-2" (closed)="mobileMenuOpen.set(false)">
+      <app-dialog-shell label="Actions" panelClass="items-start justify-end p-2" (closed)="mobileMenuOpen.set(false)">
         <div class="mt-12 sm:mt-14 w-56 bg-kitty-surface border border-kitty-border rounded-xl shadow-2xl p-2">
           <div class="px-3 py-2 text-xs font-semibold text-kitty-text-dim uppercase tracking-wider border-b border-kitty-border mb-2">Actions</div>
           <button (click)="mobileSearchOpen.set(true); mobileMenuOpen.set(false)" class="w-full px-3 py-2.5 rounded-lg text-left text-sm text-kitty-text hover:bg-kitty-surface-light transition-all duration-150 flex items-center gap-3 active:scale-[0.98]">
@@ -287,7 +287,7 @@ function countDirectives(config: KittyConfigAST): number {
 
     <!-- Search, presented as a full-height sheet on narrow viewports -->
     @if (mobileSearchOpen()) {
-      <app-dialog-shell label="Search settings" panelClass="!p-0 items-stretch" (closed)="mobileSearchOpen.set(false)">
+      <app-dialog-shell label="Search settings" panelClass="items-stretch" (closed)="mobileSearchOpen.set(false)">
         <div class="w-full h-full bg-kitty-surface flex flex-col p-4 gap-4">
           <div class="flex items-center gap-3">
             <app-search-bar class="flex-1" (resultSelected)="mobileSearchOpen.set(false)" />

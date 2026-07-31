@@ -1,6 +1,7 @@
 # Build artifacts
 .angular
 dist
+out-tsc
 
 # Dependencies
 node_modules
