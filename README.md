@@ -10,9 +10,9 @@
   </p>
 
   <p><strong><a href="https://confitty.app">confitty.app</a></strong></p>
-</div>
 
----
+  <img src="./docs/assets/confitty-terminal-divider.svg" alt="" width="100%">
+</div>
 
 Kitty is configured by hand-editing `kitty.conf`, which means reading reference
 documentation for roughly 225 options to change your font size. Confitty gives
@@ -64,6 +64,10 @@ remote sessions and streaming.
 
 132 options are indexed for keyboard-navigable fuzzy search.
 
+<div align="center">
+  <img src="./docs/assets/confitty-config-divider.svg" alt="" width="100%">
+</div>
+
 ## Using it
 
 1. Open [confitty.app](https://confitty.app).
@@ -77,6 +81,10 @@ cp ~/Downloads/kitty.conf ~/.config/kitty/kitty.conf
 ```
 
 Reload with <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F5</kbd>, or restart Kitty.
+
+<div align="center">
+  <img src="./docs/assets/confitty-window-divider.svg" alt="" width="100%">
+</div>
 
 ## Development
 
@@ -157,8 +165,10 @@ If Confitty saved you an afternoon in the Kitty docs, you can
 [buy me a coffee](https://ko-fi.com/xcutiboo). Donations cover the domain and
 hosting; the project stays free either way.
 
----
+<div align="center">
+  <img src="./docs/assets/confitty-terminal-divider.svg" alt="" width="100%">
 
-<sub>The mascot is Kitty's ghost cat, if someone had dropped her in pink paint
-and then set off a confetti cannon in her face. The confetti is permanent. She
-has accepted this.</sub>
+  <sub>The mascot is Kitty's ghost cat, if someone had dropped her in pink paint
+  and then set off a confetti cannon in her face. The confetti is permanent.
+  She has accepted this.</sub>
+</div>
