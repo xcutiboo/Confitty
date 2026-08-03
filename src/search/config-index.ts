@@ -108,6 +108,13 @@ export const CONFIG_SEARCH_INDEX: SearchableItem[] = [
 				"How Kitty composites text glyphs: platform default or legacy mode.",
 			tags: ["compositing", "rendering", "antialiasing", "cleartype"],
 		},
+		{
+			key: "text_fg_override_threshold",
+			label: "Text Fg Override Threshold",
+			description:
+				"A setting to prevent low contrast between foreground and background colors. Useful when working with applications that use colors that do not contrast well with your preferred color scheme.",
+			tags: ["override", "text", "threshold"],
+		},
 	]),
 
 	...items("cursor", "Cursor", [
@@ -184,6 +191,13 @@ export const CONFIG_SEARCH_INDEX: SearchableItem[] = [
 				"Minimum cell jump distance required to trigger cursor trail animation.",
 			tags: ["trail", "threshold", "jump", "animation"],
 		},
+		{
+			key: "cursor_trail_color",
+			label: "Cursor Trail Color",
+			description:
+				"Set the color of the cursor trail when cursor_trail is enabled. If set to 'none' (the default), the cursor trail will use the cursor's background color.",
+			tags: ["color", "cursor", "trail"],
+		},
 	]),
 
 	...items("scrollback", "Scrollback", [
@@ -226,6 +240,125 @@ export const CONFIG_SEARCH_INDEX: SearchableItem[] = [
 			label: "Touch Scroll Multiplier",
 			description: "Lines per unit of touchpad scroll gesture.",
 			tags: ["touchpad", "trackpad", "scroll", "gesture"],
+		},
+		{
+			key: "scrollback_fill_enlarged_window",
+			label: "Scrollback Fill Enlarged Window",
+			description:
+				"Fill new space with lines from the scrollback buffer after enlarging a window.",
+			tags: ["enlarged", "fill", "scrollback", "window"],
+		},
+		{
+			key: "pixel_scroll",
+			label: "Pixel Scroll",
+			description:
+				"Enable per-pixel scrolling, in the kitty scrollback buffer, when using high precision input devices (for example touchpads).",
+			tags: ["pixel", "scroll"],
+		},
+		{
+			key: "momentum_scroll",
+			label: "Momentum Scroll",
+			description:
+				"The amount of friction to apply to slow down momentum (inertial) scrolling. A number from 0 to 1, with 0 meaning no momentum scrolling and 1 meaning infinite scrolling.",
+			tags: ["momentum", "scroll"],
+		},
+		{
+			key: "scrollbar",
+			label: "Scrollbar",
+			description:
+				"Control when the scrollbar is displayed. scrolled means when the scrolling backwards has started.",
+			tags: ["scrollbar"],
+		},
+		{
+			key: "scrollbar_gap",
+			label: "Scrollbar Gap",
+			description:
+				"The gap between the scrollbar and the window edge in units of cell width.",
+			tags: ["gap", "scrollbar"],
+		},
+		{
+			key: "scrollbar_handle_color",
+			label: "Scrollbar Handle Color",
+			description:
+				"The color of the scrollbar handle. A value of foreground means to use the current foreground text color, a value of selection_background means to use the current selection background color.",
+			tags: ["color", "handle", "scrollbar"],
+		},
+		{
+			key: "scrollbar_handle_opacity",
+			label: "Scrollbar Handle Opacity",
+			description:
+				"The opacity of the scrollbar handle, 0 being fully transparent and 1 being full opaque.",
+			tags: ["handle", "opacity", "scrollbar"],
+		},
+		{
+			key: "scrollbar_hitbox_expansion",
+			label: "Scrollbar Hitbox Expansion",
+			description:
+				"The extra area around the handle to allow easier grabbing of the scollbar in units of cell width.",
+			tags: ["expansion", "hitbox", "scrollbar"],
+		},
+		{
+			key: "scrollbar_hover_width",
+			label: "Scrollbar Hover Width",
+			description:
+				"The width of the scroll bar when the mouse is hovering over it, in units of cell width.",
+			tags: ["hover", "scrollbar", "width"],
+		},
+		{
+			key: "scrollbar_interactive",
+			label: "Scrollbar Interactive",
+			description:
+				"If disabled, the scrollbar will not be controllable via the mouse and all mouse events will pass through the scrollbar.",
+			tags: ["interactive", "scrollbar"],
+		},
+		{
+			key: "scrollbar_jump_on_click",
+			label: "Scrollbar Jump On Click",
+			description:
+				"When enabled clicking in the scrollbar track will cause the scroll position to jump to the clicked location, otherwise the scroll position will only move towards the position by a single screenful, wh.",
+			tags: ["click", "jump", "scrollbar"],
+		},
+		{
+			key: "scrollbar_min_handle_height",
+			label: "Scrollbar Min Handle Height",
+			description:
+				"The minimum height of the scrollbar handle in units of cell height. Prevents the handle from becoming too small when there is a lot of scrollback.",
+			tags: ["handle", "height", "min", "scrollbar"],
+		},
+		{
+			key: "scrollbar_radius",
+			label: "Scrollbar Radius",
+			description:
+				"The radius (curvature) of the scrollbar handle in units of cell width. Should be less than scrollbar_width.",
+			tags: ["radius", "scrollbar"],
+		},
+		{
+			key: "scrollbar_track_color",
+			label: "Scrollbar Track Color",
+			description:
+				"The color of the scrollbar track. A value of foreground means to use the current foreground text color, a value of selection_background means to use the current selection background color.",
+			tags: ["color", "scrollbar", "track"],
+		},
+		{
+			key: "scrollbar_track_hover_opacity",
+			label: "Scrollbar Track Hover Opacity",
+			description:
+				"The opacity of the scrollbar track when the mouse is over the scrollbar, 0 being fully transparent and 1 being full opaque.",
+			tags: ["hover", "opacity", "scrollbar", "track"],
+		},
+		{
+			key: "scrollbar_track_opacity",
+			label: "Scrollbar Track Opacity",
+			description:
+				"The opacity of the scrollbar track, 0 being fully transparent and 1 being full opaque.",
+			tags: ["opacity", "scrollbar", "track"],
+		},
+		{
+			key: "scrollbar_width",
+			label: "Scrollbar Width",
+			description:
+				"The width of the scroll bar in units of cell width.",
+			tags: ["scrollbar", "width"],
 		},
 	]),
 
@@ -294,11 +427,88 @@ export const CONFIG_SEARCH_INDEX: SearchableItem[] = [
 			tags: ["selection", "clipboard", "clear", "primary", "linux"],
 		},
 		{
-			key: "select_by_word_chars",
+			key: "select_by_word_characters",
 			label: "Word Selection Characters",
 			description:
 				"Characters treated as word boundaries when double-clicking to select.",
 			tags: ["double click", "word select", "boundary", "delimiter"],
+		},
+		{
+			key: "detect_urls",
+			label: "Detect Urls",
+			description:
+				"Detect URLs under the mouse. Detected URLs are highlighted with an underline and the mouse cursor becomes a hand over them.",
+			tags: ["detect", "urls"],
+		},
+		{
+			key: "show_hyperlink_targets",
+			label: "Show Hyperlink Targets",
+			description:
+				"When the mouse hovers over a terminal hyperlink, show the actual URL that will be activated when the hyperlink is clicked.",
+			tags: ["hyperlink", "show", "targets"],
+		},
+		{
+			key: "underline_hyperlinks",
+			label: "Underline Hyperlinks",
+			description:
+				"Control how hyperlinks are underlined. They can either be underlined on mouse hover, always (i.e.",
+			tags: ["hyperlinks", "underline"],
+		},
+		{
+			key: "strip_trailing_spaces",
+			label: "Strip Trailing Spaces",
+			description:
+				"Remove spaces at the end of lines when copying to clipboard. A value of smart will do it when using normal selections, but not rectangle selections.",
+			tags: ["spaces", "strip", "trailing"],
+		},
+		{
+			key: "drag_threshold",
+			label: "Drag Threshold",
+			description:
+				"The threshold distance the mouse must move to start a drag and drop. Dragging works for tabs and windows.",
+			tags: ["drag", "threshold"],
+		},
+		{
+			key: "select_by_word_characters_forward",
+			label: "Select By Word Characters Forward",
+			description:
+				"Characters considered part of a word when extending the selection forward on double clicking.",
+			tags: ["characters", "forward", "select", "word"],
+		},
+		{
+			key: "click_interval",
+			label: "Click Interval",
+			description:
+				"The interval between successive clicks to detect double/triple clicks (in seconds).",
+			tags: ["click", "interval"],
+		},
+		{
+			key: "focus_follows_mouse",
+			label: "Focus Follows Mouse",
+			description:
+				"Set the active window to the window under the mouse when the mouse crosses into a different window.",
+			tags: ["focus", "follows", "mouse"],
+		},
+		{
+			key: "pointer_shape_when_grabbed",
+			label: "Pointer Shape When Grabbed",
+			description:
+				"The shape of the mouse pointer when the program running in the terminal grabs the mouse.",
+			tags: ["grabbed", "pointer", "shape", "when"],
+		},
+		{
+			key: "default_pointer_shape",
+			label: "Default Pointer Shape",
+			description:
+				"The default shape of the mouse pointer.",
+			tags: ["default", "pointer", "shape"],
+		},
+		{
+			key: "pointer_shape_when_dragging",
+			label: "Pointer Shape When Dragging",
+			description:
+				"The default shape of the mouse pointer when dragging across text. The optional second value sets the shape when dragging in rectangular selection mode.",
+			tags: ["dragging", "pointer", "shape", "when"],
 		},
 	]),
 
@@ -323,13 +533,6 @@ export const CONFIG_SEARCH_INDEX: SearchableItem[] = [
 			description:
 				"Synchronize repaints to the monitor refresh rate (vsync). Reduces tearing.",
 			tags: ["vsync", "tearing", "monitor sync", "refresh"],
-		},
-		{
-			key: "enable_audio_bell",
-			label: "Audio Bell",
-			description:
-				"Play an audible bell sound on BEL character. Disable for silent operation.",
-			tags: ["beep", "bell sound", "audio", "system bell"],
 		},
 	]),
 
@@ -373,6 +576,20 @@ export const CONFIG_SEARCH_INDEX: SearchableItem[] = [
 			label: "Command on Bell",
 			description: "Run a shell command when a bell is triggered.",
 			tags: ["bell hook", "command", "trigger", "script"],
+		},
+		{
+			key: "bell_path",
+			label: "Bell Path",
+			description:
+				"Path to a sound file to play as the bell sound. If set to none, the system default bell sound is used.",
+			tags: ["bell", "path"],
+		},
+		{
+			key: "linux_bell_theme",
+			label: "Linux Bell Theme",
+			description:
+				"The XDG Sound Theme kitty will use to play the bell sound. On Wayland, when the compositor supports it, it is asked to play the system default bell sound, and this setting has no effect.",
+			tags: ["bell", "linux", "theme"],
 		},
 	]),
 
@@ -470,6 +687,181 @@ export const CONFIG_SEARCH_INDEX: SearchableItem[] = [
 				"How content is placed inside the window: center or top-left aligned.",
 			tags: ["centering", "alignment", "content", "placement"],
 		},
+		{
+			key: "remember_window_position",
+			label: "Remember Window Position",
+			description:
+				"If enabled, the OS Window position will be remembered so that new instances of kitty will have the same position as the previous instance.",
+			tags: ["position", "remember", "window"],
+		},
+		{
+			key: "enabled_layouts",
+			label: "Enabled Layouts",
+			description:
+				"The enabled window layouts. A comma separated list of layout names. The special value all means all layouts.",
+			tags: ["enabled", "layouts"],
+		},
+		{
+			key: "window_resize_step_cells",
+			label: "Window Resize Step Cells",
+			description:
+				"The step size (in units of cell width/cell height) to use when resizing kitty windows in a layout with the shortcut start_resizing_window.",
+			tags: ["cells", "resize", "step", "window"],
+		},
+		{
+			key: "window_resize_step_lines",
+			label: "Window Resize Step Lines",
+			description:
+				"Rows a window grows or shrinks by when resized with the keyboard.",
+			tags: ["lines", "resize", "step", "window"],
+		},
+		{
+			key: "draw_window_borders_for_single_window",
+			label: "Draw Window Borders For Single Window",
+			description:
+				"Draw borders around a window even when there is only a single window visible. When enabled and there is only a single window, full borders are drawn around it (as if draw_minimal_borders is false).",
+			tags: ["borders", "draw", "for", "single", "window"],
+		},
+		{
+			key: "single_window_margin_width",
+			label: "Single Window Margin Width",
+			description:
+				"The window margin to use when only a single window is visible (in pts). Negative values will cause the value of window_margin_width to be used instead.",
+			tags: ["margin", "single", "width", "window"],
+		},
+		{
+			key: "single_window_padding_width",
+			label: "Single Window Padding Width",
+			description:
+				"The window padding to use when only a single window is visible (in pts). Negative values will cause the value of window_padding_width to be used instead.",
+			tags: ["padding", "single", "width", "window"],
+		},
+		{
+			key: "window_logo_path",
+			label: "Window Logo Path",
+			description:
+				"Path to a logo image. Must be in PNG/JPEG/WEBP/GIF/TIFF/BMP format. Relative paths are interpreted relative to the kitty config directory.",
+			tags: ["logo", "path", "window"],
+		},
+		{
+			key: "window_logo_position",
+			label: "Window Logo Position",
+			description:
+				"Where to position the window logo in the window. The value can be one of: top-left, top, top-right, left, center, right, bottom-left, bottom, bottom-right.",
+			tags: ["logo", "position", "window"],
+		},
+		{
+			key: "window_logo_alpha",
+			label: "Window Logo Alpha",
+			description:
+				"The amount the logo should be faded into the background. With zero being fully faded and one being fully opaque.",
+			tags: ["alpha", "logo", "window"],
+		},
+		{
+			key: "window_logo_scale",
+			label: "Window Logo Scale",
+			description:
+				"The percentage (0-100] of the window size to which the logo should scale. Using a single number means the logo is scaled to that percentage of the shortest window dimension, while preserving aspect ra.",
+			tags: ["logo", "scale", "window"],
+		},
+		{
+			key: "resize_in_steps",
+			label: "Resize In Steps",
+			description:
+				"Resize the OS window in steps as large as the cells, instead of with the usual pixel accuracy.",
+			tags: ["resize", "steps"],
+		},
+		{
+			key: "visual_window_select_characters",
+			label: "Visual Window Select Characters",
+			description:
+				"The list of characters for visual window selection. For example, for selecting a window to focus on with focus_visible_window.",
+			tags: ["characters", "select", "visual", "window"],
+		},
+		{
+			key: "confirm_os_window_close",
+			label: "Confirm OS Window Close",
+			description:
+				"Ask for confirmation when closing an OS window or a tab with at least this number of kitty windows in it by window manager (e.g.",
+			tags: ["close", "confirm", "window"],
+		},
+		{
+			key: "confirm_os_window_close_count_background",
+			label: "Confirm OS Window Close Count Background",
+			description:
+				"Count background processes when deciding whether to confirm closing a window.",
+			tags: ["background", "close", "confirm", "count", "window"],
+		},
+		{
+			key: "window_drag_tolerance",
+			label: "Window Drag Tolerance",
+			description:
+				"Control dragging window borders to resize kitty windows. This is the tolerance in pts for the region around window borders where pressing the left mouse button will start the dragging of window border.",
+			tags: ["drag", "tolerance", "window"],
+		},
+		{
+			key: "window_title_bar",
+			label: "Window Title Bar",
+			description:
+				"Control the position of the window title bar relative to the window content. Use window_title_bar_min_windows to control when title bars are shown.",
+			tags: ["bar", "title", "window"],
+		},
+		{
+			key: "window_title_bar_active_background",
+			label: "Window Title Bar Active Background",
+			description:
+				"Background color for the active window title bar. Defaults to the corresponding tab bar color (active_tab_background) when set to none.",
+			tags: ["active", "background", "bar", "title", "window"],
+		},
+		{
+			key: "window_title_bar_active_foreground",
+			label: "Window Title Bar Active Foreground",
+			description:
+				"Foreground color for the active window title bar. Defaults to the corresponding tab bar color (active_tab_foreground) when set to none.",
+			tags: ["active", "bar", "foreground", "title", "window"],
+		},
+		{
+			key: "window_title_bar_inactive_background",
+			label: "Window Title Bar Inactive Background",
+			description:
+				"Background color for inactive window title bars. Defaults to the corresponding tab bar color (inactive_tab_background) when set to none.",
+			tags: ["background", "bar", "inactive", "title", "window"],
+		},
+		{
+			key: "window_title_bar_inactive_foreground",
+			label: "Window Title Bar Inactive Foreground",
+			description:
+				"Foreground color for inactive window title bars. Defaults to the corresponding tab bar color (inactive_tab_foreground) when set to none.",
+			tags: ["bar", "foreground", "inactive", "title", "window"],
+		},
+		{
+			key: "window_title_bar_align",
+			label: "Window Title Bar Align",
+			description:
+				"Horizontal alignment of the text in window title bars.",
+			tags: ["align", "bar", "title", "window"],
+		},
+		{
+			key: "window_title_bar_min_windows",
+			label: "Window Title Bar Min Windows",
+			description:
+				"The minimum number of visible windows in a tab before window title bars are shown.",
+			tags: ["bar", "min", "title", "window", "windows"],
+		},
+		{
+			key: "window_title_template",
+			label: "Window Title Template",
+			description:
+				"A template to render the window title bar text. Uses the same template syntax as tab_title_template.",
+			tags: ["template", "title", "window"],
+		},
+		{
+			key: "active_window_title_template",
+			label: "Active Window Title Template",
+			description:
+				"Template to use for the active window title bar. If not set (the value none), the window_title_template is used.",
+			tags: ["active", "template", "title", "window"],
+		},
 	]),
 
 	...items("tab_bar", "Tab Bar", [
@@ -500,7 +892,7 @@ export const CONFIG_SEARCH_INDEX: SearchableItem[] = [
 			tags: ["tabs", "align", "center", "left", "right"],
 		},
 		{
-			key: "tab_min_tabs",
+			key: "tab_bar_min_tabs",
 			label: "Minimum Tabs to Show",
 			description:
 				"Minimum number of open tabs needed before the tab bar is displayed.",
@@ -564,6 +956,83 @@ export const CONFIG_SEARCH_INDEX: SearchableItem[] = [
 			label: "Inactive Tab Background",
 			description: "Background color of inactive tabs.",
 			tags: ["tabs", "inactive", "color", "background"],
+		},
+		{
+			key: "tab_bar_margin_height",
+			label: "Tab Bar Margin Height",
+			description:
+				"The margin along the tab bar edge (in pts). The first number is the margin between the edge of the OS Window and the tab bar.",
+			tags: ["bar", "height", "margin", "tab"],
+		},
+		{
+			key: "tab_powerline_style",
+			label: "Tab Powerline Style",
+			description:
+				"The powerline separator style between tabs in the tab bar when using powerline as the tab_bar_style, can be one of: angled, slanted, round.",
+			tags: ["powerline", "style", "tab"],
+		},
+		{
+			key: "tab_activity_symbol",
+			label: "Tab Activity Symbol",
+			description:
+				"Some text or a Unicode symbol to show on the tab if a window in the tab that does not have focus has some activity.",
+			tags: ["activity", "symbol", "tab"],
+		},
+		{
+			key: "tab_title_max_length",
+			label: "Tab Title Max Length",
+			description:
+				"The maximum number of cells that can be used to render the text in a tab. A value of zero means that no limit is applied.",
+			tags: ["length", "max", "tab", "title"],
+		},
+		{
+			key: "active_tab_title_template",
+			label: "Active Tab Title Template",
+			description:
+				"Template to use for active tabs. If not specified falls back to tab_title_template.",
+			tags: ["active", "tab", "template", "title"],
+		},
+		{
+			key: "inactive_tab_font_style",
+			label: "Inactive Tab Font Style",
+			description:
+				"Font style used for inactive tab titles, such as normal, bold, italic.",
+			tags: ["font", "inactive", "style", "tab"],
+		},
+		{
+			key: "tab_bar_background",
+			label: "Tab Bar Background",
+			description:
+				"Background color for the tab bar. Defaults to using the terminal background color.",
+			tags: ["background", "bar", "tab"],
+		},
+		{
+			key: "tab_bar_margin_color",
+			label: "Tab Bar Margin Color",
+			description:
+				"Color for the tab bar margin area. Defaults to using the terminal background color for margins above and below the tab bar.",
+			tags: ["bar", "color", "margin", "tab"],
+		},
+		{
+			key: "tab_bar_filter",
+			label: "Tab Bar Filter",
+			description:
+				"A search expression. Only tabs that match this expression will be shown in the tab bar.",
+			tags: ["bar", "filter", "tab"],
+		},
+		{
+			key: "tab_bar_show_new_tab_button",
+			label: "Tab Bar Show New Tab Button",
+			description:
+				"When set to yes, a + button is always shown at the end of the tab bar as a clickable shortcut to open a new tab.",
+			tags: ["bar", "button", "new", "show", "tab"],
+		},
+		{
+			key: "progress_bar",
+			label: "Progress Bar",
+			description:
+				"When a program uses the OSC 9;4 escape sequence to report progress, draw a progress bar in the specified position of the window.",
+			tags: ["bar", "progress"],
 		},
 	]),
 
@@ -761,6 +1230,48 @@ export const CONFIG_SEARCH_INDEX: SearchableItem[] = [
 				"Allow changing background opacity at runtime with keyboard shortcuts.",
 			tags: ["opacity", "dynamic", "transparency", "adjust", "runtime"],
 		},
+		{
+			key: "background_image",
+			label: "Background Image",
+			description:
+				"Glob pattern matching one or more background images. Must be in PNG/JPEG/WEBP/TIFF/GIF/BMP format.",
+			tags: ["background", "image"],
+		},
+		{
+			key: "background_image_layout",
+			label: "Background Image Layout",
+			description:
+				"Whether to tile, scale or clamp the background image. The value can be one of tiled, mirror-tiled, scaled, clamped, centered or cscaled.",
+			tags: ["background", "image", "layout"],
+		},
+		{
+			key: "background_image_linear",
+			label: "Background Image Linear",
+			description:
+				"When background image is scaled, whether linear interpolation should be used.",
+			tags: ["background", "image", "linear"],
+		},
+		{
+			key: "background_tint_gaps",
+			label: "Background Tint Gaps",
+			description:
+				"How much to tint the background image at the window gaps by the background color, after applying background_tint.",
+			tags: ["background", "gaps", "tint"],
+		},
+		{
+			key: "transparent_background_colors",
+			label: "Transparent Background Colors",
+			description:
+				"A space separated list of upto 7 colors, with opacity. When the background color of a cell matches one of these colors, it is rendered semi-transparent using the specified opacity.",
+			tags: ["background", "colors", "transparent"],
+		},
+		{
+			key: "palette_generate",
+			label: "Palette Generate",
+			description:
+				"How to fill in any colors that are unset (set to none) in the 256-color palette.",
+			tags: ["generate", "palette"],
+		},
 	]),
 
 	...items("advanced", "Advanced", [
@@ -853,6 +1364,111 @@ export const CONFIG_SEARCH_INDEX: SearchableItem[] = [
 				"Python script path that receives window lifecycle events from Kitty.",
 			tags: ["watcher", "hook", "plugin", "python", "script", "event"],
 		},
+		{
+			key: "remote_control_password",
+			label: "Remote Control Password",
+			description:
+				"Allow other programs to control kitty using passwords. This option can be specified multiple times to add multiple passwords.",
+			tags: ["control", "password", "remote"],
+		},
+		{
+			key: "env_read_from_shell",
+			label: "Env Read From Shell",
+			description:
+				"Read environment variables from the shell instead of the parent process.",
+			tags: ["env", "from", "read", "shell"],
+		},
+		{
+			key: "exe_search_path",
+			label: "Exe Search Path",
+			description:
+				"Control where kitty finds the programs to run. The default search order is: First search the system wide PATH, then ~/.local/bin and ~/bin.",
+			tags: ["exe", "path", "search"],
+		},
+		{
+			key: "map_timeout",
+			label: "Map Timeout",
+			description:
+				"The default timeout (in seconds) for multi-key mappings and modal keyboard modes.",
+			tags: ["map", "timeout"],
+		},
+		{
+			key: "file_transfer_confirmation_bypass",
+			label: "File Transfer Confirmation Bypass",
+			description:
+				"The password that can be supplied to the file transfer kitten to skip the transfer confirmation prompt.",
+			tags: ["bypass", "confirmation", "file", "transfer"],
+		},
+		{
+			key: "filter_notification",
+			label: "Filter Notification",
+			description:
+				"Specify rules to filter out notifications sent by applications running in kitty.",
+			tags: ["filter", "notification"],
+		},
+		{
+			key: "allow_hyperlinks",
+			label: "Allow Hyperlinks",
+			description:
+				"Process hyperlink escape sequences (OSC 8). If disabled OSC 8 escape sequences are ignored.",
+			tags: ["allow", "hyperlinks"],
+		},
+		{
+			key: "allow_cloning",
+			label: "Allow Cloning",
+			description:
+				"Control whether programs running in the terminal can request new windows to be created.",
+			tags: ["allow", "cloning"],
+		},
+		{
+			key: "clone_source_strategies",
+			label: "Clone Source Strategies",
+			description:
+				"Control what shell code is sourced when running clone-in-kitty in the newly cloned window.",
+			tags: ["clone", "source", "strategies"],
+		},
+		{
+			key: "forward_stdio",
+			label: "Forward stdio",
+			description:
+				"Forward STDOUT and STDERR of the kitty process to child processes. This is useful for debugging as it allows child processes to print to kitty's STDOUT directly.",
+			tags: ["forward", "stdio"],
+		},
+		{
+			key: "menu_map",
+			label: "Menu Map",
+			description:
+				"Specify entries for various menus in kitty. Currently only the global menubar on macOS is supported.",
+			tags: ["map", "menu"],
+		},
+		{
+			key: "action_alias",
+			label: "Action Alias",
+			description:
+				"Define action aliases to avoid repeating the same options in multiple mappings. Aliases can be defined for any action and will be expanded recursively.",
+			tags: ["action", "alias"],
+		},
+		{
+			key: "auto_reload_config",
+			label: "Auto Reload Config",
+			description:
+				"Automatically reload configuration files when they are changed. The setting is the number of seconds to wait before reloading the config files.",
+			tags: ["auto", "config", "reload"],
+		},
+		{
+			key: "notify_on_cmd_finish",
+			label: "Notify On Cmd Finish",
+			description:
+				"Show a desktop notification when a long-running command finishes (needs shell_integration).",
+			tags: ["cmd", "finish", "notify"],
+		},
+		{
+			key: "terminfo_type",
+			label: "Terminfo Type",
+			description:
+				"The value of the TERMINFO environment variable to set. This variable is used by programs running in the terminal to search for terminfo databases.",
+			tags: ["terminfo", "type"],
+		},
 	]),
 
 	...items("os_specific", "OS Specific", [
@@ -870,7 +1486,7 @@ export const CONFIG_SEARCH_INDEX: SearchableItem[] = [
 			tags: ["X11", "wayland", "linux", "display", "compositor"],
 		},
 		{
-			key: "macos_title_bar_color",
+			key: "macos_titlebar_color",
 			label: "macOS Title Bar Color",
 			description:
 				"Color of the macOS native title bar: system, background, or a hex.",
@@ -891,7 +1507,7 @@ export const CONFIG_SEARCH_INDEX: SearchableItem[] = [
 			tags: ["macos", "dock", "hide", "taskbar", "app switcher"],
 		},
 		{
-			key: "macos_quit_when_last_window_closes",
+			key: "macos_quit_when_last_window_closed",
 			label: "Quit When Last Window Closes",
 			description:
 				"Quit the Kitty app when the last window is closed on macOS.",
@@ -909,6 +1525,76 @@ export const CONFIG_SEARCH_INDEX: SearchableItem[] = [
 			description:
 				"Where to display the window title on macOS: titlebar, menubar, all.",
 			tags: ["macos", "title", "menubar", "titlebar", "display"],
+		},
+		{
+			key: "wayland_enable_ime",
+			label: "Wayland Enable IME",
+			description:
+				"Enable Input Method Extension on Wayland. This is typically used for inputting text in East Asian languages.",
+			tags: ["enable", "ime", "wayland"],
+		},
+		{
+			key: "macos_window_resizable",
+			label: "macOS Window Resizable",
+			description:
+				"Disable this if you want kitty top-level OS windows to not be resizable on macOS.",
+			tags: ["macos", "resizable", "window"],
+		},
+		{
+			key: "macos_thicken_font",
+			label: "macOS Thicken Font",
+			description:
+				"Draw an extra border around the font with the given width, to increase legibility at small font sizes on macOS.",
+			tags: ["font", "macos", "thicken"],
+		},
+		{
+			key: "macos_menubar_title_max_length",
+			label: "macOS Menubar Title Max Length",
+			description:
+				"The maximum number of characters from the window title to show in the macOS global menu bar.",
+			tags: ["length", "macos", "max", "menubar", "title"],
+		},
+		{
+			key: "macos_custom_beam_cursor",
+			label: "macOS Custom Beam Cursor",
+			description:
+				"Use a custom mouse cursor for macOS that is easier to see on both light and dark backgrounds.",
+			tags: ["beam", "cursor", "custom", "macos"],
+		},
+		{
+			key: "macos_colorspace",
+			label: "macOS Colorspace",
+			description:
+				"The colorspace in which to interpret terminal colors. The default of srgb will cause colors to match those seen in web browsers.",
+			tags: ["colorspace", "macos"],
+		},
+		{
+			key: "macos_dock_badge_on_bell",
+			label: "macOS Dock Badge On Bell",
+			description:
+				"Show a badge on kitty's dock icon when a bell occurs and kitty is not the active application (macOS only).",
+			tags: ["badge", "bell", "dock", "macos"],
+		},
+		{
+			key: "macos_fullscreen_ignore_safe_area_insets",
+			label: "macOS Fullscreen Ignore Safe Area Insets",
+			description:
+				"When using macos_traditional_fullscreen, ignore the safe area insets on displays such as MacBook screens with a notch.",
+			tags: ["area", "fullscreen", "ignore", "insets", "macos", "safe"],
+		},
+		{
+			key: "macos_ns_window_layer",
+			label: "macOS NS Window Layer",
+			description:
+				"Set the macOS NSWindow level for newly created panel OS windows such as with the panel kitten.",
+			tags: ["layer", "macos", "window"],
+		},
+		{
+			key: "macos_use_physical_screen_frame",
+			label: "macOS Use Physical Screen Frame",
+			description:
+				"Use the physical screen frame instead of the visible frame when placing macOS desktop panels such as those created by kitty +kitten panel.",
+			tags: ["frame", "macos", "physical", "screen", "use"],
 		},
 	]),
 ];

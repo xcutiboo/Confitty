@@ -62,7 +62,9 @@ Monokai Pro, One Dark and the Confitty palette. 18 presets combine a theme with
 functional settings for cases like performance, accessibility, presentation,
 remote sessions and streaming.
 
-132 options are indexed for keyboard-navigable fuzzy search.
+Every one of the 230 settings is indexed for keyboard-navigable fuzzy search, by
+name, description or synonym. A test fails the build if an option is added
+without a search entry.
 
 <div align="center">
   <img src="./docs/assets/confitty-config-divider.svg" alt="" width="100%">
