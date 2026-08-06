@@ -9,6 +9,33 @@ import { KittyGeneratorService } from "./kitty-generator.service";
 /** Long enough to coalesce a burst of typing, short enough to survive a tab close. */
 const PERSIST_DEBOUNCE_MS = 400;
 
+/**
+ * Editor categories, in sidebar order. The config editor switches on this value
+ * with no fallback branch, so an unrecognised one would render an empty pane.
+ */
+export const CONFIG_CATEGORIES = [
+	"fonts",
+	"cursor",
+	"scrollback",
+	"mouse",
+	"performance",
+	"bell",
+	"window_layout",
+	"tab_bar",
+	"colors",
+	"advanced",
+	"os_specific",
+	"keyboard_shortcuts",
+] as const;
+
+export type ConfigCategory = (typeof CONFIG_CATEGORIES)[number];
+
+function restoredCategory(value: string | undefined): ConfigCategory {
+	return value && (CONFIG_CATEGORIES as readonly string[]).includes(value)
+		? (value as ConfigCategory)
+		: "fonts";
+}
+
 /** Matches the `lg` breakpoint where the layout switches from overlay to split pane. */
 const WIDE_VIEWPORT = "(min-width: 1024px)";
 
@@ -31,9 +58,14 @@ export class ConfigStoreService {
 	private readonly _restoredFromStorage = signal<boolean>(false);
 	private readonly _configState = signal<KittyConfigAST>(this.hydrate());
 	private persistTimer: ReturnType<typeof setTimeout> | null = null;
+	private readonly preferences = this.persistence.loadPreferences();
 	private readonly _searchQuery = signal<string>("");
-	private readonly _activeCategory = signal<string>("fonts");
-	private readonly _advancedMode = signal<boolean>(false);
+	private readonly _activeCategory = signal<ConfigCategory>(
+		restoredCategory(this.preferences.activeCategory),
+	);
+	private readonly _advancedMode = signal<boolean>(
+		this.preferences.advancedMode ?? false,
+	);
 	private readonly _sidebarOpen = signal<boolean>(false);
 	// Preview is hidden by default on narrow viewports; users see the editor first.
 	private readonly _wideViewport = signal<boolean>(isWideViewport());
@@ -61,6 +93,14 @@ export class ConfigStoreService {
 				() => this.persistence.save(snapshot),
 				PERSIST_DEBOUNCE_MS,
 			);
+		});
+
+		// Cheap and only changes on a click, so no debounce.
+		effect(() => {
+			this.persistence.savePreferences({
+				advancedMode: this._advancedMode(),
+				activeCategory: this._activeCategory(),
+			});
 		});
 	}
 
@@ -110,8 +150,9 @@ export class ConfigStoreService {
 	setSearchQuery(query: string): void {
 		this._searchQuery.set(query);
 	}
+	/** Callers pass search-result and sidebar ids, so an unknown one falls back. */
 	setActiveCategory(category: string): void {
-		this._activeCategory.set(category);
+		this._activeCategory.set(restoredCategory(category));
 	}
 	toggleAdvancedMode(): void {
 		this._advancedMode.update((v) => !v);

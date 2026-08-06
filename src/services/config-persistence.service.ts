@@ -3,6 +3,7 @@ import { sanitizeConfig } from "../models/config-serialization";
 import type { KittyConfigAST } from "../models/kitty-types";
 
 const STORAGE_KEY = "confitty-config";
+const PREFERENCES_KEY = "confitty-preferences";
 
 /**
  * Bumped when a change to the stored shape cannot be absorbed by
@@ -14,6 +15,12 @@ const SCHEMA_VERSION = 2;
 interface StoredConfig {
 	version: number;
 	config: unknown;
+}
+
+/** Editor preferences, kept apart from the config so Reset does not clear them. */
+export interface EditorPreferences {
+	advancedMode: boolean;
+	activeCategory: string;
 }
 
 /**
@@ -67,9 +74,39 @@ export class ConfigPersistenceService {
 		}
 	}
 
-	private read(): string | null {
+	loadPreferences(): Partial<EditorPreferences> {
+		const raw = this.read(PREFERENCES_KEY);
+		if (!raw) return {};
+
 		try {
-			return localStorage.getItem(STORAGE_KEY);
+			const parsed: unknown = JSON.parse(raw);
+			if (typeof parsed !== "object" || parsed === null) return {};
+			const record = parsed as Record<string, unknown>;
+			return {
+				...(typeof record["advancedMode"] === "boolean" && {
+					advancedMode: record["advancedMode"],
+				}),
+				...(typeof record["activeCategory"] === "string" && {
+					activeCategory: record["activeCategory"],
+				}),
+			};
+		} catch {
+			return {};
+		}
+	}
+
+	savePreferences(preferences: EditorPreferences): void {
+		if (!this.available) return;
+		try {
+			localStorage.setItem(PREFERENCES_KEY, JSON.stringify(preferences));
+		} catch {
+			this.available = false;
+		}
+	}
+
+	private read(key: string = STORAGE_KEY): string | null {
+		try {
+			return localStorage.getItem(key);
 		} catch {
 			this.available = false;
 			return null;
