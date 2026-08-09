@@ -56,6 +56,19 @@ export function isDark(hex: string): boolean {
 	return luminance(hex) < 0.5;
 }
 
+/**
+ * WCAG 2.2 contrast ratio, 1 (identical) to 21 (black on white). Null when
+ * either colour is not a hex value, so callers can say nothing rather than
+ * report a ratio computed from a colour they failed to read.
+ */
+export function contrastRatio(a: string, b: string): number | null {
+	if (!toRgb(a) || !toRgb(b)) return null;
+	const la = luminance(a);
+	const lb = luminance(b);
+	const [lighter, darker] = la > lb ? [la, lb] : [lb, la];
+	return (lighter + 0.05) / (darker + 0.05);
+}
+
 export function readableOn(hex: string): string {
 	return isDark(hex) ? "#ffffff" : "#111111";
 }

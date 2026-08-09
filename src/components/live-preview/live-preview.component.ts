@@ -2,11 +2,15 @@ import { CommonModule } from "@angular/common";
 import { Component, computed, inject, signal } from "@angular/core";
 import { ConfigStoreService } from "../../services/config-store.service";
 import { KittyGeneratorService } from "../../services/kitty-generator.service";
+import { contrastRatio } from "./color-utils";
 import { TerminalPaletteComponent } from "./terminal-palette.component";
 import { TerminalWindowComponent } from "./terminal-window.component";
 
 type PreviewMode = "terminal" | "config";
 type CopyState = "idle" | "copied" | "failed";
+
+/** WCAG 2.2 minimum contrast for body-sized text. */
+const WCAG_AA_BODY_TEXT = 4.5;
 
 @Component({
 	selector: "app-live-preview",
@@ -101,6 +105,15 @@ type CopyState = "idle" | "copied" | "failed";
           <div class="flex items-center gap-2 min-w-0 flex-1 text-2xs text-kitty-text-dim font-mono flex-wrap">
             <span class="dot" [style.background]="colors().background" [title]="'background ' + colors().background"></span>
             <span class="dot" [style.background]="colors().foreground" [title]="'foreground ' + colors().foreground"></span>
+            @if (contrast(); as ratio) {
+              <span
+                [class.contrast-low]="ratio.low"
+                [title]="ratio.low
+                  ? 'Below the 4.5:1 WCAG AA threshold for body text. Readable for some, hard work for others.'
+                  : 'Meets the 4.5:1 WCAG AA threshold for body text.'"
+              >{{ ratio.label }}</span>
+              <span class="sep">·</span>
+            }
             <span class="truncate max-w-[160px]" [title]="fonts().font_family">{{ fonts().font_family }} · {{ fonts().font_size }}pt</span>
             <span class="sep">·</span>
             <span>{{ cursorLabel() }}</span>
@@ -184,6 +197,10 @@ type CopyState = "idle" | "copied" | "failed";
     .sep {
       color: rgb(var(--kitty-border-light));
     }
+    .contrast-low {
+      color: rgb(var(--kitty-warning));
+      cursor: help;
+    }
   `,
 	],
 })
@@ -201,6 +218,18 @@ export class LivePreviewComponent {
 
 	readonly colors = computed(() => this.configStore.configState().colors);
 	readonly fonts = computed(() => this.configStore.configState().fonts);
+
+	/**
+	 * Foreground against background, the pair you read all day. Several of the
+	 * bundled themes are faithful reproductions that happen to sit under the AA
+	 * threshold, so this reports rather than corrects.
+	 */
+	readonly contrast = computed(() => {
+		const { foreground, background } = this.colors();
+		const ratio = contrastRatio(foreground, background);
+		if (ratio === null) return null;
+		return { label: `${ratio.toFixed(1)}:1`, low: ratio < WCAG_AA_BODY_TEXT };
+	});
 
 	readonly cursorLabel = computed(() => {
 		const c = this.configStore.configState().cursor;
