@@ -138,6 +138,21 @@ describe("KittyGeneratorService", () => {
 		]);
 	});
 
+	it("leaves out shortcut rows that are still half-filled", () => {
+		const output = generator().generateConfig(
+			configWith((c) => {
+				c.keyboard_shortcuts = [
+					{ chord: "f1", action: "new_tab" },
+					{ chord: "", action: "new_window" },
+					{ chord: "f2", action: "  " },
+					{ chord: " f3 ", action: " close_tab " },
+				];
+			}),
+		);
+
+		expect(directives(output)).toEqual(["map f1 new_tab", "map f3 close_tab"]);
+	});
+
 	it("emits keyboard shortcuts and kitty_mod", () => {
 		const output = generator().generateConfig(
 			configWith((c) => {

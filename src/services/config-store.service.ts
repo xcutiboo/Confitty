@@ -2,7 +2,7 @@ import { computed, effect, Injectable, inject, signal } from "@angular/core";
 import { derivedFromPalette } from "../components/live-preview/tab-colors";
 import { sanitizeConfig } from "../models/config-serialization";
 import { DEFAULT_KITTY_CONFIG } from "../models/kitty-defaults";
-import type { KittyConfigAST } from "../models/kitty-types";
+import type { KittyConfigAST, KittyKeyMap } from "../models/kitty-types";
 import { ConfigPersistenceService } from "./config-persistence.service";
 import { KittyGeneratorService } from "./kitty-generator.service";
 
@@ -174,6 +174,29 @@ export class ConfigStoreService {
 
 	setKittyMod(value: string): void {
 		this._configState.update((state) => ({ ...state, kitty_mod: value }));
+	}
+
+	addShortcut(shortcut: KittyKeyMap = { chord: "", action: "" }): void {
+		this._configState.update((state) => ({
+			...state,
+			keyboard_shortcuts: [...state.keyboard_shortcuts, shortcut],
+		}));
+	}
+
+	updateShortcut(index: number, patch: Partial<KittyKeyMap>): void {
+		this._configState.update((state) => ({
+			...state,
+			keyboard_shortcuts: state.keyboard_shortcuts.map((entry, i) =>
+				i === index ? { ...entry, ...patch } : entry,
+			),
+		}));
+	}
+
+	removeShortcut(index: number): void {
+		this._configState.update((state) => ({
+			...state,
+			keyboard_shortcuts: state.keyboard_shortcuts.filter((_, i) => i !== index),
+		}));
 	}
 
 	loadConfig(config: KittyConfigAST): void {

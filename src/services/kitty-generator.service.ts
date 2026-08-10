@@ -111,8 +111,14 @@ export class KittyGeneratorService {
 			DEFAULT_KITTY_CONFIG.os_specific as unknown as Record<string, unknown>,
 		);
 
+		// A half-filled row in the editor is not a directive. Emitting it would
+		// produce `map  ` and make kitty reject the whole file.
+		const shortcuts = config.keyboard_shortcuts.filter(
+			(m) => m.chord.trim() && m.action.trim(),
+		);
+
 		if (
-			config.keyboard_shortcuts.length > 0 ||
+			shortcuts.length > 0 ||
 			config.kitty_mod !== DEFAULT_KITTY_CONFIG.kitty_mod
 		) {
 			output += "# --- Keyboard Shortcuts ---\n";
@@ -121,15 +127,20 @@ export class KittyGeneratorService {
 				output += `kitty_mod ${config.kitty_mod}\n`;
 			}
 
-			for (const mapping of config.keyboard_shortcuts) {
-				output += `map ${mapping.chord} ${mapping.action}\n`;
+			for (const mapping of shortcuts) {
+				output += `map ${mapping.chord.trim()} ${mapping.action.trim()}\n`;
 			}
 			output += "\n";
 		}
 
-		if (config.mouse_mappings.length > 0) {
+		const mouseMappings = config.mouse_mappings.filter(
+			(m) =>
+				m.button.trim() && m.event.trim() && m.modes.trim() && m.action.trim(),
+		);
+
+		if (mouseMappings.length > 0) {
 			output += "# --- Mouse Mappings ---\n";
-			for (const mapping of config.mouse_mappings) {
+			for (const mapping of mouseMappings) {
 				output += `mouse_map ${mapping.button} ${mapping.event} ${mapping.modes} ${mapping.action}\n`;
 			}
 			output += "\n";

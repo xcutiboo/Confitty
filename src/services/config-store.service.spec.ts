@@ -72,6 +72,51 @@ describe("ConfigStoreService", () => {
 		expect(service.tabBarLocked()).toBe(false);
 	});
 
+	describe("keyboard shortcuts", () => {
+		it("adds, edits and removes by position", () => {
+			const service = store();
+
+			service.addShortcut({ chord: "f1", action: "new_tab" });
+			service.addShortcut({ chord: "f2", action: "new_window" });
+			expect(service.configState().keyboard_shortcuts).toEqual([
+				{ chord: "f1", action: "new_tab" },
+				{ chord: "f2", action: "new_window" },
+			]);
+
+			service.updateShortcut(1, { chord: "f9" });
+			expect(service.configState().keyboard_shortcuts[1]).toEqual({
+				chord: "f9",
+				action: "new_window",
+			});
+
+			service.removeShortcut(0);
+			expect(service.configState().keyboard_shortcuts).toEqual([
+				{ chord: "f9", action: "new_window" },
+			]);
+		});
+
+		it("adds an empty row by default, for filling in by hand", () => {
+			const service = store();
+			service.addShortcut();
+
+			expect(service.configState().keyboard_shortcuts).toEqual([
+				{ chord: "", action: "" },
+			]);
+		});
+
+		it("ignores edits and removals aimed at a row that is not there", () => {
+			const service = store();
+			service.addShortcut({ chord: "f1", action: "new_tab" });
+
+			service.updateShortcut(7, { chord: "f2" });
+			service.removeShortcut(7);
+
+			expect(service.configState().keyboard_shortcuts).toEqual([
+				{ chord: "f1", action: "new_tab" },
+			]);
+		});
+	});
+
 	it("clears stored work on reset", () => {
 		const service = store();
 		service.updateField("fonts", "font_size", 20);
