@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, output, signal } from "@angular/core";
+import { Component, computed, inject, output, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ConfigStoreService } from "../../services/config-store.service";
 import { KittyGeneratorService } from "../../services/kitty-generator.service";
@@ -225,6 +225,33 @@ function countDirectives(config: KittyConfigAST): number {
       </div>
     </header>
 
+    @if (showRestoredNotice()) {
+      <div
+        class="px-3 sm:px-4 lg:px-6 py-2 border-b border-kitty-border bg-kitty-surface-light/60 flex items-center gap-3 text-sm text-kitty-text-dim"
+        role="status"
+      >
+        <span class="flex-1 min-w-0">
+          Picked up where you left off. Nothing was uploaded; this came from
+          this browser.
+        </span>
+        <button
+          type="button"
+          (click)="startFresh()"
+          class="flex-shrink-0 underline underline-offset-2 hover:text-kitty-text transition-colors"
+        >Start fresh</button>
+        <button
+          type="button"
+          (click)="restoredNoticeDismissed.set(true)"
+          class="flex-shrink-0 opacity-70 hover:opacity-100 transition-opacity"
+          aria-label="Dismiss message"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    }
+
     @if (importStatus(); as status) {
       <div
         class="px-3 sm:px-4 lg:px-6 py-2 border-b flex items-start gap-2 text-sm"
@@ -333,6 +360,21 @@ export class HeaderComponent {
 	readonly mobileMenuOpen = signal(false);
 	readonly importStatus = signal<ImportStatus | null>(null);
 	readonly searchableCount = CONFIG_SEARCH_INDEX.length;
+
+	/**
+	 * Returning to a config you do not remember leaving is disconcerting, and
+	 * "did this get uploaded somewhere?" is a fair first thought. Say where it
+	 * came from once, and offer the way back to defaults.
+	 */
+	readonly restoredNoticeDismissed = signal(false);
+	readonly showRestoredNotice = computed(
+		() => this.configStore.restoredFromStorage() && !this.restoredNoticeDismissed(),
+	);
+
+	startFresh(): void {
+		this.configStore.resetToDefaults();
+		this.restoredNoticeDismissed.set(true);
+	}
 
 	readonly quickCategories = [
 		{ id: "fonts", label: "Fonts" },

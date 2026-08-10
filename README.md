@@ -51,8 +51,18 @@ and written back out.
 options that release does not have are commented out with the version that
 introduced them, rather than silently emitted.
 
+**Binds keys.** Add, edit and remove `map` directives, with a picker built from
+the 55 actions Kitty binds by default — each carrying the chord Kitty uses — and
+free text for everything else. It warns about rows that are incomplete, and
+about a chord bound twice, which Kitty resolves by keeping the last.
+
+**Reports contrast.** The preview shows the foreground/background contrast
+ratio, flagged when it falls under the 4.5:1 WCAG AA threshold for body text.
+Two of the bundled themes do, faithfully.
+
 **Remembers your work.** The config is saved to `localStorage` as you edit, so
-closing the tab does not throw the session away.
+closing the tab does not throw the session away. Nothing is uploaded; clearing
+site data or **Start fresh** removes it.
 
 ### Themes and presets
 
