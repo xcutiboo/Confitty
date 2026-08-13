@@ -19,62 +19,61 @@ documentation for roughly 225 options to change your font size. Confitty gives
 those options a UI, shows the result in a live terminal preview, and exports a
 `kitty.conf` containing only what you actually changed.
 
-It runs entirely in your browser. There is no account, no backend, and nothing
-is uploaded anywhere — your config never leaves the tab.
+It runs entirely in your browser. There is no account and no backend, and your
+config never leaves the tab.
 
 > Not affiliated with the official Kitty Terminal project.
 
 ## What it does
 
-**Edits every option it models.** 231 settings across twelve categories: fonts,
-cursor, scrollback, mouse, performance, bell, window layout, tab bar, colours,
-advanced, OS-specific, and keyboard shortcuts. Option names, types and default
-values are checked against Kitty's own `options/definition.py`, so the exported
-file is one Kitty will accept.
+It edits 231 settings across twelve categories: fonts, cursor, scrollback,
+mouse, performance, bell, window layout, tab bar, colours, advanced,
+OS-specific and keyboard shortcuts. Every option name, type and default is
+checked against Kitty's own `options/definition.py`, so what comes out is a file
+Kitty accepts.
 
-**Previews as you type.** Background, opacity, blur, tint, font, padding,
+The preview updates as you type. Background, opacity, blur, tint, font, padding,
 margins, borders, cursor shape and blink, selection, the ANSI palette, tab bar
-styling and URL decoration all render live. The preview is an approximation, not
-an emulator, and says so in the UI.
+styling and URL decoration all render live, and it reports the
+foreground/background contrast ratio so you can see when a palette is going to
+be hard work to read. It is an approximation rather than an emulator, and says
+so in the UI.
 
-**Exports a minimal diff.** Only values differing from Kitty's defaults are
-written. Change the font size from 11 to 14 and you get one line, not 231. The
-output carries no timestamp, so re-exporting an unchanged config produces an
-identical file — which matters if you keep dotfiles in git.
+Export writes only the values that differ from Kitty's defaults, so changing the
+font size from 11 to 14 gives you one line rather than 231. There is no
+timestamp in the output, which means re-exporting an unchanged config produces a
+byte-identical file. That matters if you keep dotfiles in git.
 
-**Imports what you already have.** Point it at an existing `kitty.conf` and it
-populates the editor. Directives it does not model — kittens, `include` lines,
-`env`, options from a newer Kitty than it knows about — are preserved verbatim
-and written back out.
+Import goes the other way. Point it at an existing `kitty.conf` and it fills in
+the editor. Anything it does not model, whether that is a kitten, an `include`
+line, `env`, or an option from a Kitty newer than it knows about, is kept
+verbatim and written back out.
 
-**Targets a specific Kitty version.** Pick anything from 0.15 to 0.47 and
-options that release does not have are commented out with the version that
-introduced them, rather than silently emitted.
+Pick your Kitty version, anywhere from 0.15 to 0.48, and options that release
+does not have are commented out with the version that introduced them instead of
+being emitted silently.
 
-**Binds keys.** Add, edit and remove `map` directives, with a picker built from
-the 55 actions Kitty binds by default — each carrying the chord Kitty uses — and
-free text for everything else. It warns about rows that are incomplete, and
-about a chord bound twice, which Kitty resolves by keeping the last.
+Keyboard shortcuts are editable, not just viewable. Add, change and remove `map`
+directives, with a picker built from the 55 actions Kitty binds by default, each
+carrying the chord Kitty uses. The action field stays free text, because Kitty
+accepts far more than those. It flags rows that are incomplete, and chords bound
+twice, which Kitty resolves by keeping the last.
 
-**Reports contrast.** The preview shows the foreground/background contrast
-ratio, flagged when it falls under the 4.5:1 WCAG AA threshold for body text.
-Two of the bundled themes do, faithfully.
-
-**Remembers your work.** The config is saved to `localStorage` as you edit, so
-closing the tab does not throw the session away. Nothing is uploaded; clearing
-site data or **Start fresh** removes it.
+Your work is saved to `localStorage` as you edit, so closing the tab does not
+throw the session away. Nothing is uploaded. Clearing site data or pressing
+**Start fresh** removes it.
 
 ### Themes and presets
 
 47 built-in colour themes, including Catppuccin (all four flavours), Tokyo
 Night, Gruvbox, Nord, Dracula, Kanagawa, Rosé Pine, Ayu, Everforest, Solarized,
-Monokai Pro, One Dark and the Confitty palette. 18 presets combine a theme with
+Monokai Pro, One Dark and the Confitty palette. 18 presets pair a theme with
 functional settings for cases like performance, accessibility, presentation,
 remote sessions and streaming.
 
-Every one of the 230 settings is indexed for keyboard-navigable fuzzy search, by
-name, description or synonym. A test fails the build if an option is added
-without a search entry.
+All 230 settings are indexed for keyboard-navigable fuzzy search by name,
+description or synonym. A test fails the build if an option is added without a
+search entry.
 
 <div align="center">
   <img src="./docs/assets/confitty-config-divider.svg" alt="" width="100%">
@@ -121,20 +120,23 @@ request.
 
 ### Architecture
 
-Angular 21 with standalone components, signals and zoneless change detection;
-TypeScript 6 in strict mode; Tailwind 3 for styling against design tokens in
-`global_styles.css`; Nx for task running; Bun as the package manager.
+Angular 21 with standalone components, signals and zoneless change detection.
+TypeScript 6 in strict mode, Tailwind 3 against design tokens in
+`global_styles.css`, Nx for task running, Bun as the package manager.
 
-The domain lives in three places worth knowing about:
+Three files carry the domain:
 
-- `src/models/kitty-types.ts` and `kitty-defaults.ts` — the option model. The
-  defaults table is correctness-critical: because export writes only what
-  differs from it, a default that disagrees with Kitty's makes the preview lie
-  and drops settings from the output.
-- `src/services/kitty-parser.service.ts` — reads `kitty.conf`. Anything it does
-  not model is kept as a raw directive so imports round-trip losslessly.
-- `src/services/kitty-generator.service.ts` — writes `kitty.conf`, applying the
-  default diff and the version gate.
+| File | Holds |
+| --- | --- |
+| `models/kitty-types.ts`, `models/kitty-defaults.ts` | The option model and Kitty's defaults |
+| `services/kitty-parser.service.ts` | Reads `kitty.conf` |
+| `services/kitty-generator.service.ts` | Writes `kitty.conf` |
+
+The defaults table is correctness-critical. Export writes only what differs from
+it, so a default that disagrees with Kitty's both makes the preview show a state
+Kitty will never be in and drops the setting from the output when a user
+deliberately picks Kitty's value. Anything the parser does not model is kept as
+a raw directive, so imports round-trip without losing lines.
 
 Parser and generator are covered by unit tests, including round-trip cases.
 Changes to either should come with one.
@@ -163,9 +165,8 @@ footer a major. Do not bump the version in `package.json` by hand.
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md). Bug reports and config-option
-coverage gaps are both useful — if Kitty has an option Confitty does not model,
-that is a bug worth filing.
+See [CONTRIBUTING.md](./CONTRIBUTING.md). Bug reports and coverage gaps are both
+useful. If Kitty has an option Confitty does not model, that is worth filing.
 
 Community: [Discord](https://discord.gg/kxG674AadQ).
 

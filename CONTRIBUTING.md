@@ -86,8 +86,8 @@ name, the value type and the default.
    what makes the parser accept the key at all, so this step is only about
    converting the value.
 4. Add a control in the matching form component.
-5. If the option has special formatting — repeated directives, comma-separated
-   values, quoting — extend `kitty-generator.service.ts`. Getting the separator
+5. If the option has special formatting (repeated directives, comma-separated
+   values, quoting) extend `kitty-generator.service.ts`. Getting the separator
    wrong produces a file Kitty rejects.
 6. If it arrived in a specific Kitty version, register it in
    `kitty-version.service.ts` so older targets emit a guarded comment.
@@ -108,7 +108,7 @@ Full preset configs (more than just a palette) live in
 - One logical change per PR.
 - Verify in the browser before opening. Exercise live preview and export.
 - `bun run typecheck`, `bun run test` and `bun run build:prod` must pass. Note
-  that `typecheck` does not check templates — only the build does.
+  that `typecheck` does not check templates; only the build does.
 - Conventional Commits, imperative mood: `feat: add Rosé Pine theme`,
   `fix: correct the opacity slider range`. The subject line drives the release
   version, so `fix:` and `feat:` are not interchangeable.

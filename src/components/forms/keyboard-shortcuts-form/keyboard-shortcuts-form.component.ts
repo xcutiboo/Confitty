@@ -151,7 +151,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
           >
             <option value="">Add from Kitty's defaults…</option>
             @for (item of actions; track item.action) {
-              <option [value]="item.action">{{ item.title }} — {{ item.defaultChord }}</option>
+              <option [value]="item.action">{{ item.title }} ({{ item.defaultChord }})</option>
             }
           </select>
         </div>

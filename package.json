@@ -31,7 +31,7 @@
 		"build:prod": "nx build --configuration production",
 		"test": "nx test",
 		"test:watch": "nx test --watch",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc -p tsconfig.spec.json --noEmit"
 	},
 	"dependencies": {
 		"@angular/common": "21.2.19",

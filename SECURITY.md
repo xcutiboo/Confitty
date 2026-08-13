@@ -9,8 +9,8 @@ the config you are editing, so a reload does not discard it, and your light or
 dark theme preference. Clearing site data removes both, as does **Reset to
 defaults** in the app.
 
-The only third-party requests are the Ko-fi support widget, and Google Fonts —
-the latter fetched solely when you select a font for the preview, not on page
+The only third-party requests are the Ko-fi support widget and Google Fonts,
+the latter fetched solely when you select a font for the preview, never on page
 load.
 
 ## Supported versions

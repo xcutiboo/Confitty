@@ -7,8 +7,8 @@ const PREFERENCES_KEY = "confitty-preferences";
 
 /**
  * Bumped when a change to the stored shape cannot be absorbed by
- * `sanitizeConfig` — a renamed option, say, where silently keeping the old
- * value would be worse than starting clean.
+ * `sanitizeConfig`: a renamed option, say, where silently keeping the old value
+ * would be worse than starting clean.
  */
 const SCHEMA_VERSION = 2;
 

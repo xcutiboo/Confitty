@@ -31,8 +31,8 @@ import type {
  * is enough to make the parser recognise it.
  *
  * Section routing is prefix-based (`tab_`, `color`, `macos_`, ...), so without
- * this gate any option in one of those namespaces that we do not model — a newer
- * Kitty release, a typo, `color16`-`color255` — would reach a section parser,
+ * this gate any option in one of those namespaces that we do not model (a newer
+ * Kitty release, a typo, `color16` to `color255`) would reach a section parser,
  * match no case, and vanish. Unknown keys must survive as raw directives instead.
  */
 const MODELLED_KEYS: ReadonlySet<string> = new Set(

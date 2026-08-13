@@ -56,8 +56,8 @@ function sanitizeMouseMaps(incoming: unknown): KittyMouseMap[] {
 }
 
 /**
- * Rebuild a config from untrusted JSON — restored session state or a pasted
- * export — by layering recognised values over the defaults.
+ * Rebuild a config from untrusted JSON, whether restored session state or a
+ * pasted export, by layering recognised values over the defaults.
  *
  * Merging onto a complete default rather than validating and rejecting means
  * the result always has every section and field, so a truncated or hostile

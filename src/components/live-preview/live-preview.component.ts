@@ -140,7 +140,7 @@ const WCAG_AA_BODY_TEXT = 4.5;
             {{ configLineCount() }} lines
           </p>
           <p class="text-2xs text-kitty-text-dim/80 flex-shrink-0">
-            Approximate preview — your terminal will differ in detail.
+            Approximate preview. Your terminal will differ in detail.
           </p>
         </div>
       </footer>
