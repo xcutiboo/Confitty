@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, signal } from "@angular/core";
+import { Component, effect, ElementRef, inject, signal } from "@angular/core";
 import { ConfigStoreService } from "../../services/config-store.service";
 import { AdvancedFormComponent } from "../forms/advanced-form/advanced-form.component";
 import { BellFormComponent } from "../forms/bell-form/bell-form.component";
@@ -120,7 +120,24 @@ import { PresetSelectorComponent } from "../preset-selector/preset-selector.comp
 	styles: [],
 })
 export class ConfigEditorComponent {
-	readonly presetsExpanded = signal(true);
+	readonly configStore = inject(ConfigStoreService);
+	private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
-	constructor(public readonly configStore: ConfigStoreService) {}
+	/**
+	 * Open for a first visit, where presets are the fastest way in, and closed
+	 * for a returning one. Left open it fills the viewport, so picking a category
+	 * in the sidebar appeared to do nothing: the form it selected was below the
+	 * fold behind a panel of themes.
+	 */
+	readonly presetsExpanded = signal(!this.configStore.restoredFromStorage());
+
+	constructor() {
+		// The editor is its own scroll container. Without this, moving from a
+		// category you had scrolled through to another drops you into the middle
+		// of the new form.
+		effect(() => {
+			this.configStore.activeCategory();
+			this.host.nativeElement.scrollTo({ top: 0, behavior: "instant" });
+		});
+	}
 }
