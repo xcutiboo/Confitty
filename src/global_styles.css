@@ -9,16 +9,22 @@
 	--kitty-surface: 255 255 255;
 	--kitty-surface-light: 242 241 237;
 
-	--kitty-primary: 236 72 153;
-	--kitty-primary-dim: 219 39 119;
-	--kitty-primary-hover: 244 114 182;
-	--kitty-secondary: 192 38 211;
-	--kitty-accent: 217 70 239;
-	--kitty-accent-dim: 162 28 175;
+	/*
+	 * Measured against WCAG 2.2 on this theme's own surfaces. The lighter pink
+	 * and fuchsia this started with gave 3.5:1 both as text and behind the white
+	 * label on the Export button, so the app's primary action failed the same
+	 * check the preview applies to the user's terminal palette.
+	 */
+	--kitty-primary: 203 51 121;
+	--kitty-primary-dim: 157 23 77;
+	--kitty-primary-hover: 190 24 93;
+	--kitty-secondary: 162 28 175;
+	--kitty-accent: 192 38 211;
+	--kitty-accent-dim: 134 25 143;
 	--kitty-warning: 180 83 9;
 
 	--kitty-text: 28 25 23;
-	--kitty-text-dim: 120 113 108;
+	--kitty-text-dim: 115 109 104;
 
 	--kitty-border: 229 226 221;
 	--kitty-border-light: 212 209 204;
@@ -56,12 +62,12 @@
 	--kitty-warning: 249 175 79;
 
 	--kitty-text: 224 224 224;
-	--kitty-text-dim: 144 144 144;
+	--kitty-text-dim: 146 146 146;
 
 	--kitty-border: 51 51 51;
 	--kitty-border-light: 64 64 64;
 
-	--kitty-dark: 86 77 80;
+	--kitty-dark: 72 64 67;
 }
 
 * {
