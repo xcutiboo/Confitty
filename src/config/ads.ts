@@ -1,7 +1,7 @@
 /**
  * AdSense identifiers, supplied by the deployment rather than committed.
  *
- * `scripts/apply-ad-config.mjs` rewrites the two constants below from
+ * `scripts/apply-site-config.mjs` rewrites the two constants below from
  * CONFITTY_ADSENSE_CLIENT and CONFITTY_ADSENSE_SLOT before a production build.
  * They stay empty in the repository, so the open-source tree carries no ad
  * account details and a contributor's local build serves no ads at all.

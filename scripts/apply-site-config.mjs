@@ -25,6 +25,17 @@ const ADS_TXT = new URL("src/ads.txt", root);
 const HEAD_START = "<!-- deployment-tags:start -->";
 const HEAD_END = "<!-- deployment-tags:end -->";
 
+/**
+ * Retries until there is a body to append to, because this runs in <head> and
+ * on a cold load there is not one yet.
+ */
+const RECOVERY_PRESENCE_TAG =
+	"<script>(function(){function s(){if(window.frames['googlefcPresent'])return;" +
+	"if(!document.body){setTimeout(s,0);return;}" +
+	"var f=document.createElement('iframe');f.name='googlefcPresent';" +
+	"f.style.cssText='display:none;width:0;height:0;border:none;position:absolute;left:-1000px;top:-1000px;z-index:-1000';" +
+	"document.body.appendChild(f);}s();})();</script>";
+
 const client = (process.env["CONFITTY_ADSENSE_CLIENT"] ?? "").trim();
 const slot = (process.env["CONFITTY_ADSENSE_SLOT"] ?? "").trim();
 const recovery = (process.env["CONFITTY_ADBLOCK_RECOVERY"] ?? "").trim() === "1";
@@ -109,6 +120,13 @@ function writeHeadTags() {
 		tags.push(
 			`<script async src="https://fundingchoicesmessages.google.com/i/${client.replace(/^ca-/, "")}?ers=1"></script>`,
 		);
+		// The loader above sits on every blocker's filter list, so in the one case
+		// this feature exists for it never runs. This frame is the fallback signal:
+		// inline, first-party, and therefore still executed, it publishes a named
+		// window that Google's surviving code paths look for to tell "publisher is
+		// tagged, message was suppressed" apart from "publisher never tagged". It
+		// detects rather than disguises, which is what keeps it inside policy.
+		tags.push(RECOVERY_PRESENCE_TAG);
 	}
 
 	if (beacon) {
