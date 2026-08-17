@@ -1,7 +1,7 @@
 {
 	"name": "Confitty · Visual Kitty Terminal config builder",
 	"short_name": "Confitty",
-	"description": "Build, preview, and export kitty.conf visually. Live terminal preview, 40+ color themes, smart diff export.",
+	"description": "Build, preview and export kitty.conf visually. Live terminal preview, 47 colour themes, and an export containing only what you changed.",
 	"id": "/",
 	"start_url": "/",
 	"scope": "/",

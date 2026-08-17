@@ -51,9 +51,14 @@ import { AdSlotComponent } from "../shared/ad-slot/ad-slot.component";
                 </svg>
               </div>
               <div class="text-left">
-                <h3 class="text-sm font-semibold text-kitty-text group-hover:text-kitty-primary transition-colors leading-tight">
+                <!--
+                  h2, not h3: this panel is a sibling of the category form
+                  below it, and the outline read h1 then h3 then h2, which is
+                  meaningless to anyone navigating by heading.
+                -->
+                <h2 class="text-sm font-semibold text-kitty-text group-hover:text-kitty-primary transition-colors leading-tight">
                   Quick Start Presets
-                </h3>
+                </h2>
                 <p class="text-xs text-kitty-text-dim mt-0.5 leading-snug">
                   Themes, performance tweaks, and full setups. One click away.
                 </p>
