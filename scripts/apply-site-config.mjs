@@ -58,8 +58,14 @@ if (Boolean(client) !== Boolean(slot)) {
 if (recovery && !client) {
 	fail("CONFITTY_ADBLOCK_RECOVERY needs CONFITTY_ADSENSE_CLIENT to identify the publisher");
 }
-if (beacon && !/^[a-f0-9]{16,}$/i.test(beacon)) {
-	fail(`CONFITTY_CF_ANALYTICS_TOKEN must be the hex beacon token, got "${beacon}"`);
+// Exactly 32, which is what Cloudflare issues. The looser check this replaces
+// accepted anything hex and long enough, so a token that had lost characters on
+// the way here would build, deploy, and quietly collect nothing: the beacon
+// posts to an endpoint that answers an unknown token with a 404.
+if (beacon && !/^[a-f0-9]{32}$/i.test(beacon)) {
+	fail(
+		`CONFITTY_CF_ANALYTICS_TOKEN must be 32 hex characters, got ${beacon.length}`,
+	);
 }
 
 writeAdsConfig();
