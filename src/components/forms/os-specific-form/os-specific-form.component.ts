@@ -28,7 +28,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
         </p>
       </div>
 
-      <div class="space-y-6 bg-kitty-surface rounded-lg p-6 border border-kitty-border">
+      <div class="space-y-6 bg-kitty-surface rounded-lg p-4 sm:p-6 border border-kitty-border">
         <h3 class="text-lg font-semibold text-kitty-accent mb-4">macOS Settings</h3>
 
         <div class="space-y-6">
@@ -282,7 +282,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
         </div>
       </div>
 
-      <div class="space-y-6 bg-kitty-surface rounded-lg p-6 border border-kitty-border">
+      <div class="space-y-6 bg-kitty-surface rounded-lg p-4 sm:p-6 border border-kitty-border">
         <h3 class="text-lg font-semibold text-kitty-accent mb-4">Linux &amp; Wayland Settings</h3>
 
         <div class="space-y-6">

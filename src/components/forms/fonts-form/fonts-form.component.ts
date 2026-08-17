@@ -216,7 +216,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
       }
 
       @if (helper.advancedMode()) {
-        <div class="bg-kitty-surface rounded-lg p-6 border border-kitty-border">
+        <div class="bg-kitty-surface rounded-lg p-4 sm:p-6 border border-kitty-border">
           <h3 class="text-lg font-semibold text-kitty-text mb-1">Undercurl & Rendering</h3>
           <p class="text-kitty-text-dim text-sm mb-4">
             Visual style for undercurls used in error indicators, spell checking, and LSP
@@ -279,7 +279,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
         </div>
 
         <div
-          class="bg-kitty-surface rounded-lg p-6 border border-kitty-border"
+          class="bg-kitty-surface rounded-lg p-4 sm:p-6 border border-kitty-border"
           [class.opacity-60]="!fontFeaturesAvailable()"
         >
           <div class="flex items-center gap-2 mb-1">

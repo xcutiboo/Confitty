@@ -18,7 +18,7 @@ import { IconComponent, type IconName } from "../icon.component";
         </div>
       </header>
 
-      <div class="space-y-6 bg-kitty-surface/50 rounded-xl p-6 border border-kitty-border/80 shadow-sm">
+      <div class="space-y-6 bg-kitty-surface/50 rounded-xl p-4 sm:p-6 border border-kitty-border/80 shadow-sm">
         <ng-content />
       </div>
     </section>

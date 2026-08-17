@@ -140,7 +140,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
       </div>
 
       @if (helper.advancedMode()) {
-        <div class="bg-kitty-surface rounded-lg p-6 border border-kitty-border">
+        <div class="bg-kitty-surface rounded-lg p-4 sm:p-6 border border-kitty-border">
           <h3 class="text-lg font-semibold text-kitty-text mb-4">Spacing & Borders</h3>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

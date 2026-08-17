@@ -26,7 +26,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
         </p>
       </div>
 
-      <div class="space-y-6 bg-kitty-surface rounded-lg p-6 border border-kitty-border">
+      <div class="space-y-6 bg-kitty-surface rounded-lg p-4 sm:p-6 border border-kitty-border">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="form-group">
             <label class="block text-sm font-medium text-kitty-text mb-2">
@@ -113,7 +113,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
       </div>
 
       @if (helper.advancedMode()) {
-        <div class="bg-kitty-surface rounded-lg p-6 border border-kitty-border">
+        <div class="bg-kitty-surface rounded-lg p-4 sm:p-6 border border-kitty-border">
           <h3 class="text-lg font-semibold text-kitty-text mb-4">System & Network</h3>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -257,7 +257,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
           </div>
         </div>
 
-        <div class="bg-kitty-surface rounded-lg p-6 border border-kitty-border" [class.opacity-60]="!startupSessionAvailable()">
+        <div class="bg-kitty-surface rounded-lg p-4 sm:p-6 border border-kitty-border" [class.opacity-60]="!startupSessionAvailable()">
           <div class="flex items-center gap-2 mb-1">
             <h3 class="text-lg font-semibold text-kitty-text">Startup Session</h3>
             @if (!startupSessionAvailable()) {

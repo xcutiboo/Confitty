@@ -8,7 +8,7 @@ import { DialogShellComponent } from "../shared/dialog-shell/dialog-shell.compon
     <app-dialog-shell label="About Confitty" (closed)="closeRequested.emit()">
       <div class="relative w-full max-w-lg max-h-[90dvh] flex flex-col glass-panel rounded-2xl overflow-hidden">
 
-        <div class="relative flex items-center gap-5 px-7 py-7 border-b border-kitty-border bg-kitty-surface-light/50">
+        <div class="relative flex items-center gap-4 sm:gap-5 px-5 sm:px-7 py-5 sm:py-7 border-b border-kitty-border bg-kitty-surface-light/50">
           <img
             src="assets/confitty.svg"
             alt=""
@@ -31,7 +31,7 @@ import { DialogShellComponent } from "../shared/dialog-shell/dialog-shell.compon
           </button>
         </div>
 
-        <div class="p-6 space-y-5 overflow-y-auto">
+        <div class="p-4 sm:p-6 space-y-5 overflow-y-auto">
 
           <div>
             <h3 class="text-sm font-semibold text-kitty-primary uppercase tracking-wider mb-2">About Confitty</h3>

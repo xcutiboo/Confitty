@@ -97,7 +97,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
       </div>
 
       @if (helper.advancedMode()) {
-        <div class="bg-kitty-surface rounded-lg p-6 border border-kitty-border">
+        <div class="bg-kitty-surface rounded-lg p-4 sm:p-6 border border-kitty-border">
           <h3 class="text-lg font-semibold text-kitty-text mb-1">URL Styling</h3>
           <p class="text-kitty-text-dim text-sm mb-4">
             Appearance of detected URLs in the terminal
@@ -201,7 +201,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
           </div>
         </div>
 
-        <div class="bg-kitty-surface rounded-lg p-6 border border-kitty-border">
+        <div class="bg-kitty-surface rounded-lg p-4 sm:p-6 border border-kitty-border">
           <h3 class="text-lg font-semibold text-kitty-text mb-1">Mouse Behavior</h3>
           <p class="text-kitty-text-dim text-sm mb-4">Advanced mouse and pointer settings</p>
 
@@ -326,7 +326,7 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
           </div>
         </div>
 
-        <div class="bg-kitty-surface rounded-lg p-6 border border-kitty-border">
+        <div class="bg-kitty-surface rounded-lg p-4 sm:p-6 border border-kitty-border">
           <h3 class="text-lg font-semibold text-kitty-text mb-1">Selection Behavior</h3>
           <p class="text-kitty-text-dim text-sm mb-4">
             How text selection and word boundaries work

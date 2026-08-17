@@ -42,7 +42,7 @@ import { AdSlotComponent } from "../shared/ad-slot/ad-slot.component";
         <div class="bg-kitty-surface rounded-xl border border-kitty-border overflow-hidden mb-4">
           <button
             (click)="presetsExpanded.set(!presetsExpanded())"
-            class="w-full px-4 sm:px-7 py-4 sm:py-5 flex items-center justify-between hover:bg-kitty-surface-light transition-colors group"
+            class="w-full px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between hover:bg-kitty-surface-light transition-colors group"
           >
             <div class="flex items-center gap-4">
               <div class="w-9 h-9 rounded-lg bg-kitty-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-kitty-primary/15 transition-colors">

@@ -39,7 +39,7 @@ const TAB_BAR_COLOR_KEYS = new Set([
 	selector: "app-preset-selector",
 	imports: [CommonModule],
 	template: `
-    <div class="px-7 pt-5 pb-6">
+    <div class="px-4 sm:px-6 pt-4 sm:pt-5 pb-5 sm:pb-6">
       <div class="mb-5">
         <p class="text-xs text-kitty-text-dim mb-4 leading-relaxed">
           Pick a preset to get going, then tweak whatever you want from there.
