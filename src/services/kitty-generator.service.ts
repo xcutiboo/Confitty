@@ -15,6 +15,22 @@ const MULTILINE_KEYS = new Set([
 	"action_alias",
 ]);
 
+/**
+ * Flattens a value onto the one line a directive occupies.
+ *
+ * A font family of "Mono\nfont_size 99" was written out as two lines, and the
+ * second was read back as a setting of its own: exporting and importing again
+ * silently changed the font size. Kitty has no escape for a line break inside a
+ * value, so there is nothing to escape it to, and a value that contains one is
+ * already not something the format can carry.
+ *
+ * Only line breaks are touched. Leading and trailing spaces are left alone
+ * because the quoting below exists to preserve them.
+ */
+function singleLine(value: string): string {
+	return value.replace(/[\r\n\u2028\u2029]+/g, " ");
+}
+
 const COMMA_SEPARATED_KEYS = new Set([
 	"enabled_layouts",
 	"paste_actions",
@@ -315,11 +331,8 @@ export class KittyGeneratorService {
 		if (value == null) return "";
 		if (Array.isArray(value)) return JSON.stringify(value);
 		if (typeof value === "object") return JSON.stringify(value);
-		if (
-			typeof value === "string" ||
-			typeof value === "number" ||
-			typeof value === "boolean"
-		) {
+		if (typeof value === "string") return singleLine(value);
+		if (typeof value === "number" || typeof value === "boolean") {
 			return String(value);
 		}
 		return "";
@@ -362,10 +375,11 @@ export class KittyGeneratorService {
 	}
 
 	private formatStringValue(key: string, value: string): string[] {
+		const flattened = singleLine(value);
 		const needsQuoting =
 			QUOTED_STRING_KEYS.has(key) &&
-			(/^\s|\s$/.test(value) || value.includes("#"));
-		const formattedValue = needsQuoting ? `"${value}"` : value;
+			(/^\s|\s$/.test(flattened) || flattened.includes("#"));
+		const formattedValue = needsQuoting ? `"${flattened}"` : flattened;
 		return [`${key} ${formattedValue}`];
 	}
 

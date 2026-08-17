@@ -94,4 +94,65 @@ describe("export then import round trip", () => {
 		const twice = roundTrip(once);
 		expect(diff(once, twice)).toEqual([]);
 	});
+
+	/**
+	 * A font is named by whoever made it, and a shortcut is whatever somebody
+	 * typed. Both end up on a line where whitespace separates the key from the
+	 * value and a hash starts a comment, so both can say something the format
+	 * reads as structure.
+	 */
+	describe("values that mean something to the file format", () => {
+		const AWKWARD: ReadonlyArray<readonly [string, string]> = [
+			["a hash, which starts a comment", "Comic Mono #1"],
+			["a trailing hash", "Mono #"],
+			["leading whitespace", "  Mono"],
+			["trailing whitespace", "Mono  "],
+			["an equals sign", "Mono=Regular"],
+			["a quote", 'Mono "Bold"'],
+			["a backslash", "Mono\\Bold"],
+			["something that looks like another setting", "Mono\nfont_size 99"],
+			["a tab", "Mono\tBold"],
+			["emoji", "Fira 🐱 Code"],
+			["a colon", "Mono:style=Regular"],
+		];
+
+		/**
+		 * A directive separates its key from its value with whitespace and cannot
+		 * say how much of it was meant, so any run of it collapses to one space
+		 * and the ends are trimmed. Kitty reads a file the same way. Everything
+		 * else about the value has to survive.
+		 */
+		const asKittyReadsIt = (value: string) =>
+			value.replace(/\s+/g, " ").trim();
+
+		it.each(AWKWARD)("keeps a font family containing %s", (_label, family) => {
+			const config = structuredClone(DEFAULT_KITTY_CONFIG);
+			config.fonts.font_family = family;
+
+			expect(roundTrip(config).fonts.font_family).toBe(asKittyReadsIt(family));
+		});
+
+		it.each(AWKWARD)("never lets %s forge another setting", (_label, family) => {
+			const config = structuredClone(DEFAULT_KITTY_CONFIG);
+			config.fonts.font_family = family;
+
+			const after = roundTrip(config);
+
+			// The newline case is the one that matters: a value carrying a line
+			// break must not arrive as a second directive.
+			expect(after.fonts.font_size).toBe(DEFAULT_KITTY_CONFIG.fonts.font_size);
+		});
+
+		it("keeps a shortcut whose action carries arguments and quotes", () => {
+			const config = structuredClone(DEFAULT_KITTY_CONFIG);
+			config.keyboard_shortcuts = [
+				{ chord: "ctrl+shift+e", action: 'launch --type=tab --cwd="/tmp/a b"' },
+				{ chord: "ctrl+shift+p>n", action: "new_tab" },
+			];
+
+			expect(roundTrip(config).keyboard_shortcuts).toEqual(
+				config.keyboard_shortcuts,
+			);
+		});
+	});
 });
