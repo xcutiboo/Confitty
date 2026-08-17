@@ -22,10 +22,15 @@ const COMMA_SEPARATED_KEYS = new Set([
 	"clone_source_strategies",
 ]);
 
-// Modelled as its own field for the UI, but Kitty only accepts it as a suffix
-// on confirm_os_window_close, so it must never reach the output as a directive.
+/**
+ * Modelled as their own fields so the UI can offer a control, but Kitty has no
+ * option by these names. Each is written as part of another directive:
+ * `confirm_os_window_close N count-background` and `env read_from_shell`.
+ * Reaching the output on their own makes Kitty reject the file.
+ */
 const INTERNAL_ONLY_KEYS = new Set([
 	"confirm_os_window_close_count_background",
+	"env_read_from_shell",
 ]);
 
 // Keys that require quoted values when they have leading/trailing spaces
@@ -167,6 +172,7 @@ export class KittyGeneratorService {
 
 		for (const key in advanced) {
 			if (!Object.hasOwn(advanced, key)) continue;
+			if (INTERNAL_ONLY_KEYS.has(key)) continue;
 
 			if (key === "env") {
 				this.collectEnvLines(advanced, defaults, lines);
