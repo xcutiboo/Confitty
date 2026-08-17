@@ -19,10 +19,12 @@ documentation for roughly 225 options to change your font size. Confitty gives
 those options a UI, shows the result in a live terminal preview, and exports a
 `kitty.conf` containing only what you actually changed.
 
-It runs entirely in your browser. There is no account and no backend, and your
-config never leaves the tab. The hosted site carries one ad below the settings,
-which covers the domain and hosting; the source has no ad configuration in it,
-so anything you build yourself has none.
+Editing runs entirely in your browser. There is no account, and your config
+never leaves the tab: it is held in local storage and turned into a file by
+the same page you are looking at. The hosted site counts visits, which is one
+number in a key-value store and no part of what you are editing. It also
+carries one ad below the settings, which covers the domain and hosting; the
+source has no ad configuration in it, so anything you build yourself has none.
 
 > Not affiliated with the official Kitty Terminal project.
 

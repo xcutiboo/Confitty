@@ -1,11 +1,18 @@
 import { CommonModule } from "@angular/common";
-import { Component, HostListener, inject, signal } from "@angular/core";
+import {
+	afterNextRender,
+	Component,
+	HostListener,
+	inject,
+	signal,
+} from "@angular/core";
 import { AboutModalComponent } from "../components/about-modal/about-modal.component";
 import { CategoryNavigationComponent } from "../components/category-navigation/category-navigation.component";
 import { ConfigEditorComponent } from "../components/config-editor/config-editor.component";
 import { HeaderComponent } from "../components/header/header.component";
 import { LivePreviewComponent } from "../components/live-preview/live-preview.component";
 import { ConfigStoreService } from "../services/config-store.service";
+import { formatCount, SiteStatsService } from "../services/site-stats.service";
 
 @Component({
 	selector: "app-root",
@@ -82,6 +89,13 @@ import { ConfigStoreService } from "../services/config-store.service";
             <span class="hidden sm:inline">Not affiliated with the </span>
             <a href="https://sw.kovidgoyal.net/kitty/" target="_blank" rel="noopener"
                class="text-kitty-primary hover:text-kitty-primary-hover underline decoration-dotted underline-offset-2 transition-colors">Kitty Terminal</a><span class="hidden sm:inline">. Open source under MIT.</span><span class="sm:hidden"> · MIT</span>
+            <!--
+              sm and up only: the phone footer is one row on purpose, and this
+              is the least useful thing competing for it.
+            -->
+            @if (visitors(); as count) {
+              <span class="hidden sm:inline"> · {{ format(count) }} visitors</span>
+            }
           </p>
           <button
             type="button"
@@ -108,6 +122,16 @@ import { ConfigStoreService } from "../services/config-store.service";
 export class AppComponent {
 	readonly configStore = inject(ConfigStoreService);
 	readonly showAbout = signal(false);
+
+	private readonly siteStats = inject(SiteStatsService);
+	readonly visitors = this.siteStats.visitors;
+	readonly format = formatCount;
+
+	constructor() {
+		// After the first paint, so a slow or blocked request never delays the
+		// editor appearing.
+		afterNextRender(() => void this.siteStats.load());
+	}
 
 	/**
 	 * Dismiss one layer at a time, topmost first. The about dialog is not listed:
