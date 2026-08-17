@@ -50,13 +50,15 @@
     <meta name="twitter:image" content="https://confitty.app/assets/confitty-og.png" />
     <meta name="twitter:image:alt" content="Confitty logo on a dark background, with the tagline 'Visual config builder for Kitty terminal'" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <!-- nosemgrep -->
     <link rel="dns-prefetch" href="https://storage.ko-fi.com" />
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://storage.ko-fi.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self'; font-src 'self' https://fonts.gstatic.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self';" />
+    <!--
+      Mirrors the Content-Security-Policy in src/_headers so the dev server gets
+      the same policy. frame-ancestors is deliberately omitted: it is ignored in
+      a meta element, and is delivered as a real header in production.
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://storage.ko-fi.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self'; font-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none';" />
 
     <script>
       (() => {
@@ -113,8 +115,8 @@
       "screenshot": "https://confitty.app/assets/confitty-og.png",
       "featureList": [
         "Live terminal preview",
-        "40+ color themes",
-        "Visual editor for 400+ Kitty options",
+        "47 built-in color themes",
+        "Visual editor for 230+ kitty.conf options",
         "Import existing kitty.conf",
         "Smart diff export (only changed values)",
         "Tab bar, cursor, font, and window controls"
@@ -122,58 +124,7 @@
       "inLanguage": "en",
       "isAccessibleForFree": true,
       "license": "https://github.com/xcutiboo/Confitty/blob/confitty/LICENSE",
-      "softwareVersion": "1.0.0",
-      "datePublished": "2025-03-04",
-      "dateModified": "2026-05-19"
-    }
-    </script>
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What is Confitty?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Confitty is a visual configuration builder for Kitty terminal. It lets you tweak settings, preview the result live, and export a minimal kitty.conf that only includes values that differ from Kitty's defaults."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is Confitty free?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. Confitty is free and open source under the MIT license."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How do I apply the exported kitty.conf?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Save the exported file to ~/.config/kitty/kitty.conf and reload Kitty with Ctrl+Shift+F5."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Which themes ship with Confitty?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Confitty includes Dracula, Nord, Tokyo Night, Catppuccin variants, Gruvbox, Kanagawa, Ayu, Monokai, Solarized, VS Code, GitHub, iTerm2, and the original Confitty themes."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can I import an existing kitty.conf?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. Click Import and select your kitty.conf, and Confitty parses it and populates the visual editor."
-          }
-        }
-      ]
+      "datePublished": "2025-03-04"
     }
     </script>
 
