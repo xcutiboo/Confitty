@@ -47,6 +47,7 @@
 					},
 					"src/_headers",
 					"src/_redirects",
+					"src/ads.txt",
 					"src/robots.txt",
 					"src/sitemap.xml",
 					"src/manifest.json"
@@ -56,11 +57,15 @@
 				"outputPath": "dist/confitty",
 				"polyfills": [],
 				"scripts": [],
-				"styles": ["src/global_styles.css"],
+				"styles": [
+					"src/global_styles.css"
+				],
 				"tsConfig": "tsconfig.app.json",
 				"allowedCommonJsDependencies": []
 			},
-			"outputs": ["{options.outputPath}"]
+			"outputs": [
+				"{options.outputPath}"
+			]
 		},
 		"test": {
 			"executor": "@angular/build:unit-test",

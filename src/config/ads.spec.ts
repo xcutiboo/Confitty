@@ -3,22 +3,37 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { ADSENSE_CLIENT, ADSENSE_SLOT, adsEnabled } from "./ads";
 
-describe("ad configuration", () => {
-	it("carries no account details in the repository", () => {
-		// The prebuild script writes these from the environment. If a real ID ever
-		// reaches a commit, this is what catches it: the checked-in file must be
-		// the empty one, whatever the working copy currently holds after a build.
-		const source = readFileSync(
-			join(process.cwd(), "src", "config", "ads.ts"),
-			"utf8",
-		);
+const ROOT = process.cwd();
+
+function read(...segments: string[]): string {
+	return readFileSync(join(ROOT, ...segments), "utf8");
+}
+
+/**
+ * The build rewrites these files in place from environment variables. That is
+ * convenient and it is also exactly how a publisher ID or an analytics token
+ * ends up in a commit by accident, so the checked-in copies are asserted empty
+ * whatever a local build has left in the working tree.
+ */
+describe("deployment configuration", () => {
+	it("keeps AdSense identifiers out of the repository", () => {
+		const source = read("src", "config", "ads.ts");
 
 		expect(source).toContain('export const ADSENSE_CLIENT = "";');
 		expect(source).toContain('export const ADSENSE_SLOT = "";');
 
-		// Any assignment holding something is a real identifier that escaped.
-		const assignments = [...source.matchAll(/=\s*"([^"]+)"/g)].map((m) => m[1]);
-		expect(assignments).toEqual([]);
+		const assigned = [...source.matchAll(/=\s*"([^"]+)"/g)].map((m) => m[1]);
+		expect(assigned).toEqual([]);
+	});
+
+	it("keeps deployment tags out of index.html", () => {
+		const html = read("src", "index.html");
+		const block = /<!-- deployment-tags:start -->([\s\S]*?)<!-- deployment-tags:end -->/.exec(
+			html,
+		);
+
+		expect(block, "the deployment-tags markers must exist").not.toBeNull();
+		expect(block?.[1]?.trim()).toBe("");
 	});
 
 	it("is off unless both identifiers are supplied", () => {

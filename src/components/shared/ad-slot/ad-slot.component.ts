@@ -1,4 +1,11 @@
-import { afterNextRender, Component, signal } from "@angular/core";
+import {
+	afterNextRender,
+	Component,
+	ElementRef,
+	inject,
+	type OnDestroy,
+	signal,
+} from "@angular/core";
 import { ADSENSE_CLIENT, ADSENSE_SLOT, adsEnabled } from "../../../config/ads";
 
 const LOADER_ID = "adsense-loader";
@@ -73,19 +80,53 @@ declare global {
   `,
 	],
 })
-export class AdSlotComponent {
+export class AdSlotComponent implements OnDestroy {
 	readonly client = ADSENSE_CLIENT;
 	readonly slot = ADSENSE_SLOT;
 	readonly visible = signal(adsEnabled());
 
+	private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+	private observer: IntersectionObserver | null = null;
+
 	constructor() {
 		afterNextRender(() => {
-			if (!this.visible()) return;
-			loadAdSense();
-			// Pushing an empty object is how AdSense is told to fill the unit that
-			// was just added to the DOM.
-			(window.adsbygoogle ??= []).push({});
+			if (this.visible()) this.requestWhenApproaching();
 		});
+	}
+
+	ngOnDestroy(): void {
+		this.observer?.disconnect();
+	}
+
+	/**
+	 * The slot sits below the settings, so on most visits it is far off screen.
+	 * Requesting an ad that is never scrolled to spends an impression on nobody
+	 * and drags the viewability rate down, which is one of the things buyers bid
+	 * on. Waiting until it is within a screen of the viewport asks for the ad
+	 * just early enough to be filled by the time it is actually looked at.
+	 */
+	private requestWhenApproaching(): void {
+		const request = () => {
+			this.observer?.disconnect();
+			this.observer = null;
+			loadAdSense();
+			// An empty object is how AdSense is told to fill the unit that is now
+			// in the DOM.
+			(window.adsbygoogle ??= []).push({});
+		};
+
+		if (typeof IntersectionObserver !== "function") {
+			request();
+			return;
+		}
+
+		this.observer = new IntersectionObserver(
+			(entries) => {
+				if (entries.some((entry) => entry.isIntersecting)) request();
+			},
+			{ rootMargin: "100% 0px" },
+		);
+		this.observer.observe(this.host.nativeElement);
 	}
 }
 

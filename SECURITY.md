@@ -17,6 +17,10 @@ The deployed site makes three, and none of them see your configuration:
   and hosting. Like any ad network it sets cookies and reads the usual request
   metadata. EEA and UK visitors get Google's consent message before personalised
   ads are served, per the certified-CMP requirement in force since January 2024.
+  The ad is requested only once you scroll near it, so a visit that never
+  reaches it never contacts the ad server.
+- **Cloudflare Web Analytics**, which counts page views without cookies and
+  without building a profile of you. There is no Google Analytics here.
 - **Ko-fi**, the support widget.
 - **Google Fonts**, fetched only when you pick a font for the preview, never on
   page load.

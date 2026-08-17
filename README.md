@@ -159,19 +159,32 @@ Cloudflare dashboard:
 | Build output directory | `dist/confitty/browser` |
 | Node version | `22` |
 
-Two build environment variables switch on the ad unit. Leave them unset and the
-component renders nothing and loads no third-party script, which is what local
-and CI builds do:
+Four build environment variables switch on everything the hosted site has and a
+local build does not. All optional, all independent; unset means the code is
+never emitted and the request is never made:
 
 | Variable | Value |
 | --- | --- |
 | `CONFITTY_ADSENSE_CLIENT` | Publisher ID, `ca-pub-` followed by 16 digits |
 | `CONFITTY_ADSENSE_SLOT` | Numeric ad unit ID |
+| `CONFITTY_ADBLOCK_RECOVERY` | `1` to emit Google's ad blocking recovery tag |
+| `CONFITTY_CF_ANALYTICS_TOKEN` | Cloudflare Web Analytics beacon token |
 
-`scripts/apply-ad-config.mjs` reads them before the build, validates the format
-and writes them into `src/config/ads.ts`. They are never committed, and a spec
-fails if they ever are. Consent for EEA and UK visitors is handled by Google's
-Privacy & Messaging in the AdSense dashboard, not in this codebase.
+`scripts/apply-site-config.mjs` validates them, writes the AdSense constants
+into `src/config/ads.ts`, generates `ads.txt`, and injects the head tags between
+the `deployment-tags` markers in `index.html`. Nothing it writes is committed,
+and specs fail if any of it ever is.
+
+A few things live in the AdSense dashboard rather than here: site approval, the
+consent message for EEA and UK visitors under the certified-CMP requirement in
+force since January 2024, and the wording of the ad blocking recovery message.
+The recovery tag reports blocker rates even while that message is still a draft,
+which is a reasonable way to find out how much is actually being blocked before
+deciding whether to ask anyone anything.
+
+If you would rather use the Pages one-click analytics setup under **Metrics →
+Web Analytics**, leave `CONFITTY_CF_ANALYTICS_TOKEN` unset so the beacon is not
+counted twice.
 
 Security headers, caching and SPA routing come from `src/_headers` and
 `src/_redirects`, which the build copies into the output.
