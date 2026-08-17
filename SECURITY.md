@@ -1,12 +1,22 @@
 # Security Policy
 
-Confitty is a fully client-side static site. It does not collect, transmit, or
-store any user data. The exported `kitty.conf` never leaves your browser.
+Confitty is a fully client-side static site with no backend and no analytics.
+Nothing you enter is transmitted anywhere; the exported `kitty.conf` is built
+and downloaded entirely in the browser.
+
+Two things are stored locally, in `localStorage`, and never leave the device:
+the config you are editing, so a reload does not discard it, and your light or
+dark theme preference. Clearing site data removes both, as does **Reset to
+defaults** in the app.
+
+The only third-party requests are the Ko-fi support widget, and Google Fonts —
+the latter fetched solely when you select a font for the preview, not on page
+load.
 
 ## Supported versions
 
-The deployed `main` branch is the only supported version. Older tagged
-releases are not patched.
+Only the currently deployed site, built from the `confitty` branch, is
+supported. Older tagged releases are not patched.
 
 ## Reporting a vulnerability
 

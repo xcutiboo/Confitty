@@ -32,14 +32,17 @@ src/
 ├── models/
 │   ├── kitty-types.ts                  TypeScript shape of a Kitty config.
 │   └── kitty-defaults.ts               Default values matching Kitty itself.
+├── models/
+│   └── config-serialization.ts         Rebuilds a config from untrusted JSON.
 └── services/
     ├── config-store.service.ts         Central state (Angular signals).
+    ├── config-persistence.service.ts   Saves and restores state via localStorage.
     ├── kitty-parser.service.ts         Parses `.conf` → `KittyConfigAST`.
     ├── kitty-generator.service.ts      Generates minimal `.conf` text.
     ├── kitty-version.service.ts        Version-gated option availability.
     ├── color-themes.service.ts         16-color palettes.
     ├── presets.service.ts              Full config presets.
-    ├── font-presets.service.ts         Font metadata + Google Fonts loader.
+    ├── font-presets.service.ts         Font metadata + on-demand webfont loader.
     ├── search.service.ts               Search index and result routing.
     └── theme.service.ts                Light/dark UI theme.
 ```
@@ -67,16 +70,29 @@ Naming:
 
 ## Adding a Kitty option
 
-1. Add the property to the relevant interface in `kitty-types.ts`.
+Check the option against Kitty's own
+[`kitty/options/definition.py`](https://github.com/kovidgoyal/kitty/blob/master/kitty/options/definition.py)
+first, not the rendered docs. That file is the source of truth for the exact
+name, the value type and the default.
+
+1. Add the property to the relevant interface in `kitty-types.ts`, using the
+   type Kitty actually parses. An option taking a float or a keyword is not a
+   boolean, however much it reads like one.
 2. Add the default value to `kitty-defaults.ts`. It **must** match Kitty's
-   actual default. The generator only emits values that differ from the
-   default, so an incorrect default leaks into every exported config.
-3. Handle the key in `kitty-parser.service.ts`.
+   actual default. Export writes only what differs from this table, so a wrong
+   default both makes the preview show a state Kitty will never be in and drops
+   the setting from the output when a user deliberately picks Kitty's default.
+3. Handle the key in `kitty-parser.service.ts`. Adding the field to the model is
+   what makes the parser accept the key at all, so this step is only about
+   converting the value.
 4. Add a control in the matching form component.
-5. If the option has special formatting in `kitty.conf`, extend
-   `kitty-generator.service.ts`.
-6. If it was added in a specific Kitty version, register it in
-   `kitty-version.service.ts` so older versions emit a guarded comment.
+5. If the option has special formatting — repeated directives, comma-separated
+   values, quoting — extend `kitty-generator.service.ts`. Getting the separator
+   wrong produces a file Kitty rejects.
+6. If it arrived in a specific Kitty version, register it in
+   `kitty-version.service.ts` so older targets emit a guarded comment.
+7. Add a case to `kitty-generator.service.spec.ts`, and to
+   `kitty-parser.service.spec.ts` if parsing is not a plain assignment.
 
 ## Adding a theme
 
@@ -91,9 +107,11 @@ Full preset configs (more than just a palette) live in
 
 - One logical change per PR.
 - Verify in the browser before opening. Exercise live preview and export.
-- `bun run typecheck` and `bun run build:prod` must pass.
-- Imperative commit messages: "Add Rosé Pine theme", "Fix opacity slider", not
-  "Added X" or "Fixing Y".
+- `bun run typecheck`, `bun run test` and `bun run build:prod` must pass. Note
+  that `typecheck` does not check templates — only the build does.
+- Conventional Commits, imperative mood: `feat: add Rosé Pine theme`,
+  `fix: correct the opacity slider range`. The subject line drives the release
+  version, so `fix:` and `feat:` are not interchangeable.
 - Don't bundle formatting noise into substantive PRs.
 
 ## Reporting issues

@@ -57,8 +57,12 @@
       Mirrors the Content-Security-Policy in src/_headers so the dev server gets
       the same policy. frame-ancestors is deliberately omitted: it is ignored in
       a meta element, and is delivered as a real header in production.
+
+      The font origins are for FontPresetsService.loadWebFont, which fetches a
+      font only when someone picks one for the preview. Nothing is fetched on
+      load; the UI itself uses the platform font stack.
     -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://storage.ko-fi.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self'; font-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none';" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://storage.ko-fi.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self'; font-src 'self' https://fonts.gstatic.com; base-uri 'self'; form-action 'self'; object-src 'none';" />
 
     <script>
       (() => {
