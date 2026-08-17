@@ -1,10 +1,12 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, signal } from "@angular/core";
 import { ConfigStoreService } from "../../services/config-store.service";
+import { KittyGeneratorService } from "../../services/kitty-generator.service";
 import { TerminalPaletteComponent } from "./terminal-palette.component";
 import { TerminalWindowComponent } from "./terminal-window.component";
 
 type PreviewMode = "terminal" | "config";
+type CopyState = "idle" | "copied" | "failed";
 
 @Component({
 	selector: "app-live-preview",
@@ -36,21 +38,37 @@ type PreviewMode = "terminal" | "config";
               type="button"
               (click)="copyConfig()"
               class="action-btn"
-              [class.success]="copied()"
+              [class.success]="copyState() === 'copied'"
+              [class.failure]="copyState() === 'failed'"
             >
-              @if (copied()) {
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                </svg>
-                <span>Copied</span>
-              } @else {
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                  <rect x="9" y="9" width="13" height="13" rx="2"/>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                </svg>
-                <span>Copy</span>
+              @switch (copyState()) {
+                @case ('copied') {
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  <span>Copied</span>
+                }
+                @case ('failed') {
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/>
+                  </svg>
+                  <span>Copy blocked</span>
+                }
+                @default {
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
+                    <rect x="9" y="9" width="13" height="13" rx="2"/>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                  </svg>
+                  <span>Copy</span>
+                }
               }
             </button>
+            <span class="sr-only" role="status" aria-live="polite">
+              @switch (copyState()) {
+                @case ('copied') { Configuration copied to the clipboard }
+                @case ('failed') { Copying failed, use Export to download the file instead }
+              }
+            </span>
           }
 
           <button
@@ -151,6 +169,10 @@ type PreviewMode = "terminal" | "config";
       background: rgb(var(--kitty-primary));
       color: rgb(var(--kitty-dark));
     }
+    .action-btn.failure {
+      background: rgb(220 38 38 / 0.18);
+      color: rgb(252 165 165);
+    }
     .dot {
       display: inline-block;
       width: 9px;
@@ -167,9 +189,10 @@ type PreviewMode = "terminal" | "config";
 })
 export class LivePreviewComponent {
 	readonly previewMode = signal<PreviewMode>("terminal");
-	readonly copied = signal(false);
+	readonly copyState = signal<CopyState>("idle");
 
 	readonly configStore = inject(ConfigStoreService);
+	private readonly generator = inject(KittyGeneratorService);
 
 	readonly configText = computed(() => this.configStore.rawConfigText());
 	readonly configLineCount = computed(
@@ -192,20 +215,19 @@ export class LivePreviewComponent {
 			: "opaque";
 	});
 
-	copyConfig(): void {
-		void navigator.clipboard.writeText(this.configText()).then(() => {
-			this.copied.set(true);
-			setTimeout(() => this.copied.set(false), 1800);
-		});
+	async copyConfig(): Promise<void> {
+		// Rejects on insecure origins and when the permission is denied, and the
+		// API is absent entirely in some embedded webviews.
+		try {
+			await navigator.clipboard.writeText(this.configText());
+			this.copyState.set("copied");
+		} catch {
+			this.copyState.set("failed");
+		}
+		setTimeout(() => this.copyState.set("idle"), 2400);
 	}
 
 	download(): void {
-		const blob = new Blob([this.configText()], { type: "text/plain" });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement("a");
-		a.href = url;
-		a.download = "kitty.conf";
-		a.click();
-		URL.revokeObjectURL(url);
+		this.generator.downloadConfig(this.configStore.configState());
 	}
 }

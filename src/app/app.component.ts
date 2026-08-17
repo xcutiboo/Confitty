@@ -34,28 +34,29 @@ import { ConfigStoreService } from "../services/config-store.service";
           ></div>
         }
 
-        <!-- Sidebar: Desktop always visible, mobile overlay -->
-        <app-category-navigation
-          class="w-72 flex-shrink-0 desktop-sidebar"
-        />
-        <app-category-navigation
-          class="mobile-sidebar fixed z-40 h-full w-72 flex-shrink-0 transform transition-transform duration-300 ease-out shadow-2xl will-change-transform"
-          [class.-translate-x-full]="!configStore.sidebarOpen()"
-        />
+        <!-- A single instance either way: a permanent pane above lg, an overlay below. -->
+        @if (configStore.wideViewport()) {
+          <app-category-navigation class="w-72 flex-shrink-0" />
+        } @else {
+          <app-category-navigation
+            class="fixed z-40 h-full w-72 flex-shrink-0 transform transition-transform duration-300 ease-out shadow-2xl will-change-transform"
+            [class.-translate-x-full]="!configStore.sidebarOpen()"
+          />
+        }
 
-        <!-- Main content area -->
         <main class="flex-1 overflow-hidden flex flex-col lg:flex-row min-w-0">
-          <!-- Config editor -->
           <app-config-editor class="flex-1 overflow-y-auto min-w-0" />
 
-          <!-- Preview panel: Static on desktop, overlay on mobile -->
           @if (configStore.previewVisible()) {
-            <app-live-preview
-              class="desktop-preview w-2/5 flex-shrink-0 border-l border-kitty-border bg-kitty-darker"
-            />
-            <app-live-preview
-              class="mobile-preview fixed inset-0 z-50 bg-kitty-darker animate-slide-in-right will-change-transform"
-            />
+            @if (configStore.wideViewport()) {
+              <app-live-preview
+                class="w-2/5 flex-shrink-0 border-l border-kitty-border bg-kitty-darker"
+              />
+            } @else {
+              <app-live-preview
+                class="fixed inset-0 z-50 bg-kitty-darker animate-slide-in-right will-change-transform"
+              />
+            }
           }
         </main>
       </div>
@@ -85,15 +86,6 @@ import { ConfigStoreService } from "../services/config-store.service";
 	styles: [
 		`
     :host { display: block; }
-
-    @media (min-width: 1024px) {
-      .desktop-sidebar, .desktop-preview { display: block; }
-      .mobile-sidebar,  .mobile-preview  { display: none; }
-    }
-    @media (max-width: 1023px) {
-      .desktop-sidebar, .desktop-preview { display: none; }
-      .mobile-sidebar,  .mobile-preview  { display: block; }
-    }
   `,
 	],
 })
@@ -101,16 +93,20 @@ export class AppComponent {
 	readonly configStore = inject(ConfigStoreService);
 	readonly showAbout = signal(false);
 
+	/** Dismiss one layer at a time, topmost first, the way stacked dialogs behave. */
 	@HostListener("window:keydown.escape")
 	onEscape(): void {
-		if (this.configStore.sidebarOpen()) {
-			this.configStore.setSidebarOpen(false);
-		}
-		if (this.configStore.previewVisible()) {
-			this.configStore.setPreviewVisible(false);
-		}
 		if (this.showAbout()) {
 			this.showAbout.set(false);
+			return;
+		}
+		if (this.configStore.sidebarOpen()) {
+			this.configStore.setSidebarOpen(false);
+			return;
+		}
+		// Only an overlay on narrow viewports; on desktop it is a permanent pane.
+		if (this.configStore.previewVisible() && !this.configStore.wideViewport()) {
+			this.configStore.setPreviewVisible(false);
 		}
 	}
 

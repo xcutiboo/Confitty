@@ -4,6 +4,7 @@ import {
 	computed,
 	type ElementRef,
 	inject,
+	output,
 	signal,
 	ViewChild,
 } from "@angular/core";
@@ -185,11 +186,15 @@ export class SearchBarComponent {
 		}
 	}
 
+	/** Lets a host close whatever surface is presenting the search. */
+	readonly resultSelected = output<void>();
+
 	onSelect(result: SearchResult): void {
 		this.searchService.select(result);
 		this.inputValue = "";
 		this.isFocused.set(false);
 		this.activeIndex.set(-1);
+		this.resultSelected.emit();
 	}
 
 	clearInput(): void {
