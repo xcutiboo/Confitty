@@ -6,6 +6,13 @@
 # The ad-measurement directives are deliberately not denied: the site serves
 # AdSense, and blocking the APIs it runs on would cost revenue for no privacy
 # gain that matters here, since nothing about your config is ever sent anywhere.
+#
+# Google supports only a nonce-based policy for AdSense and says plainly that
+# the domains its ad code calls change without notice. A nonce needs a value
+# per response, which a static site served straight from the edge does not have,
+# and the policy Google publishes to go with it allows scripts from any https
+# origin. That is a worse trade for an editor that parses files people paste in,
+# so the allowlist stays and gets corrected when it falls behind.
 
 /*
   X-Content-Type-Options: nosniff
@@ -15,7 +22,7 @@
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://storage.ko-fi.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://fundingchoicesmessages.google.com https://fundingchoices.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://cloudflareinsights.com https://fundingchoicesmessages.google.com; font-src 'self' https://fonts.gstatic.com; frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com https://fundingchoicesmessages.google.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://storage.ko-fi.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://fundingchoicesmessages.google.com https://fundingchoices.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://ep1.adtrafficquality.google https://cloudflareinsights.com https://fundingchoicesmessages.google.com; font-src 'self' https://fonts.gstatic.com; frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com https://ep2.adtrafficquality.google https://fundingchoicesmessages.google.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'
 
 /index.html
   Cache-Control: public, max-age=0, must-revalidate

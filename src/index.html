@@ -56,13 +56,18 @@
     <!--
       Mirrors the Content-Security-Policy in src/_headers so the dev server gets
       the same policy. frame-ancestors is deliberately omitted: it is ignored in
-      a meta element, and is delivered as a real header in production.
+      a meta element, and is delivered as a real header in production. So are
+      the reporting directives, for the same reason.
+
+      ep1 and ep2.adtrafficquality.google are Google's invalid-traffic checks.
+      They only fire once an ad actually fills, which is why leaving them out
+      survived testing on a site that had nothing to serve yet.
 
       The font origins are for FontPresetsService.loadWebFont, which fetches a
       font only when someone picks one for the preview. Nothing is fetched on
       load; the UI itself uses the platform font stack.
     -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://storage.ko-fi.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://fundingchoicesmessages.google.com https://fundingchoices.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://cloudflareinsights.com https://fundingchoicesmessages.google.com; font-src 'self' https://fonts.gstatic.com; frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com https://fundingchoicesmessages.google.com; base-uri 'self'; form-action 'self'; object-src 'none';" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://storage.ko-fi.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://fundingchoicesmessages.google.com https://fundingchoices.google.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://ep1.adtrafficquality.google https://cloudflareinsights.com https://fundingchoicesmessages.google.com; font-src 'self' https://fonts.gstatic.com; frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com https://ep2.adtrafficquality.google https://fundingchoicesmessages.google.com; base-uri 'self'; form-action 'self'; object-src 'none';" />
 
     <!-- deployment-tags:start --><!-- deployment-tags:end -->
 
