@@ -16,6 +16,9 @@ interface ImportStatus {
 	message: string;
 }
 
+/** navigator.platform is deprecated but still the least wrong way to ask. */
+const APPLE_PLATFORM = /Mac|iPhone|iPad|iPod/;
+
 /**
  * How many settings a parsed file actually carried. Counted structurally rather
  * than from the generated output, so options gated behind a newer Kitty version
@@ -91,6 +94,36 @@ function countDirectives(config: KittyConfigAST): number {
 
       <!-- Right: Actions -->
       <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+        <!--
+          Phones reach these through the actions menu instead. The header there
+          is already carrying a sidebar toggle, the wordmark and Export.
+        -->
+        <button
+          type="button"
+          (click)="configStore.undo()"
+          [disabled]="!configStore.canUndo()"
+          class="hidden sm:flex w-9 h-9 items-center justify-center rounded-lg bg-kitty-surface-light text-kitty-text-dim transition-all duration-200 enabled:hover:bg-kitty-bg enabled:hover:text-kitty-text enabled:active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+          aria-label="Undo"
+          [title]="'Undo (' + modifierLabel + 'Z)'"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/>
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          (click)="configStore.redo()"
+          [disabled]="!configStore.canRedo()"
+          class="hidden sm:flex w-9 h-9 items-center justify-center rounded-lg bg-kitty-surface-light text-kitty-text-dim transition-all duration-200 enabled:hover:bg-kitty-bg enabled:hover:text-kitty-text enabled:active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+          aria-label="Redo"
+          [title]="'Redo (' + modifierLabel + 'Shift+Z)'"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 000 12h3"/>
+          </svg>
+        </button>
+
         <!-- Mobile: Quick Export -->
         <button
           (click)="handleExport()"
@@ -279,6 +312,15 @@ function countDirectives(config: KittyConfigAST): number {
       <app-dialog-shell label="Actions" panelClass="items-start justify-end p-2" (closed)="mobileMenuOpen.set(false)">
         <div class="mt-12 sm:mt-14 w-56 bg-kitty-surface border border-kitty-border rounded-xl shadow-2xl p-2">
           <div class="px-3 py-2 text-xs font-semibold text-kitty-text-dim uppercase tracking-wider border-b border-kitty-border mb-2">Actions</div>
+          <button (click)="configStore.undo(); mobileMenuOpen.set(false)" [disabled]="!configStore.canUndo()" class="w-full px-3 py-2.5 rounded-lg text-left text-sm text-kitty-text transition-all duration-150 flex items-center gap-3 enabled:hover:bg-kitty-surface-light enabled:active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed">
+            <svg class="w-4 h-4 text-kitty-text-dim" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></svg>
+            Undo
+          </button>
+          <button (click)="configStore.redo(); mobileMenuOpen.set(false)" [disabled]="!configStore.canRedo()" class="w-full px-3 py-2.5 rounded-lg text-left text-sm text-kitty-text transition-all duration-150 flex items-center gap-3 enabled:hover:bg-kitty-surface-light enabled:active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed">
+            <svg class="w-4 h-4 text-kitty-text-dim" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 000 12h3"/></svg>
+            Redo
+          </button>
+          <div class="h-px bg-kitty-border my-2"></div>
           <button (click)="mobileSearchOpen.set(true); mobileMenuOpen.set(false)" class="w-full px-3 py-2.5 rounded-lg text-left text-sm text-kitty-text hover:bg-kitty-surface-light transition-all duration-150 flex items-center gap-3 active:scale-[0.98]">
             <svg class="w-4 h-4 text-kitty-text-dim" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             Search Settings
@@ -364,6 +406,12 @@ export class HeaderComponent {
 	 * loaded on the first keystroke and is the largest module in the app.
 	 */
 	readonly searchableCount = SEARCHABLE_OPTION_COUNT;
+	/** Tooltips only, so naming the wrong key is the whole cost of being wrong. */
+	readonly modifierLabel = APPLE_PLATFORM.test(
+		globalThis.navigator?.platform ?? "",
+	)
+		? "⌘"
+		: "Ctrl+";
 
 	/**
 	 * Returning to a config you do not remember leaving is disconcerting, and

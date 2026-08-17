@@ -72,6 +72,12 @@ Your work is saved to `localStorage` as you edit, so closing the tab does not
 throw the session away. Nothing is uploaded. Clearing site data or pressing
 **Start fresh** removes it.
 
+Editing is undoable, with `Ctrl+Z` and `Ctrl+Shift+Z` or the arrows in the
+header, fifty steps deep. Applying a theme counts as one step rather than the
+thirty-odd colours it writes, and holding a slider counts as one rather than
+every value it passed through on the way. History lives in the tab and is not
+saved, so a reload starts clean.
+
 ### Themes and presets
 
 47 built-in colour themes, including Catppuccin (all four flavours), Tokyo

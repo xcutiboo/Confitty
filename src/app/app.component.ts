@@ -14,6 +14,16 @@ import { LivePreviewComponent } from "../components/live-preview/live-preview.co
 import { ConfigStoreService } from "../services/config-store.service";
 import { formatCount, SiteStatsService } from "../services/site-stats.service";
 
+/**
+ * Whether the browser has its own undo stack for whatever this is. Selects are
+ * included because a modifier plus a letter there is the platform's business.
+ */
+function isTextEntry(target: EventTarget | null): boolean {
+	if (!(target instanceof HTMLElement)) return false;
+	if (target.isContentEditable) return true;
+	return ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName);
+}
+
 @Component({
 	selector: "app-root",
 	imports: [
@@ -147,6 +157,24 @@ export class AppComponent {
 		if (this.configStore.previewVisible() && !this.configStore.wideViewport()) {
 			this.configStore.setPreviewVisible(false);
 		}
+	}
+
+	/**
+	 * Both modifiers are accepted rather than the one belonging to the platform,
+	 * because getting that wrong costs someone their undo and reading it right
+	 * costs a deprecated API call.
+	 */
+	@HostListener("window:keydown", ["$event"])
+	onKeydown(event: KeyboardEvent): void {
+		if (event.key.toLowerCase() !== "z") return;
+		if (!(event.metaKey || event.ctrlKey) || event.altKey) return;
+		// Inside a text field the browser has its own undo stack for what is being
+		// typed, and taking the key away there would be worse than not having this.
+		if (isTextEntry(event.target)) return;
+
+		event.preventDefault();
+		if (event.shiftKey) this.configStore.redo();
+		else this.configStore.undo();
 	}
 
 	openKofi(): void {

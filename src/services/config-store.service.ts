@@ -10,6 +10,30 @@ import { KittyGeneratorService } from "./kitty-generator.service";
 const PERSIST_DEBOUNCE_MS = 400;
 
 /**
+ * Enough to walk back a preset that replaced the palette and the edits either
+ * side of it. Each entry is a whole config, so the ceiling is a few hundred
+ * kilobytes rather than a session's worth of clones.
+ */
+const HISTORY_LIMIT = 50;
+
+/**
+ * Consecutive edits to the same field inside this window collapse into one
+ * step. Without it, dragging the font size slider leaves fifty entries to walk
+ * back through, which makes undo useless for the case it is most needed.
+ */
+const COALESCE_MS = 700;
+
+/**
+ * The tab bar lock travels with the config because it changes what a later
+ * edit does. Restoring a config whose tab bar colours were hand-picked, while
+ * leaving the lock off, means the next palette edit quietly overwrites them.
+ */
+interface HistoryEntry {
+	readonly config: KittyConfigAST;
+	readonly tabBarCustomised: boolean;
+}
+
+/**
  * Editor categories, in sidebar order. The config editor switches on this value
  * with no fallback branch, so an unrecognised one would render an empty pane.
  */
@@ -74,6 +98,11 @@ export class ConfigStoreService {
 	private previewChosenByUser = false;
 	/** Becomes true the moment the Tab Bar form writes a color, freezes palette auto-sync. */
 	private readonly _tabBarColorsCustomised = signal<boolean>(false);
+	private readonly _past = signal<readonly HistoryEntry[]>([]);
+	private readonly _future = signal<readonly HistoryEntry[]>([]);
+	/** Which field the last step covered, so a run of edits to it can coalesce. */
+	private lastStepKey: string | null = null;
+	private lastStepAt = 0;
 
 	constructor() {
 		// Without this the initial measurement sticks forever: shrinking a desktop
@@ -120,15 +149,82 @@ export class ConfigStoreService {
 	readonly previewVisible = this._previewVisible.asReadonly();
 	readonly wideViewport = this._wideViewport.asReadonly();
 	readonly tabBarLocked = this._tabBarColorsCustomised.asReadonly();
+	readonly canUndo = computed(() => this._past().length > 0);
+	readonly canRedo = computed(() => this._future().length > 0);
 
 	readonly rawConfigText = computed(() =>
 		this.generator.generateConfig(this._configState()),
 	);
 
+	/**
+	 * Records the state about to be replaced. Called at the top of every
+	 * operation a person can start, and nowhere else: the internal writes that
+	 * one operation fans out into must not each leave a step of their own.
+	 *
+	 * `key` identifies what is being edited. Repeating it quickly means the same
+	 * field is still being dragged or typed into, and the step already on the
+	 * stack covers it. Pass null for anything that should always stand alone.
+	 */
+	private step(key: string | null): void {
+		const now = Date.now();
+		const continuing =
+			key !== null && key === this.lastStepKey && now - this.lastStepAt < COALESCE_MS;
+
+		this.lastStepKey = key;
+		this.lastStepAt = now;
+		if (continuing) return;
+
+		this._past.update((past) =>
+			[
+				...past,
+				{
+					config: this._configState(),
+					tabBarCustomised: this._tabBarColorsCustomised(),
+				},
+			].slice(-HISTORY_LIMIT),
+		);
+		// Editing after undoing abandons what was undone, as everywhere else.
+		if (this._future().length) this._future.set([]);
+	}
+
+	undo(): void {
+		this.move(this._past, this._future);
+	}
+
+	redo(): void {
+		this.move(this._future, this._past);
+	}
+
+	private move(
+		from: typeof this._past,
+		to: typeof this._past,
+	): void {
+		const stack = from();
+		const entry = stack[stack.length - 1];
+		if (!entry) return;
+
+		to.update((other) => [
+			...other,
+			{
+				config: this._configState(),
+				tabBarCustomised: this._tabBarColorsCustomised(),
+			},
+		]);
+		from.set(stack.slice(0, -1));
+		this._configState.set(entry.config);
+		this._tabBarColorsCustomised.set(entry.tabBarCustomised);
+		// An edit landing straight after must not merge into the step that was
+		// just walked past.
+		this.lastStepKey = null;
+	}
+
 	updateSection<T extends keyof KittyConfigAST>(
 		section: T,
 		data: Partial<KittyConfigAST[T]>,
 	): void {
+		// The forms hand back the whole section on every change rather than the
+		// field that moved, so the section is the finest key available here.
+		this.step(String(section));
 		this._configState.update((state) => ({
 			...state,
 			[section]: { ...(state[section] as object), ...data },
@@ -140,6 +236,7 @@ export class ConfigStoreService {
 		T extends keyof KittyConfigAST,
 		K extends keyof KittyConfigAST[T],
 	>(section: T, field: K, value: KittyConfigAST[T][K]): void {
+		this.step(`${String(section)}.${String(field)}`);
 		this._configState.update((state) => ({
 			...state,
 			[section]: { ...(state[section] as object), [field]: value },
@@ -173,10 +270,12 @@ export class ConfigStoreService {
 	}
 
 	setKittyMod(value: string): void {
+		this.step("kitty_mod");
 		this._configState.update((state) => ({ ...state, kitty_mod: value }));
 	}
 
 	addShortcut(shortcut: KittyKeyMap = { chord: "", action: "" }): void {
+		this.step(null);
 		this._configState.update((state) => ({
 			...state,
 			keyboard_shortcuts: [...state.keyboard_shortcuts, shortcut],
@@ -184,6 +283,7 @@ export class ConfigStoreService {
 	}
 
 	updateShortcut(index: number, patch: Partial<KittyKeyMap>): void {
+		this.step(`shortcut.${index}.${Object.keys(patch).sort().join(",")}`);
 		this._configState.update((state) => ({
 			...state,
 			keyboard_shortcuts: state.keyboard_shortcuts.map((entry, i) =>
@@ -193,6 +293,7 @@ export class ConfigStoreService {
 	}
 
 	removeShortcut(index: number): void {
+		this.step(null);
 		this._configState.update((state) => ({
 			...state,
 			keyboard_shortcuts: state.keyboard_shortcuts.filter((_, i) => i !== index),
@@ -200,12 +301,14 @@ export class ConfigStoreService {
 	}
 
 	loadConfig(config: KittyConfigAST): void {
+		this.step(null);
 		// A fresh preset is not a user customisation; re-enable palette auto-sync.
 		this._tabBarColorsCustomised.set(false);
 		this._configState.set(structuredClone(config));
 	}
 
 	resetToDefaults(): void {
+		this.step(null);
 		this._tabBarColorsCustomised.set(false);
 		this._restoredFromStorage.set(false);
 		this._configState.set(structuredClone(DEFAULT_KITTY_CONFIG));
@@ -224,6 +327,9 @@ export class ConfigStoreService {
 		} catch {
 			return false;
 		}
+		// Only once the file has parsed, so a rejected import leaves no step to
+		// undo past.
+		this.step(null);
 		this._tabBarColorsCustomised.set(false);
 		this._configState.set(sanitizeConfig(parsed));
 		return true;
