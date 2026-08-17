@@ -12,7 +12,12 @@ export type KittyTabBarStyle =
 	| "powerline"
 	| "custom"
 	| "hidden";
-export type KittyTabBarAlign = "left" | "center" | "right";
+export type KittyTabBarAlign =
+	| "start"
+	| "center"
+	| "end"
+	| "left"
+	| "right";
 export type KittyTabBarEdge = "top" | "bottom";
 export type KittyTabSwitchStrategy = "previous" | "left" | "right" | "last";
 export type KittyTabPowerlineStyle = "angled" | "slanted" | "round";
@@ -65,6 +70,13 @@ export type KittyPlacementStrategy =
 	| "bottom"
 	| "bottom-right";
 export type KittyUnderlineHyperlinks = "hover" | "always" | "never";
+export type KittyShowHyperlinkTargets =
+	| "never"
+	| "always"
+	| "ctrl"
+	| "cmd"
+	| "alt"
+	| "shift";
 export type KittyStripTrailingSpaces = "never" | "smart" | "always";
 export type KittyMacosColorspace = "srgb" | "default" | "displayp3";
 export type KittyHideWindowDecorations =
@@ -137,7 +149,8 @@ export interface KittyScrollbackConfig {
 	wheel_scroll_min_lines: number;
 	touch_scroll_multiplier: number;
 	pixel_scroll: boolean;
-	momentum_scroll: boolean;
+	/** Friction applied to inertial scrolling, 0 (off) to 1 (never stops). */
+	momentum_scroll: number;
 	scrollbar: KittyScrollbarMode;
 	scrollbar_gap: number;
 	scrollbar_handle_color: string;
@@ -161,8 +174,10 @@ export interface KittyMouseConfig {
 	open_url_with: string;
 	url_prefixes: string[];
 	detect_urls: boolean;
-	show_hyperlink_targets: boolean;
+	show_hyperlink_targets: KittyShowHyperlinkTargets;
 	underline_hyperlinks: KittyUnderlineHyperlinks;
+	/** Pixels the pointer must travel before a tab or window drag begins; 0 disables dragging. */
+	drag_threshold: number;
 	copy_on_select: KittyCopyOnSelect;
 	paste_actions: string[];
 	strip_trailing_spaces: KittyStripTrailingSpaces;
@@ -223,8 +238,8 @@ export interface KittyWindowLayoutConfig {
 	resize_in_steps: boolean;
 	visual_window_select_characters: string;
 	confirm_os_window_close: number;
+	/** Folded into the `confirm_os_window_close` directive; never emitted on its own. */
 	confirm_os_window_close_count_background: boolean;
-	startup_window: string;
 	window_drag_tolerance: number;
 	window_title_bar: "top" | "bottom";
 	window_title_bar_active_background: string;
@@ -260,8 +275,6 @@ export interface KittyTabBarConfig {
 	inactive_tab_font_style: string;
 	tab_bar_background: string;
 	tab_bar_margin_color: string;
-	tab_bar_hide_path: string;
-	tab_bar_drag_threshold: number;
 	tab_bar_filter: string;
 	tab_bar_show_new_tab_button: boolean;
 	progress_bar: "left" | "right" | "top" | "bottom" | "hidden";
@@ -297,8 +310,7 @@ export interface KittyColorConfig {
 	color13: string;
 	color14: string;
 	color15: string;
-	// Extended 256-color palette (16-255) - optional
-	extendedColors: Record<string, string>;
+	// color16-color255 are not modelled: they round-trip as raw directives.
 	mark1_foreground: string;
 	mark1_background: string;
 	mark2_foreground: string;

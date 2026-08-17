@@ -148,9 +148,9 @@ export class KittyVersionService {
 			description: "Powerline tab bar style with custom arrows",
 			warning: "Requires Nerd Font or symbol_map for arrows",
 		},
-		tab_bar_drag_threshold: {
+		drag_threshold: {
 			minVersion: "0.46.0",
-			description: "Drag tabs to reorder",
+			description: "Drag tabs and windows to reorder or detach them",
 			warning: "Mouse drag support",
 		},
 		transparent_background_colors: {

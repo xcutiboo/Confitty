@@ -13,6 +13,7 @@ import type {
 	KittyMacosOptionAsAlt,
 	KittyPlacementStrategy,
 	KittyRemoteControl,
+	KittyShowHyperlinkTargets,
 	KittyStripTrailingSpaces,
 	KittyTabBarAlign,
 	KittyTabBarEdge,
@@ -24,6 +25,31 @@ import type {
 	KittyUnderlineHyperlinks,
 	KittyUrlStyle,
 } from "../models/kitty-types";
+
+/**
+ * Every option this app models, derived from the defaults so that adding a field
+ * is enough to make the parser recognise it.
+ *
+ * Section routing is prefix-based (`tab_`, `color`, `macos_`, ...), so without
+ * this gate any option in one of those namespaces that we do not model — a newer
+ * Kitty release, a typo, `color16`-`color255` — would reach a section parser,
+ * match no case, and vanish. Unknown keys must survive as raw directives instead.
+ */
+const MODELLED_KEYS: ReadonlySet<string> = new Set(
+	Object.values(DEFAULT_KITTY_CONFIG)
+		.filter(
+			(section): section is Record<string, unknown> =>
+				typeof section === "object" && section !== null && !Array.isArray(section),
+		)
+		.flatMap((section) => Object.keys(section)),
+);
+
+/** Kitty rejects unit floats outside 0..1, so keep the fallback rather than pass one on. */
+function clampUnitFloat(raw: string, fallback: number): number {
+	const parsed = Number.parseFloat(raw);
+	if (Number.isNaN(parsed)) return fallback;
+	return Math.min(1, Math.max(0, parsed));
+}
 
 @Injectable({
 	providedIn: "root",
@@ -95,6 +121,11 @@ export class KittyParserService {
 		value: string,
 	): void {
 		if (this.handleSpecialKeys(config, key, value)) {
+			return;
+		}
+
+		if (!MODELLED_KEYS.has(key)) {
+			config.unrecognized_directives.push(`${key} ${value}`);
 			return;
 		}
 
@@ -256,6 +287,7 @@ export class KittyParserService {
 				"url_prefixes",
 				"open_url_with",
 				"detect_urls",
+				"drag_threshold",
 				"show_hyperlink_targets",
 				"underline_hyperlinks",
 				"copy_on_select",
@@ -318,7 +350,6 @@ export class KittyParserService {
 			"resize_debounce_time",
 			"resize_in_steps",
 			"visual_window_select_characters",
-			"startup_window",
 		].includes(key);
 	}
 
@@ -567,7 +598,10 @@ export class KittyParserService {
 				config.scrollback.pixel_scroll = value === "yes" || value === "true";
 				break;
 			case "momentum_scroll":
-				config.scrollback.momentum_scroll = value === "yes" || value === "true";
+				config.scrollback.momentum_scroll = clampUnitFloat(
+					value,
+					DEFAULT_KITTY_CONFIG.scrollback.momentum_scroll,
+				);
 				break;
 		}
 	}
@@ -598,7 +632,10 @@ export class KittyParserService {
 				break;
 			case "show_hyperlink_targets":
 				config.mouse.show_hyperlink_targets =
-					value === "yes" || value === "true";
+					value as KittyShowHyperlinkTargets;
+				break;
+			case "drag_threshold":
+				config.mouse.drag_threshold = Number.parseFloat(value);
 				break;
 			case "underline_hyperlinks":
 				config.mouse.underline_hyperlinks = value as KittyUnderlineHyperlinks;
@@ -819,9 +856,6 @@ export class KittyParserService {
 			case "visual_window_select_characters":
 				config.window_layout.visual_window_select_characters = value;
 				break;
-			case "startup_window":
-				config.window_layout.startup_window = value;
-				break;
 			case "window_drag_tolerance":
 				config.window_layout.window_drag_tolerance = Number.parseFloat(value);
 				break;
@@ -931,12 +965,6 @@ export class KittyParserService {
 				break;
 			case "tab_bar_margin_color":
 				config.tab_bar.tab_bar_margin_color = value;
-				break;
-			case "tab_bar_hide_path":
-				config.tab_bar.tab_bar_hide_path = value;
-				break;
-			case "tab_bar_drag_threshold":
-				config.tab_bar.tab_bar_drag_threshold = Number.parseFloat(value);
 				break;
 			case "tab_bar_filter":
 				config.tab_bar.tab_bar_filter = value;

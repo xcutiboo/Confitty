@@ -268,22 +268,6 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
 
           <div class="form-group">
             <label class="block text-sm font-medium text-kitty-text mb-2">
-              Tab Bar Hide Path
-              <span class="text-kitty-text-dim text-xs ml-2"
-                >Regex to hide tab bar when CWD matches (e.g., /private/)</span
-              >
-            </label>
-            <input
-              type="text"
-              [(ngModel)]="tabBar().tab_bar_hide_path"
-              (ngModelChange)="helper.updateField('tab_bar_hide_path', $event)"
-              class="w-full px-4 py-2 bg-kitty-bg border border-kitty-border rounded-lg text-kitty-text focus:outline-none focus:ring-2 focus:ring-kitty-primary font-mono text-sm"
-              placeholder="none or regex pattern"
-            />
-          </div>
-
-          <div class="form-group">
-            <label class="block text-sm font-medium text-kitty-text mb-2">
               Tab Title Max Length
               <span class="text-kitty-text-dim text-xs ml-2"
                 >Maximum characters in tab title (0 = unlimited)</span
@@ -342,26 +326,6 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
             />
           </div>
 
-          <div class="form-group" [class.opacity-60]="!tabBarDragThresholdAvailable()">
-            <div class="flex items-center gap-2 mb-2">
-              <label class="block text-sm font-medium text-kitty-text">
-                Drag Threshold
-                <span class="text-kitty-text-dim text-xs ml-2"
-                  >Pixels of drag to trigger tab reorder (0 = disabled)</span
-                >
-              </label>
-              @if (!tabBarDragThresholdAvailable()) {
-                <app-version-badge version="0.46.0" />
-              }
-            </div>
-            <app-number-input
-              [(ngModel)]="tabBar().tab_bar_drag_threshold"
-              (ngModelChange)="helper.updateField('tab_bar_drag_threshold', $event)"
-              [min]="0"
-              [step]="1"
-              [disabled]="!tabBarDragThresholdAvailable()"
-            />
-          </div>
         </div>
       }
 
@@ -488,10 +452,6 @@ export class TabBarFormComponent {
 	readonly powerlineStyleAvailable = computed(() =>
 		this.versionService.isOptionAvailable("tab_bar_style_powerline"),
 	);
-	readonly tabBarDragThresholdAvailable = computed(() =>
-		this.versionService.isOptionAvailable("tab_bar_drag_threshold"),
-	);
-
 	readonly progressBarAvailable = computed(() =>
 		this.versionService.isOptionAvailable("progress_bar"),
 	);

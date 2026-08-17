@@ -538,25 +538,14 @@ import { VersionBadgeComponent } from "../../shared/version-badge/version-badge.
             />
           </div>
 
-          <div class="form-group mt-4">
-            <label class="block text-sm font-medium text-kitty-text mb-2">
-              Startup Window State
-              <span class="text-kitty-text-dim text-xs ml-2"
-                >Initial window state when Kitty starts</span
-              >
-            </label>
-            <select
-              [(ngModel)]="windowLayout().startup_window"
-              (ngModelChange)="helper.updateField('startup_window', $event)"
-              class="w-full px-4 py-2 bg-kitty-bg border border-kitty-border rounded-lg text-kitty-text focus:outline-none focus:ring-2 focus:ring-kitty-primary"
-            >
-              <option value="normal">Normal (default)</option>
-              <option value="maximized">Maximized</option>
-              <option value="minimized">Minimized</option>
-              <option value="fullscreen">Fullscreen</option>
-              <option value="hidden">Hidden (requires remote control)</option>
-            </select>
-          </div>
+          <p class="mt-4 text-xs text-kitty-text-dim leading-relaxed">
+            Starting maximized or fullscreen is not a <code class="font-mono text-kitty-accent">kitty.conf</code>
+            setting. Launch Kitty with
+            <code class="font-mono text-kitty-accent">kitty --start-as=fullscreen</code>
+            (or <code class="font-mono text-kitty-accent">maximized</code>,
+            <code class="font-mono text-kitty-accent">minimized</code>) and put that
+            in your desktop entry or shell alias.
+          </p>
         </div>
       }
     </app-form-section>
