@@ -9,9 +9,21 @@ the config you are editing, so a reload does not discard it, and your light or
 dark theme preference. Clearing site data removes both, as does **Reset to
 defaults** in the app.
 
-The only third-party requests are the Ko-fi support widget and Google Fonts,
-the latter fetched solely when you select a font for the preview, never on page
-load.
+## Third-party requests
+
+The deployed site makes three, and none of them see your configuration:
+
+- **Google AdSense**, one ad unit below the settings, which pays for the domain
+  and hosting. Like any ad network it sets cookies and reads the usual request
+  metadata. EEA and UK visitors get Google's consent message before personalised
+  ads are served, per the certified-CMP requirement in force since January 2024.
+- **Ko-fi**, the support widget.
+- **Google Fonts**, fetched only when you pick a font for the preview, never on
+  page load.
+
+Ads are configured through build-time environment variables and are absent from
+this repository, so a local build or a fork serves none of the above except the
+Ko-fi widget. Blocking any of it leaves the editor fully functional.
 
 ## Supported versions
 

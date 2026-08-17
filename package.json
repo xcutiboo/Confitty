@@ -28,7 +28,7 @@
 		"dev": "nx serve --configuration development",
 		"build": "nx build --configuration production",
 		"build:dev": "nx build --configuration development",
-		"build:prod": "nx build --configuration production",
+		"build:prod": "node scripts/apply-ad-config.mjs && nx build --configuration production",
 		"test": "nx test",
 		"test:watch": "nx test --watch",
 		"typecheck": "tsc -p tsconfig.spec.json --noEmit"

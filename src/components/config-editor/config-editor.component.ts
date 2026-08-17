@@ -14,12 +14,14 @@ import { ScrollbackFormComponent } from "../forms/scrollback-form/scrollback-for
 import { TabBarFormComponent } from "../forms/tab-bar-form/tab-bar-form.component";
 import { WindowLayoutFormComponent } from "../forms/window-layout-form/window-layout-form.component";
 import { PresetSelectorComponent } from "../preset-selector/preset-selector.component";
+import { AdSlotComponent } from "../shared/ad-slot/ad-slot.component";
 
 @Component({
 	selector: "app-config-editor",
 	imports: [
 		CommonModule,
 		PresetSelectorComponent,
+		AdSlotComponent,
 		FontsFormComponent,
 		CursorFormComponent,
 		ScrollbackFormComponent,
@@ -114,6 +116,12 @@ import { PresetSelectorComponent } from "../preset-selector/preset-selector.comp
           }
         }
 
+        <!--
+          Below the settings, in the scroll flow, so it is reachable but never
+          between someone and the control they came for. Renders nothing unless
+          the deployment supplies AdSense identifiers.
+        -->
+        <app-ad-slot />
       </div>
     </div>
   `,

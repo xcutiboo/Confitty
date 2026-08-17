@@ -20,7 +20,9 @@ those options a UI, shows the result in a live terminal preview, and exports a
 `kitty.conf` containing only what you actually changed.
 
 It runs entirely in your browser. There is no account and no backend, and your
-config never leaves the tab.
+config never leaves the tab. The hosted site carries one ad below the settings,
+which covers the domain and hosting; the source has no ad configuration in it,
+so anything you build yourself has none.
 
 > Not affiliated with the official Kitty Terminal project.
 
@@ -156,6 +158,20 @@ Cloudflare dashboard:
 | Build command | `bun run build:prod` |
 | Build output directory | `dist/confitty/browser` |
 | Node version | `22` |
+
+Two build environment variables switch on the ad unit. Leave them unset and the
+component renders nothing and loads no third-party script, which is what local
+and CI builds do:
+
+| Variable | Value |
+| --- | --- |
+| `CONFITTY_ADSENSE_CLIENT` | Publisher ID, `ca-pub-` followed by 16 digits |
+| `CONFITTY_ADSENSE_SLOT` | Numeric ad unit ID |
+
+`scripts/apply-ad-config.mjs` reads them before the build, validates the format
+and writes them into `src/config/ads.ts`. They are never committed, and a spec
+fails if they ever are. Consent for EEA and UK visitors is handled by Google's
+Privacy & Messaging in the AdSense dashboard, not in this codebase.
 
 Security headers, caching and SPA routing come from `src/_headers` and
 `src/_redirects`, which the build copies into the output.

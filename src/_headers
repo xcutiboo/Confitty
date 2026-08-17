@@ -1,20 +1,21 @@
 # Cloudflare Pages and Workers both read this file from the build output.
 # Pages allows 100 rules, each header up to 2000 characters.
 #
-# Permissions-Policy denies the hardware and payment APIs the app never calls,
-# and opts out of the ad-measurement ones. interest-cohort used to be here; FLoC
-# was abandoned and the directive with it, so the Topics API replacement
-# browsing-topics is what actually does anything now.
+# Permissions-Policy denies the hardware APIs the app never touches. It used to
+# carry interest-cohort, which stopped meaning anything when FLoC was abandoned.
+# The ad-measurement directives are deliberately not denied: the site serves
+# AdSense, and blocking the APIs it runs on would cost revenue for no privacy
+# gain that matters here, since nothing about your config is ever sent anywhere.
 
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), browsing-topics=(), attribution-reporting=()
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), usb=(), serial=(), midi=()
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://storage.ko-fi.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self'; font-src 'self' https://fonts.gstatic.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://storage.ko-fi.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net; font-src 'self' https://fonts.gstatic.com; frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'
 
 /index.html
   Cache-Control: public, max-age=0, must-revalidate
