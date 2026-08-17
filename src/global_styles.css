@@ -142,6 +142,72 @@ button {
 }
 
 /*
+ * Touch targets, set once rather than component by component.
+ *
+ * A finger needs roughly 44px; a mouse pointer does not, and forcing that size
+ * on desktop would inflate a dense settings UI for no reason. So the hit area
+ * grows only for coarse pointers, and it grows via a centred pseudo-element
+ * rather than min-height, which means the control's own size and the layout
+ * around it are untouched. Nothing moves; there is just more of it to hit.
+ */
+@media (pointer: coarse) {
+	button,
+	a[href],
+	[role="button"] {
+		position: relative;
+	}
+
+	button::after,
+	a[href]::after,
+	[role="button"]::after {
+		content: "";
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		translate: -50% -50%;
+		width: 100%;
+		height: 100%;
+		min-width: 44px;
+		min-height: 44px;
+		/*
+		 * It has to receive pointer events to be a hit area at all; a click on it
+		 * targets the control it belongs to. It paints nothing, so the only thing
+		 * that changes is how easy the control is to hit.
+		 */
+	}
+
+	/* Inline links inside a paragraph must not gain a 44px block that overlaps
+	   the line above; they are read, not tapped in isolation. */
+	p a[href]::after,
+	li a[href]::after {
+		content: none;
+	}
+
+	/*
+	 * Inputs are void elements and cannot carry generated content, so the trick
+	 * above does nothing for them. They grow for real instead, which is no loss:
+	 * a taller field is easier to hit and easier to read what you typed.
+	 */
+	input,
+	select,
+	textarea {
+		min-height: 44px;
+	}
+
+	input[type="checkbox"] {
+		width: 24px;
+		height: 24px;
+	}
+
+	/* A range track is a few pixels tall; the padding is what makes the thumb
+	   catchable without making the track look like a slab. */
+	input[type="range"] {
+		min-height: 0;
+		padding-block: 14px;
+	}
+}
+
+/*
  * A keyboard focus ring for anything that does not already draw its own. Form
  * controls set focus:ring themselves and win on specificity; this exists so a
  * plain button cannot end up with no focus indicator at all, which is what most

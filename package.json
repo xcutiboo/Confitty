@@ -26,9 +26,9 @@
 	"scripts": {
 		"start": "nx serve",
 		"dev": "nx serve --configuration development",
-		"build": "nx build --configuration production",
+		"build": "node scripts/apply-site-config.mjs && nx build --configuration production",
 		"build:dev": "nx build --configuration development",
-		"build:prod": "node scripts/apply-site-config.mjs && nx build --configuration production",
+		"build:prod": "bun run build",
 		"test": "nx test",
 		"test:watch": "nx test --watch",
 		"typecheck": "tsc -p tsconfig.spec.json --noEmit"
