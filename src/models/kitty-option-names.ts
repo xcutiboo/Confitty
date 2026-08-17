@@ -9,6 +9,34 @@
  *
  * Refresh it from upstream when adding support for a new kitty release.
  */
+/**
+ * Options present in kitty's development branch but not in any release yet, so
+ * deliberately unmodelled: the version selector stops at 0.48, and offering a
+ * setting nobody can install is worse than not offering it.
+ *
+ * When 0.49 ships this is the checklist.
+ */
+export const UNRELEASED_KITTY_OPTIONS: ReadonlySet<string> = new Set([
+	"custom_shaders",
+	"padding_fill_strategy",
+	"remap_modifiers",
+	"tab_title_max_lines",
+	"tab_title_wrap",
+]);
+
+/**
+ * Directives kitty accepts that have no business being a form control. They
+ * survive an import as raw directives and are written back untouched, which is
+ * the right outcome for a one-off escape hatch or a legacy alias.
+ */
+export const UNMODELLED_KITTY_DIRECTIVES: ReadonlySet<string> = new Set([
+	"clear_all_shortcuts",
+	"clear_all_mouse_actions",
+	"kitten_alias",
+	// Modelled, but at the top level of the config rather than inside a section.
+	"kitty_mod",
+]);
+
 export const KITTY_OPTION_NAMES: ReadonlySet<string> = new Set([
 	"action_alias",
 	"active_border_color",

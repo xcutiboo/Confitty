@@ -1,7 +1,11 @@
 import { TestBed } from "@angular/core/testing";
 import { describe, expect, it } from "vitest";
 import { DEFAULT_KITTY_CONFIG } from "../models/kitty-defaults";
-import { KITTY_OPTION_NAMES } from "../models/kitty-option-names";
+import {
+	KITTY_OPTION_NAMES,
+	UNMODELLED_KITTY_DIRECTIVES,
+	UNRELEASED_KITTY_OPTIONS,
+} from "../models/kitty-option-names";
 import type { KittyConfigAST } from "../models/kitty-types";
 import { KittyGeneratorService } from "./kitty-generator.service";
 import { KittyVersionService } from "./kitty-version.service";
@@ -86,6 +90,26 @@ describe("generated kitty.conf conformance", () => {
 		);
 
 		expect(invented).toEqual([]);
+	});
+
+	it("models every option in a released Kitty", () => {
+		// The inverse of the check above: not "is everything we write real" but
+		// "is everything real covered". Anything landing here is a coverage gap,
+		// or a new option to add to one of the two exclusion lists with a reason.
+		const modelled = new Set(
+			SECTIONS.flatMap((section) => Object.keys(DEFAULT_KITTY_CONFIG[section])),
+		);
+
+		const uncovered = [...KITTY_OPTION_NAMES].filter(
+			(name) =>
+				!modelled.has(name) &&
+				!UNRELEASED_KITTY_OPTIONS.has(name) &&
+				!UNMODELLED_KITTY_DIRECTIVES.has(name) &&
+				// color16 to color255 round-trip as raw directives.
+				!/^color\d+$/.test(name),
+		);
+
+		expect(uncovered).toEqual([]);
 	});
 
 	it("emits nothing at all for an untouched config", () => {

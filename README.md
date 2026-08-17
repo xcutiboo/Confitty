@@ -28,11 +28,14 @@ config never leaves the tab.
 
 It edits 231 settings across twelve categories: fonts, cursor, scrollback,
 mouse, performance, bell, window layout, tab bar, colours, advanced,
-OS-specific and keyboard shortcuts. Names, types and defaults all come from
-Kitty's own `options/definition.py`, and a test sets every option away from its
-default, generates the file and asserts each directive is a name Kitty accepts.
-So "it exports a valid `kitty.conf`" is checked on every run rather than
-believed.
+OS-specific and keyboard shortcuts. That is every option in a released Kitty,
+with the handful sitting in the unreleased 0.49 branch listed and waiting.
+
+Names, types and defaults all come from Kitty's own `options/definition.py`, and
+the tests hold both directions of that: one sets every option away from its
+default, generates the file and asserts each directive is a name Kitty accepts;
+another asserts every name Kitty accepts is one Confitty models. "It exports a
+valid `kitty.conf`" is checked on every run rather than believed.
 
 The preview updates as you type. Background, opacity, blur, tint, font, padding,
 margins, borders, cursor shape and blink, selection, the ANSI palette, tab bar
