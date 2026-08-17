@@ -1,7 +1,9 @@
 import { CommonModule } from "@angular/common";
 import {
+	afterNextRender,
 	Component,
 	computed,
+	DestroyRef,
 	type ElementRef,
 	inject,
 	signal,
@@ -9,14 +11,22 @@ import {
 } from "@angular/core";
 import type { KittyColorConfig } from "../../models/kitty-types";
 import { ConfigStoreService } from "../../services/config-store.service";
-import { mix } from "./color-utils";
+import { measureCell } from "./cell-metrics";
+import { mix, ptToPx } from "./color-utils";
+import { FONT_SIZE_PT } from "./preview-metrics";
 import { TerminalCursorComponent } from "./terminal-cursor.component";
 import {
 	type AnsiKey,
+	COMPACT_SESSION,
+	compactPrompt,
 	type Line,
+	prompt,
 	SAMPLE_SESSION,
+	sessionColumns,
 	type Span,
 } from "./terminal-session";
+
+const WIDE_COLUMNS = sessionColumns(SAMPLE_SESSION);
 
 const ANSI_KEYS: readonly AnsiKey[] = [
 	"color0",
@@ -50,31 +60,20 @@ function ansi(text: string, color: AnsiKey): Span {
 function dim(text: string): Span {
 	return { text, color: "fg", dim: true };
 }
-function promptSpans(path: string): Span[] {
-	return [
-		{ text: "user", color: "color2", bold: true },
-		{ text: "@", color: "color8" },
-		{ text: "kitty", color: "color6", bold: true },
-		{ text: " " },
-		{ text: path, color: "color4", bold: true },
-		{ text: " " },
-		{ text: "❯", color: "color5", bold: true },
-		{ text: " " },
-	];
-}
 
 @Component({
 	selector: "app-terminal-screen",
 	imports: [CommonModule, TerminalCursorComponent],
 	template: `
     <div
+      #screen
       class="screen"
       role="textbox"
       aria-label="Interactive terminal preview, click and type to test the configuration"
       [style.color]="foreground()"
       (click)="focusInput()"
     >
-      @for (line of session; track $index) {
+      @for (line of session(); track $index) {
         <div class="line">
           @for (span of line.spans; track $index) {
             <span
@@ -93,7 +92,7 @@ function promptSpans(path: string): Span[] {
         </div>
       }
       <div class="line">
-        @for (span of activePrompt; track $index) {
+        @for (span of activePrompt(); track $index) {
           <span [ngStyle]="spanStyles(span)">{{ span.text }}</span>
         }<span [ngStyle]="fgStyles()">{{ buffer() }}</span><app-terminal-cursor />
       </div>
@@ -163,16 +162,64 @@ export class TerminalScreenComponent {
 	private readonly store = inject(ConfigStoreService);
 	private readonly hidden =
 		viewChild.required<ElementRef<HTMLInputElement>>("hiddenInput");
+	private readonly screen =
+		viewChild.required<ElementRef<HTMLElement>>("screen");
 
-	readonly session = SAMPLE_SESSION;
-	readonly activePrompt = promptSpans("~/dotfiles");
+	/** Pane width in px, remeasured on resize; 0 until the first observation. */
+	private readonly paneWidth = signal(0);
+
 	readonly buffer = signal("");
 	readonly history = signal<Line[]>([]);
 
 	private readonly colors = computed(() => this.store.configState().colors);
 	private readonly mouse = computed(() => this.store.configState().mouse);
+	private readonly fonts = computed(() => this.store.configState().fonts);
 
 	readonly foreground = computed(() => this.colors().foreground);
+
+	constructor() {
+		const destroyRef = inject(DestroyRef);
+		afterNextRender(() => {
+			const element = this.screen().nativeElement;
+			this.paneWidth.set(element.clientWidth);
+			// Width is not a viewport question: the desktop preview is two fifths of
+			// the window, which is already too narrow for the wide session well
+			// above the phone breakpoints a media query would key off.
+			const observer = new ResizeObserver(([entry]) => {
+				if (entry) this.paneWidth.set(entry.contentRect.width);
+			});
+			observer.observe(element);
+			destroyRef.onDestroy(() => observer.disconnect());
+		});
+	}
+
+	/** Width one character occupies at the size the window is actually drawing. */
+	private readonly cellWidth = computed(() => {
+		const { font_family, font_size } = this.fonts();
+		const pt = Math.max(
+			FONT_SIZE_PT.min,
+			Math.min(FONT_SIZE_PT.max, font_size),
+		);
+		return measureCell(font_family, ptToPx(pt)).width;
+	});
+
+	/**
+	 * Falls back to the wide session before the first measurement, so a pane that
+	 * is genuinely wide never flashes the compact one on the way in.
+	 */
+	readonly compact = computed(() => {
+		const available = this.paneWidth();
+		if (available === 0) return false;
+		return WIDE_COLUMNS * this.cellWidth() > available;
+	});
+
+	readonly session = computed(() =>
+		this.compact() ? COMPACT_SESSION : SAMPLE_SESSION,
+	);
+
+	readonly activePrompt = computed(() =>
+		this.compact() ? compactPrompt() : prompt("~/dotfiles"),
+	);
 
 	focusInput(): void {
 		this.hidden().nativeElement.focus();
@@ -238,10 +285,11 @@ export class TerminalScreenComponent {
 	}
 
 	private commitLine(cmd: string): void {
-		const echo: Line = { spans: [...this.activePrompt, fg(cmd)] };
+		const prompt = this.activePrompt();
+		const echo: Line = { spans: [...prompt, fg(cmd)] };
 
 		if (!cmd) {
-			this.history.update((h) => [...h, { spans: [...this.activePrompt] }]);
+			this.history.update((h) => [...h, { spans: [...prompt] }]);
 			return;
 		}
 		if (cmd === "clear") {
