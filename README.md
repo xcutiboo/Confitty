@@ -157,6 +157,23 @@ Cloudflare dashboard:
 Security headers, caching and SPA routing come from `src/_headers` and
 `src/_redirects`, which the build copies into the output.
 
+Cloudflare now points new static sites at Workers rather than Pages, and Workers
+reads the same `_headers` and `_redirects` files while adding logs and Logpush,
+which Pages has no equivalent for. Moving over means a `wrangler.jsonc` at the
+root and switching the deployment in the dashboard:
+
+```jsonc
+{
+  "name": "confitty",
+  "compatibility_date": "2026-08-17",
+  "assets": { "directory": "./dist/confitty/browser/" }
+}
+```
+
+That file becomes the source of truth once it exists, so the dashboard settings
+above stop applying. Worth doing deliberately rather than as a side effect of a
+push.
+
 ### Releases
 
 Versioning is [semantic](https://semver.org/), driven by

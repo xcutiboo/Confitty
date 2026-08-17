@@ -1,8 +1,16 @@
+# Cloudflare Pages and Workers both read this file from the build output.
+# Pages allows 100 rules, each header up to 2000 characters.
+#
+# Permissions-Policy denies the hardware and payment APIs the app never calls,
+# and opts out of the ad-measurement ones. interest-cohort used to be here; FLoC
+# was abandoned and the directive with it, so the Topics API replacement
+# browsing-topics is what actually does anything now.
+
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=(), browsing-topics=(), attribution-reporting=()
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
