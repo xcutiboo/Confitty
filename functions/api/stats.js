@@ -51,7 +51,28 @@ async function increment(kv) {
 	await kv.put(key, String(current + 1));
 }
 
-export async function onRequestGet(context) {
+/**
+ * Handles every method rather than only GET, because anything left unhandled
+ * falls through to the single-page app's catch-all rewrite and answers a probe
+ * of this endpoint with a page of HTML.
+ */
+export async function onRequest(context) {
+	const { request } = context;
+
+	if (request.method === "HEAD") {
+		const response = await respond(context, { count: false });
+		return new Response(null, {
+			status: response.status,
+			headers: response.headers,
+		});
+	}
+	if (request.method !== "GET") {
+		return new Response(null, { status: 405, headers: { allow: "GET, HEAD" } });
+	}
+	return respond(context, { count: true });
+}
+
+async function respond(context, { count }) {
 	const { request, env } = context;
 	const kv = env.CONFITTY_METRICS;
 
@@ -75,7 +96,7 @@ export async function onRequestGet(context) {
 	);
 
 	const seenKey = `seen:${fingerprint}`;
-	if (!(await kv.get(seenKey))) {
+	if (count && !(await kv.get(seenKey))) {
 		await kv.put(seenKey, "1", { expirationTtl: DAY_SECONDS });
 		await increment(kv);
 	}
