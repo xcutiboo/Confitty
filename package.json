@@ -59,7 +59,7 @@
 		"autoprefixer": "10.5.2",
 		"jsdom": "^26",
 		"nx": "22.6.4",
-		"postcss": "8.5.15",
+		"postcss": "8.5.23",
 		"semantic-release": "^24.0.0",
 		"tailwindcss": "3.4.19",
 		"typescript": "6.0.3",
