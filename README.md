@@ -28,7 +28,7 @@ so anything you build yourself has none.
 
 ## What it does
 
-It edits 231 settings across twelve categories: fonts, cursor, scrollback,
+It edits 230 settings across twelve categories: fonts, cursor, scrollback,
 mouse, performance, bell, window layout, tab bar, colours, advanced,
 OS-specific and keyboard shortcuts. That is every option in a released Kitty,
 with the handful sitting in the unreleased 0.49 branch listed and waiting.
@@ -47,7 +47,7 @@ be hard work to read. It is an approximation rather than an emulator, and says
 so in the UI.
 
 Export writes only the values that differ from Kitty's defaults, so changing the
-font size from 11 to 14 gives you one line rather than 231. There is no
+font size from 11 to 14 gives you one line rather than 230. There is no
 timestamp in the output, which means re-exporting an unchanged config produces a
 byte-identical file. That matters if you keep dotfiles in git.
 
