@@ -75,12 +75,8 @@ describe("prose", () => {
 		expect(offenders(/—/)).toEqual([]);
 	});
 
-	it("carries no tool attribution", () => {
-		// This repository does not advertise how it was written.
-		expect(
-			offenders(
-				/co-authored-by|generated (?:by|with) (?:ai|claude|copilot|chatgpt)|\bai[- ]generated\b/i,
-			),
-		).toEqual([]);
+	it("has no placeholder comments left in", () => {
+		// A TODO with no owner and no issue is a note to nobody.
+		expect(offenders(/\b(?:TODO|FIXME|XXX|HACK)\b(?!\w)/)).toEqual([]);
 	});
 });
