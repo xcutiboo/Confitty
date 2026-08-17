@@ -18,7 +18,12 @@ import { ConfigStoreService } from "../services/config-store.service";
 		AboutModalComponent,
 	],
 	template: `
-    <div class="h-screen bg-kitty-darker text-kitty-text flex flex-col overflow-hidden">
+    <!--
+      h-dvh, not h-screen: 100vh on mobile is the height with the browser chrome
+      hidden, so with the address bar showing the footer sits below the fold and
+      the editor is taller than the space it has. dvh tracks the real viewport.
+    -->
+    <div class="h-dvh bg-kitty-darker text-kitty-text flex flex-col overflow-hidden">
       <app-header (aboutRequested)="showAbout.set(true)" />
 
       @if (showAbout()) {

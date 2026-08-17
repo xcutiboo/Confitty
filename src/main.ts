@@ -15,7 +15,7 @@ function showBootstrapFailure(error: unknown): void {
 	const panel = document.createElement("div");
 	panel.setAttribute("role", "alert");
 	panel.style.cssText =
-		"min-height:100vh;display:flex;flex-direction:column;align-items:center;" +
+		"min-height:100dvh;display:flex;flex-direction:column;align-items:center;" +
 		"justify-content:center;gap:12px;padding:24px;text-align:center;" +
 		"font:16px/1.6 system-ui,sans-serif;color:#e0e0e0";
 

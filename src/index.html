@@ -81,7 +81,7 @@
       html { background: #0d0d0d; color-scheme: dark; }
       html.light { background: #f6f5f3; color-scheme: light; }
       body { margin: 0; background: inherit; }
-      app-root { display: block; min-height: 100vh; }
+      app-root { display: block; min-height: 100vh; min-height: 100dvh; }
 
       /*
        * Angular replaces everything inside app-root on bootstrap, so this is
@@ -91,7 +91,7 @@
        */
       .boot {
         display: flex; flex-direction: column; align-items: center;
-        justify-content: center; gap: 20px; min-height: 100vh;
+        justify-content: center; gap: 20px; min-height: 100vh; min-height: 100dvh;
         padding: 24px; text-align: center; background: inherit;
         font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
         color: #e0e0e0;

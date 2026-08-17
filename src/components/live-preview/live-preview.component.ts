@@ -114,11 +114,13 @@ const WCAG_AA_BODY_TEXT = 4.5;
               >{{ ratio.label }}</span>
               <span class="sep">·</span>
             }
-            <span class="truncate max-w-[160px]" [title]="fonts().font_family">{{ fonts().font_family }} · {{ fonts().font_size }}pt</span>
-            <span class="sep">·</span>
-            <span>{{ cursorLabel() }}</span>
-            <span class="sep">·</span>
-            <span>{{ opacityLabel() }}</span>
+            <span class="truncate max-w-[8rem] sm:max-w-[10rem]" [title]="fonts().font_family">{{ fonts().font_family }} · {{ fonts().font_size }}pt</span>
+            <!-- Cursor shape and opacity are visible in the preview itself, so
+                 they are the first thing to drop when the column is narrow. -->
+            <span class="hidden sm:inline sep">·</span>
+            <span class="hidden sm:inline">{{ cursorLabel() }}</span>
+            <span class="hidden sm:inline sep">·</span>
+            <span class="hidden sm:inline">{{ opacityLabel() }}</span>
           </div>
           <button
             type="button"
@@ -131,15 +133,24 @@ const WCAG_AA_BODY_TEXT = 4.5;
             <span>Export</span>
           </button>
         </div>
-        <div class="flex items-center justify-between gap-4">
-          <p class="text-2xs text-kitty-text-dim font-mono leading-snug truncate">
+        <!--
+          Two competing single-line rows in a 375px column truncated each other
+          into nothing: the install path rendered as "~/.co…". They stack below
+          sm, and the path, which is a desktop reminder rather than something
+          you act on from a phone, drops out entirely there.
+        -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-4">
+          <p class="hidden sm:block text-2xs text-kitty-text-dim font-mono leading-snug truncate">
             <span class="text-kitty-accent">~/.config/kitty/kitty.conf</span>
             <span class="mx-1.5 opacity-50">·</span>
             Reload: <span class="text-kitty-accent">Ctrl+Shift+F5</span>
             <span class="mx-1.5 opacity-50">·</span>
             {{ configLineCount() }} lines
           </p>
-          <p class="text-2xs text-kitty-text-dim/80 flex-shrink-0">
+          <p class="sm:hidden text-2xs text-kitty-text-dim font-mono leading-snug">
+            {{ configLineCount() }} lines
+          </p>
+          <p class="text-2xs text-kitty-text-dim/80 sm:flex-shrink-0">
             Approximate preview. Your terminal will differ in detail.
           </p>
         </div>
