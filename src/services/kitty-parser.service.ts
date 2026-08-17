@@ -51,6 +51,46 @@ function clampUnitFloat(raw: string, fallback: number): number {
 	return Math.min(1, Math.max(0, parsed));
 }
 
+/**
+ * Puts back the default wherever a number came out unusable, which is what
+ * Kitty does with a value it cannot read.
+ *
+ * Every numeric option is read with parseFloat or parseInt, and both answer NaN
+ * for a word and Infinity for something too large. Nothing downstream expects
+ * either: the generator writes "font_size NaN" into the exported file, which
+ * Kitty then refuses, and the preview measures a cell that many pixels wide.
+ *
+ * Doing this in one place rather than at each of the sixty-odd conversions is
+ * deliberate. The conversions are spread across a thousand lines of switch, one
+ * was always going to be missed, and an option added next year is covered here
+ * without anyone remembering to.
+ */
+function restoreUnusableNumbers(config: KittyConfigAST): void {
+	const defaults = DEFAULT_KITTY_CONFIG as unknown as Record<
+		string,
+		Record<string, unknown>
+	>;
+	const parsed = config as unknown as Record<string, Record<string, unknown>>;
+	const unusable = (value: unknown): boolean =>
+		typeof value === "number" && !Number.isFinite(value);
+
+	for (const [section, fallbacks] of Object.entries(defaults)) {
+		if (!fallbacks || typeof fallbacks !== "object" || Array.isArray(fallbacks)) {
+			continue;
+		}
+		const values = parsed[section];
+		if (!values) continue;
+
+		for (const [key, fallback] of Object.entries(fallbacks)) {
+			const value = values[key];
+			// A list is replaced whole: a scale with one unreadable entry in it is
+			// not a scale, and half of one is worse than the default.
+			const broken = Array.isArray(value) ? value.some(unusable) : unusable(value);
+			if (broken) values[key] = structuredClone(fallback);
+		}
+	}
+}
+
 @Injectable({
 	providedIn: "root",
 })
@@ -79,6 +119,7 @@ export class KittyParserService {
 			this.parseKeyValue(config, key, value);
 		}
 
+		restoreUnusableNumbers(config);
 		return config;
 	}
 
