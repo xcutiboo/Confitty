@@ -1,4 +1,40 @@
 import { Injectable } from "@angular/core";
+import type {
+	KittyConfigAST,
+	KittyTabBarEdge,
+	KittyTabBarStyle,
+	KittyTabPowerlineStyle,
+} from "../models/kitty-types";
+
+type UnionToIntersection<U> = (
+	U extends unknown
+		? (of: U) => void
+		: never
+) extends (of: infer I) => void
+	? I
+	: never;
+
+/** Sections only. The lists and kitty_mod are not addressed by a settings key. */
+type SettingsSection<T> = T extends readonly unknown[]
+	? never
+	: T extends object
+		? T
+		: never;
+
+/**
+ * Every setting a preset can name, carrying the type the config actually holds.
+ *
+ * This used to be `Record<string, string | number | boolean | string[] |
+ * number[]>`, which types a preset key as "any of the things a setting might
+ * be" rather than "what this setting is". The Confitty preset set modify_font
+ * to a string where the config holds a list of them, nothing objected, and the
+ * fonts form threw on every change detection pass for anyone who applied it.
+ */
+type KittySettings = UnionToIntersection<
+	{
+		[Section in keyof KittyConfigAST]: SettingsSection<KittyConfigAST[Section]>;
+	}[keyof KittyConfigAST]
+>;
 
 export interface ConfigPreset {
 	id: string;
@@ -7,10 +43,11 @@ export interface ConfigPreset {
 	category: "theme" | "performance" | "minimal" | "feature-rich" | "gaming";
 	author?: string;
 	tags?: string[];
-	config: Partial<
-		Record<string, string | number | boolean | string[] | number[]>
-	>;
+	config: Partial<KittySettings>;
 }
+
+/** Every settings key a preset may name, for callers that hold one as data. */
+export type PresetSettingKey = keyof KittySettings;
 
 function preset(
 	id: string,
@@ -24,6 +61,9 @@ function preset(
 	return { id, name, description, category, author, tags, config };
 }
 
+// `satisfies` rather than a plain annotation, so the literals stay literals and
+// still get checked. A bare object literal widens "cursor" to string, which the
+// narrow option types then reject.
 const baseTheme = {
 	font_size: 12,
 	disable_ligatures: "cursor",
@@ -43,7 +83,7 @@ const baseTheme = {
 	window_border_width: "1pt",
 	draw_minimal_borders: true,
 	inactive_text_alpha: 0.7,
-};
+} satisfies ConfigPreset["config"];
 
 const themeColors = (
 	fg: string,
@@ -76,7 +116,11 @@ const themeColors = (
 	color15: colors[15],
 });
 
-const tabConfig = (style: string, edge: string, powerline?: string) => ({
+const tabConfig = (
+	style: KittyTabBarStyle,
+	edge: KittyTabBarEdge,
+	powerline?: KittyTabPowerlineStyle,
+) => ({
 	tab_bar_style: style,
 	tab_bar_edge: edge,
 	tab_bar_min_tabs: 2,
@@ -132,7 +176,7 @@ export class PresetsService {
 				),
 				font_family: "JetBrains Mono",
 				font_size: 12,
-				modify_font: "cell_height 120%",
+				modify_font: ["cell_height 120%"],
 				scrollback_lines: 15000,
 				touch_scroll_multiplier: 1.5,
 				url_color: "#9DC3CA",

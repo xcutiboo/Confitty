@@ -5,6 +5,7 @@ import type { KittyConfigAST } from "../../models/kitty-types";
 import { ConfigStoreService } from "../../services/config-store.service";
 import {
 	type ConfigPreset,
+	type PresetSettingKey,
 	PresetsService,
 } from "../../services/presets.service";
 
@@ -151,7 +152,7 @@ export class PresetSelectorComponent {
 		this.showAllPresets.set(false);
 	}
 
-	readonly paletteKeys: readonly string[] = [
+	readonly paletteKeys: readonly PresetSettingKey[] = [
 		"color1",
 		"color2",
 		"color3",
@@ -213,7 +214,7 @@ export class PresetSelectorComponent {
 		}
 	}
 
-	getPresetColor(preset: ConfigPreset, key: string): string {
+	getPresetColor(preset: ConfigPreset, key: PresetSettingKey): string {
 		const value = preset.config[key];
 		return typeof value === "string" ? value : "#000000";
 	}
