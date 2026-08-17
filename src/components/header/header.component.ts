@@ -1,14 +1,13 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, inject, output, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { DEFAULT_KITTY_CONFIG, SEARCHABLE_OPTION_COUNT } from "../../models/kitty-defaults";
 import { ConfigStoreService } from "../../services/config-store.service";
 import { KittyGeneratorService } from "../../services/kitty-generator.service";
 import { KittyParserService } from "../../services/kitty-parser.service";
 import { KittyVersionService } from "../../services/kitty-version.service";
 import { ThemeService } from "../../services/theme.service";
-import { DEFAULT_KITTY_CONFIG } from "../../models/kitty-defaults";
 import type { KittyConfigAST } from "../../models/kitty-types";
-import { CONFIG_SEARCH_INDEX } from "../../search/config-index";
 import { SearchBarComponent } from "../search-bar/search-bar.component";
 import { DialogShellComponent } from "../shared/dialog-shell/dialog-shell.component";
 
@@ -359,7 +358,12 @@ export class HeaderComponent {
 	readonly mobileSearchOpen = signal(false);
 	readonly mobileMenuOpen = signal(false);
 	readonly importStatus = signal<ImportStatus | null>(null);
-	readonly searchableCount = CONFIG_SEARCH_INDEX.length;
+	/**
+	 * Every modelled option is indexed, a spec enforces it, so this counts the
+	 * model rather than importing the index just to read its length. The index is
+	 * loaded on the first keystroke and is the largest module in the app.
+	 */
+	readonly searchableCount = SEARCHABLE_OPTION_COUNT;
 
 	/**
 	 * Returning to a config you do not remember leaving is disconcerting, and

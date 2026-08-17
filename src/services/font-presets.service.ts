@@ -200,7 +200,12 @@ export class FontPresetsService {
 		return this.fonts.find((f) => f.family === family);
 	}
 
+	/**
+	 * Fetches a font only when someone picks it for the preview, never on load.
+	 * No-ops without a document, which is the case while the page is prerendered.
+	 */
 	loadWebFont(family: string): void {
+		if (typeof document === "undefined") return;
 		if (this.loadedFonts.has(family)) return;
 		const preset = this.getFontByFamily(family);
 		if (!preset?.googleFontsFamily) return;

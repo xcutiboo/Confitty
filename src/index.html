@@ -76,24 +76,44 @@
     </script>
 
     <style>
-      html { background: #0d0d0d; }
-      html.light { background: #f6f5f3; }
+      html { background: #0d0d0d; color-scheme: dark; }
+      html.light { background: #f6f5f3; color-scheme: light; }
       body { margin: 0; background: inherit; }
       app-root { display: block; min-height: 100vh; }
-      .app-loader {
-        display: flex; align-items: center; justify-content: center;
-        min-height: 100vh; background: inherit;
+
+      /*
+       * Angular replaces everything inside app-root on bootstrap, so this is
+       * only ever seen while the bundle loads, by a crawler that does not run
+       * scripts, or by someone who has turned them off. Worth being a real
+       * description of the tool rather than a bare spinner.
+       */
+      .boot {
+        display: flex; flex-direction: column; align-items: center;
+        justify-content: center; gap: 20px; min-height: 100vh;
+        padding: 24px; text-align: center; background: inherit;
+        font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        color: #e0e0e0;
       }
-      .app-loader__spinner {
-        width: 36px; height: 36px;
-        border: 3px solid rgba(236, 72, 153, 0.18);
-        border-top-color: #ec4899;
+      html.light .boot { color: #1c1917; }
+      .boot h1 { margin: 0; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em; }
+      .boot p { margin: 0; max-width: 46ch; color: #909090; }
+      html.light .boot p { color: #736d68; }
+      .boot a { color: #ffb5c6; }
+      html.light .boot a { color: #cb3379; }
+      .boot__spinner {
+        width: 32px; height: 32px;
+        border: 3px solid rgba(255, 181, 198, 0.2);
+        border-top-color: #ffb5c6;
         border-radius: 50%;
         animation: spin 900ms linear infinite;
       }
+      html.light .boot__spinner {
+        border-color: rgba(203, 51, 121, 0.2);
+        border-top-color: #cb3379;
+      }
       @keyframes spin { to { transform: rotate(360deg); } }
       @media (prefers-reduced-motion: reduce) {
-        .app-loader__spinner { animation: none; border-top-color: rgba(236, 72, 153, 0.6); }
+        .boot__spinner { animation: none; opacity: 0.6; }
       }
     </style>
 
@@ -141,8 +161,26 @@
   </head>
   <body>
     <app-root>
-      <div class="app-loader" role="status" aria-label="Loading Confitty">
-        <div class="app-loader__spinner"></div>
+      <div class="boot">
+        <h1>Confitty</h1>
+        <p>
+          A visual configuration builder for the
+          <a href="https://sw.kovidgoyal.net/kitty/">Kitty terminal</a>. Edit 231
+          settings with a live terminal preview, then export a
+          <code>kitty.conf</code> containing only what you changed. It runs
+          entirely in your browser, with no account and no backend.
+        </p>
+        <div class="boot__spinner" role="status" aria-label="Loading the editor"></div>
+        <noscript>
+          <p>
+            Confitty needs JavaScript: it builds and previews your configuration
+            in the browser rather than on a server. The
+            <a href="https://github.com/xcutiboo/Confitty">source is on GitHub</a>,
+            and Kitty's own
+            <a href="https://sw.kovidgoyal.net/kitty/conf/">configuration reference</a>
+            documents every option it edits.
+          </p>
+        </noscript>
       </div>
     </app-root>
   </body>

@@ -57,7 +57,7 @@ export function highlight(text: string, query: string): SearchMatch[] {
 }
 
 export function search(
-	items: SearchableItem[],
+	items: readonly SearchableItem[],
 	query: string,
 	limit = DEFAULT_RESULT_LIMIT,
 ): SearchResult[] {

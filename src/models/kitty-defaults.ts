@@ -1,5 +1,20 @@
 import type { KittyConfigAST } from "./kitty-types";
 
+/** Sections holding plain options, as opposed to the mapping lists. */
+const OPTION_SECTIONS = [
+	"fonts",
+	"cursor",
+	"scrollback",
+	"mouse",
+	"performance",
+	"bell",
+	"window_layout",
+	"tab_bar",
+	"colors",
+	"advanced",
+	"os_specific",
+] as const;
+
 export const DEFAULT_KITTY_CONFIG: KittyConfigAST = {
 	fonts: {
 		font_family: "monospace",
@@ -281,3 +296,13 @@ export const DEFAULT_KITTY_CONFIG: KittyConfigAST = {
 	unrecognized_directives: [],
 	kitty_mod: "ctrl+shift",
 };
+
+/**
+ * How many options the editor exposes. Every one is searchable, which
+ * config-index.spec.ts enforces, so the UI can quote this without pulling in
+ * the search index to count it.
+ */
+export const SEARCHABLE_OPTION_COUNT = OPTION_SECTIONS.reduce(
+	(total, section) => total + Object.keys(DEFAULT_KITTY_CONFIG[section]).length,
+	0,
+);
