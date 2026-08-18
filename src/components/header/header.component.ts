@@ -554,7 +554,12 @@ export class HeaderComponent {
 		} catch {
 			// Denied clipboard permission, or an insecure origin. Putting the link
 			// in the address bar at least leaves it somewhere copyable.
-			globalThis.location.hash = new URL(link).hash;
+			//
+			// replaceState rather than assigning location.hash, which fires a
+			// hashchange: the editor listens for that to open a link somebody has
+			// pasted, so writing the link would have been read straight back as one
+			// and cleared the address bar again.
+			globalThis.history.replaceState(null, "", link);
 			this.importStatus.set({
 				tone: "success",
 				message: "Link ready in the address bar; copying it was blocked by the browser.",
