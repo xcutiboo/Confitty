@@ -143,6 +143,89 @@ describe("export then import round trip", () => {
 			expect(after.fonts.font_size).toBe(DEFAULT_KITTY_CONFIG.fonts.font_size);
 		});
 
+		it("keeps a mouse mapping", () => {
+			const config = structuredClone(DEFAULT_KITTY_CONFIG);
+			config.mouse_mappings = [
+				{
+					button: "left",
+					event: "click",
+					modes: "ungrabbed",
+					action: "mouse_handle_click selection link prompt",
+				},
+			];
+
+			expect(roundTrip(config).mouse_mappings).toEqual(config.mouse_mappings);
+		});
+
+		it("keeps environment variables", () => {
+			// env is the one section written as several directives sharing a name,
+			// which is a different path through both sides.
+			const config = structuredClone(DEFAULT_KITTY_CONFIG);
+			(config.advanced as unknown as Record<string, unknown>)["env"] = {
+				EDITOR: "nvim",
+				PATH_EXTRA: "/opt/bin",
+			};
+
+			const after = roundTrip(config).advanced as unknown as Record<
+				string,
+				unknown
+			>;
+			expect(after["env"]).toEqual({ EDITOR: "nvim", PATH_EXTRA: "/opt/bin" });
+		});
+
+		it("writes each setting once, whatever has been changed", () => {
+			// Kitty keeps the last of a repeated directive, so a duplicate is a
+			// setting that silently does something other than what the editor shows.
+			const config = structuredClone(DEFAULT_KITTY_CONFIG) as unknown as Record<
+				string,
+				Record<string, unknown>
+			>;
+			for (const [section, values] of Object.entries(
+				DEFAULT_KITTY_CONFIG as unknown as Record<string, unknown>,
+			)) {
+				if (!values || typeof values !== "object" || Array.isArray(values)) {
+					continue;
+				}
+				for (const [key, value] of Object.entries(
+					values as Record<string, unknown>,
+				)) {
+					const slice = config[section];
+					if (!slice) continue;
+					if (typeof value === "boolean") slice[key] = !value;
+					else if (typeof value === "number") slice[key] = value + 1;
+				}
+			}
+
+			// These are the directives Kitty expects more than one of.
+			const REPEATABLE = new Set([
+				"map",
+				"mouse_map",
+				"env",
+				"symbol_map",
+				"narrow_symbols",
+				"font_features",
+				"modify_font",
+				"watcher",
+				"exe_search_path",
+				"menu_map",
+				"action_alias",
+				"remote_control_password",
+			]);
+
+			const counts = new Map<string, number>();
+			for (const line of generator
+				.generateConfig(config as unknown as KittyConfigAST)
+				.split("\n")) {
+				const trimmed = line.trim();
+				if (!trimmed || trimmed.startsWith("#")) continue;
+				const key = trimmed.split(/\s+/)[0];
+				if (!key || REPEATABLE.has(key)) continue;
+				counts.set(key, (counts.get(key) ?? 0) + 1);
+			}
+
+			expect([...counts].filter(([, times]) => times > 1)).toEqual([]);
+		});
+
 		it("keeps a shortcut whose action carries arguments and quotes", () => {
 			const config = structuredClone(DEFAULT_KITTY_CONFIG);
 			config.keyboard_shortcuts = [
