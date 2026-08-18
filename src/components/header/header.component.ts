@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, computed, inject, output, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DEFAULT_KITTY_CONFIG, SEARCHABLE_OPTION_COUNT } from "../../models/kitty-defaults";
+import { ConfigSharingService } from "../../services/config-sharing.service";
 import { ConfigStoreService } from "../../services/config-store.service";
 import { KittyGeneratorService } from "../../services/kitty-generator.service";
 import { KittyParserService } from "../../services/kitty-parser.service";
@@ -236,6 +237,18 @@ function countDirectives(config: KittyConfigAST): number {
         </button>
 
         <button
+          (click)="handleShare()"
+          class="hidden sm:flex items-center gap-2 px-3 py-2 lg:px-4 lg:py-2.5 bg-kitty-surface-light hover:bg-kitty-bg text-kitty-text rounded-lg text-sm font-medium transition-colors border border-kitty-border"
+          title="Copy a link that opens this config"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+          </svg>
+          <span class="hidden xl:inline">Share</span>
+        </button>
+
+        <button
           (click)="handleImport()"
           class="hidden sm:flex items-center gap-2 px-3 py-2 lg:px-4 lg:py-2.5 bg-kitty-surface-light hover:bg-kitty-bg text-kitty-text rounded-lg text-sm font-medium transition-colors border border-kitty-border"
         >
@@ -328,6 +341,10 @@ function countDirectives(config: KittyConfigAST): number {
           <button (click)="configStore.togglePreview(); mobileMenuOpen.set(false)" class="w-full px-3 py-2.5 rounded-lg text-left text-sm text-kitty-text hover:bg-kitty-surface-light transition-all duration-150 flex items-center gap-3 active:scale-[0.98]">
             <svg class="w-4 h-4 text-kitty-text-dim" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
             {{ configStore.previewVisible() ? 'Hide Preview' : 'Show Preview' }}
+          </button>
+          <button (click)="handleShare(); mobileMenuOpen.set(false)" class="w-full px-3 py-2.5 rounded-lg text-left text-sm text-kitty-text hover:bg-kitty-surface-light transition-all duration-150 flex items-center gap-3 active:scale-[0.98]">
+            <svg class="w-4 h-4 text-kitty-text-dim" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            Copy Share Link
           </button>
           <button (click)="handleImport(); mobileMenuOpen.set(false)" class="w-full px-3 py-2.5 rounded-lg text-left text-sm text-kitty-text hover:bg-kitty-surface-light transition-all duration-150 flex items-center gap-3 active:scale-[0.98]">
             <svg class="w-4 h-4 text-kitty-text-dim" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
@@ -459,6 +476,7 @@ export class HeaderComponent {
 		public readonly themeService: ThemeService,
 		private readonly generator: KittyGeneratorService,
 		private readonly parser: KittyParserService,
+		private readonly sharing: ConfigSharingService,
 	) {}
 
 	handleImport(): void {
@@ -506,5 +524,41 @@ export class HeaderComponent {
 
 	handleExport(): void {
 		this.generator.downloadConfig(this.configStore.configState());
+	}
+
+	/**
+	 * The config travels in the link's fragment, so it is never sent anywhere:
+	 * whoever opens it decodes it in their own browser. Nothing is stored here,
+	 * which also means a link cannot be taken back once it is sent.
+	 */
+	async handleShare(): Promise<void> {
+		const link = await this.sharing.toLink(
+			this.configStore.configState(),
+			`${globalThis.location.origin}${globalThis.location.pathname}`,
+		);
+
+		if (!link) {
+			this.importStatus.set({
+				tone: "error",
+				message: "This config is too large to put in a link. Export the file instead.",
+			});
+			return;
+		}
+
+		try {
+			await navigator.clipboard.writeText(link);
+			this.importStatus.set({
+				tone: "success",
+				message: "Link copied. It carries your config in the address itself, so nothing was uploaded.",
+			});
+		} catch {
+			// Denied clipboard permission, or an insecure origin. Putting the link
+			// in the address bar at least leaves it somewhere copyable.
+			globalThis.location.hash = new URL(link).hash;
+			this.importStatus.set({
+				tone: "success",
+				message: "Link ready in the address bar; copying it was blocked by the browser.",
+			});
+		}
 	}
 }

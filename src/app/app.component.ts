@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import {
 	afterNextRender,
 	Component,
+	DestroyRef,
 	HostListener,
 	inject,
 	signal,
@@ -11,6 +12,7 @@ import { CategoryNavigationComponent } from "../components/category-navigation/c
 import { ConfigEditorComponent } from "../components/config-editor/config-editor.component";
 import { HeaderComponent } from "../components/header/header.component";
 import { LivePreviewComponent } from "../components/live-preview/live-preview.component";
+import { ConfigSharingService } from "../services/config-sharing.service";
 import { ConfigStoreService } from "../services/config-store.service";
 import { formatCount, SiteStatsService } from "../services/site-stats.service";
 
@@ -42,6 +44,32 @@ function isTextEntry(target: EventTarget | null): boolean {
     -->
     <div class="h-dvh bg-kitty-darker text-kitty-text flex flex-col overflow-hidden">
       <app-header (aboutRequested)="showAbout.set(true)" />
+
+      <!--
+        Says plainly that what is on screen replaced what was here, and how to
+        get it back, because the swap happens before anyone has touched anything.
+      -->
+      @if (openedFromLink()) {
+        <div
+          class="px-3 sm:px-4 lg:px-6 py-2 border-b border-kitty-border bg-kitty-surface-light/60 flex items-center gap-3 text-sm text-kitty-text-dim"
+          role="status"
+        >
+          <span class="flex-1 min-w-0">
+            Opened from a shared link. Nothing was uploaded; the config travelled
+            in the address. Undo to go back to your own.
+          </span>
+          <button
+            type="button"
+            (click)="openedFromLink.set(false)"
+            class="flex-shrink-0 -m-1.5 p-1.5 opacity-70 hover:opacity-100 transition-opacity"
+            aria-label="Dismiss message"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      }
 
       @if (showAbout()) {
         <app-about-modal (closeRequested)="showAbout.set(false)" />
@@ -137,10 +165,48 @@ export class AppComponent {
 	readonly visitors = this.siteStats.visitors;
 	readonly format = formatCount;
 
+	private readonly sharing = inject(ConfigSharingService);
+	/** Says where the config came from, since nothing else on screen would. */
+	readonly openedFromLink = signal(false);
+
 	constructor() {
 		// After the first paint, so a slow or blocked request never delays the
 		// editor appearing.
 		afterNextRender(() => void this.siteStats.load());
+		afterNextRender(() => void this.openSharedConfig());
+
+		// Pasting a link into the address bar of a tab that already has the editor
+		// open only changes the fragment, so nothing reloads and none of the above
+		// runs again. Without this the link appears to do nothing at all.
+		const onHashChange = () => void this.openSharedConfig();
+		globalThis.addEventListener("hashchange", onHashChange);
+		inject(DestroyRef).onDestroy(() =>
+			globalThis.removeEventListener("hashchange", onHashChange),
+		);
+	}
+
+	/**
+	 * Opens a config someone was sent a link to. It replaces whatever was
+	 * restored from the last visit, which is why it goes through the store as a
+	 * single step: Ctrl+Z puts the previous work straight back.
+	 *
+	 * The fragment is cleared afterwards so that editing from here does not leave
+	 * an address bar describing a config that is no longer the one on screen.
+	 */
+	private async openSharedConfig(): Promise<void> {
+		const hash = globalThis.location.hash;
+		if (!hash.includes("c=")) return;
+
+		const shared = await this.sharing.fromHash(hash);
+		if (!shared) return;
+
+		this.configStore.loadConfig(shared);
+		this.openedFromLink.set(true);
+		globalThis.history.replaceState(
+			null,
+			"",
+			globalThis.location.pathname + globalThis.location.search,
+		);
 	}
 
 	/**

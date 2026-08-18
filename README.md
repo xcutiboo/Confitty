@@ -58,6 +58,12 @@ the editor. Anything it does not model, whether that is a kitten, an `include`
 line, `env`, or an option from a Kitty newer than it knows about, is kept
 verbatim and written back out.
 
+**Share** copies a link that opens your config in somebody else's browser. The
+config rides in the fragment, the part of a URL browsers never send, so it
+reaches them without touching a server here: there is nothing stored, no id to
+look up, and no link to expire. Opening one replaces what you had, which undo
+puts back.
+
 Pick your Kitty version, anywhere from 0.15 to 0.48, and options that release
 does not have are commented out with the version that introduced them instead of
 being emitted silently.
