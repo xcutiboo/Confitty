@@ -182,11 +182,17 @@ export class TerminalTabBarComponent {
 		() => this.store.configState().tab_bar.tab_powerline_style,
 	);
 
+	/**
+	 * The slant style carves the bar's own background out of each end of a tab,
+	 * so a tab reads as a trapezium. Kitty flips which corner is cut when the bar
+	 * sits along the bottom, otherwise the tabs would lean into the terminal
+	 * rather than away from it: E0BC/E0BE along the top, E0B8/E0BA below.
+	 */
 	readonly slantLeftPath = computed(() =>
-		this.edge() === "top" ? POWERLINE_GLYPHS.e0bc : POWERLINE_GLYPHS.e0ba,
+		this.edge() === "top" ? POWERLINE_GLYPHS.e0bc : POWERLINE_GLYPHS.e0b8,
 	);
 	readonly slantRightPath = computed(() =>
-		this.edge() === "top" ? POWERLINE_GLYPHS.e0be : POWERLINE_GLYPHS.e0b8,
+		this.edge() === "top" ? POWERLINE_GLYPHS.e0be : POWERLINE_GLYPHS.e0ba,
 	);
 
 	private readonly tabBar = computed(() => this.store.configState().tab_bar);
@@ -263,12 +269,19 @@ export class TerminalTabBarComponent {
 		return this.edge() === "top" ? inner : outer;
 	});
 
+	/**
+	 * The glyph Kitty draws between two powerline tabs, from the table in
+	 * tab_bar.py. Its filled part takes the tab's own background and the rest
+	 * shows the next tab's, so picking the complementary triangle puts the tab's
+	 * colour on the far side of the slant and leaves a wedge of it stranded
+	 * against the following tab.
+	 */
 	powerlinePath(): string {
 		switch (this.powerlineShape()) {
 			case "round":
 				return POWERLINE_GLYPHS.e0b4;
 			case "slanted":
-				return POWERLINE_GLYPHS.e0b8;
+				return POWERLINE_GLYPHS.e0bc;
 			default:
 				return POWERLINE_GLYPHS.e0b0;
 		}

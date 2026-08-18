@@ -126,16 +126,18 @@ export const POWERLINE_GLYPHS = {
 } as const;
 
 /**
- * Thin separator stroke definitions. Used when two adjacent tabs share a
- * background color, so the filled glyph would render invisibly. These
- * stand in for the Powerline soft-separator codepoints (U+E0B1, U+E0B3,
- * U+E0B5, U+E0B9, U+E0BD).
+ * Thin separator stroke definitions, used when two adjacent tabs share a
+ * background colour and the filled glyph would render invisibly.
+ *
+ * The chevron and the arc imitate U+E0B1 and U+E0B5, which sit inset within
+ * their cell in every Powerline font. The slant does not: Kitty reaches for
+ * U+2571 there, a box-drawing character that runs corner to corner, so an inset
+ * copy of it reads as a stroke that fell short at both ends.
  */
 export const POWERLINE_SOFT = {
 	angled: "M0.15 0 L0.85 0.5 L0.15 1",
-	slanted: "M0.85 0 L0.15 1",
+	slanted: "M1 0 L0 1",
 	round: "M0.3 0 Q0.85 0 0.85 0.5 Q0.85 1 0.3 1",
-	slantTop: "M0.85 0 L0.15 1",
 } as const;
 
 /** macOS-style traffic light cluster. */
