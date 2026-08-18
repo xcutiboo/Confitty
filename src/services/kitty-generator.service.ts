@@ -195,6 +195,13 @@ export class KittyGeneratorService {
 				continue;
 			}
 
+			// Advanced was writing these whatever Kitty was selected, so picking an
+			// older one still produced a file it refuses on the first unknown name.
+			if (!this.versionService.isOptionAvailable(key)) {
+				this.collectUnavailableOption(key, advanced, defaults, lines);
+				continue;
+			}
+
 			this.collectConfigLine(key, advanced[key], defaults[key], lines);
 		}
 
@@ -308,10 +315,12 @@ export class KittyGeneratorService {
 		if (!requirement || !this.isDifferent(current[key], defaults[key])) return;
 
 		const formatted = this.formatValueForKey(key, current[key]);
-		if (formatted) {
-			lines.push(
-				`# ${formatted[0]}  # Requires Kitty >= ${requirement.minVersion}`,
-			);
+		if (!formatted) return;
+
+		// Every line, not just the first: an option like watcher writes one per
+		// entry, and commenting only the first dropped the rest without saying so.
+		for (const line of formatted) {
+			lines.push(`# ${line}  # Requires Kitty >= ${requirement.minVersion}`);
 		}
 	}
 
