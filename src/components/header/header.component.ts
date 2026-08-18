@@ -140,7 +140,7 @@ function countDirectives(config: KittyConfigAST): number {
         <button
           type="button"
           (click)="mobileMenuOpen.set(true)"
-          class="sm:hidden w-9 h-9 flex items-center justify-center rounded-lg bg-kitty-surface-light hover:bg-kitty-bg text-kitty-text-dim hover:text-kitty-text transition-all duration-200 active:scale-95"
+          class="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg bg-kitty-surface-light hover:bg-kitty-bg text-kitty-text-dim hover:text-kitty-text transition-all duration-200 active:scale-95"
           aria-label="More actions"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -325,6 +325,25 @@ function countDirectives(config: KittyConfigAST): number {
       <app-dialog-shell label="Actions" panelClass="items-start justify-end p-2" (closed)="mobileMenuOpen.set(false)">
         <div class="mt-12 sm:mt-14 w-56 bg-kitty-surface border border-kitty-border rounded-xl shadow-2xl p-2">
           <div class="px-3 py-2 text-xs font-semibold text-kitty-text-dim uppercase tracking-wider border-b border-kitty-border mb-2">Actions</div>
+          <!--
+            The header only has room for this above 1280px, and it decides which
+            options the forms offer, so leaving it out of here made every
+            narrower window quietly claim the newest Kitty.
+          -->
+          <label class="flex items-center gap-3 px-3 py-2.5 text-sm text-kitty-text xl:hidden">
+            <svg class="w-4 h-4 text-kitty-text-dim flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+            <span class="flex-shrink-0">Kitty</span>
+            <select
+              [ngModel]="versionService.currentVersion()"
+              (ngModelChange)="onVersionChange($event)"
+              class="flex-1 min-w-0 bg-kitty-bg border border-kitty-border rounded-md px-2 py-1 text-sm text-kitty-text"
+            >
+              @for (version of versionService.versions; track version.version) {
+                <option [value]="version.version">{{ version.label }}</option>
+              }
+            </select>
+          </label>
+          <div class="h-px bg-kitty-border my-2 xl:hidden"></div>
           <button (click)="configStore.undo(); mobileMenuOpen.set(false)" [disabled]="!configStore.canUndo()" class="w-full px-3 py-2.5 rounded-lg text-left text-sm text-kitty-text transition-all duration-150 flex items-center gap-3 enabled:hover:bg-kitty-surface-light enabled:active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed">
             <svg class="w-4 h-4 text-kitty-text-dim" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></svg>
             Undo
