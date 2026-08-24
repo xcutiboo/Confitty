@@ -51,7 +51,7 @@
 		"@nx/angular": "22.7.7",
 		"@nx/workspace": "22.7.7",
 		"@schematics/angular": "21.2.19",
-		"@types/node": "26.0.1",
+		"@types/node": "26.2.0",
 		"autoprefixer": "10.5.2",
 		"jsdom": "^26",
 		"nx": "22.7.7",
